@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>action</key>
+	<true/>
+	<key>category</key>
+	<string>SCRIPTS</string>
+	<key>command</key>
+	<string># myPhoneDesktop for Alfred extension
+# v1.1, 09/12/2012
+# Author: jProductivity
+# Copyright © 2012 jProductivity, LLC
+# http://www.myphonedesktop.com/
+
+# visit http://bit.ly/wKjfV2 
+# for instructions on how to install and use this extension
+
+ruby mpd_alfred.rb "{query}"</string>
+	<key>disabled</key>
+	<false/>
+	<key>escapedollar</key>
+	<false/>
+	<key>escapequery</key>
+	<false/>
+	<key>escapequerybackquotes</key>
+	<false/>
+	<key>escapequerybrackets</key>
+	<false/>
+	<key>escapequeryquotes</key>
+	<true/>
+	<key>escapequerysemicolons</key>
+	<false/>
+	<key>growloutput</key>
+	<false/>
+	<key>growloutputsticky</key>
+	<false/>
+	<key>keyword</key>
+	<string>send</string>
+	<key>logging</key>
+	<true/>
+	<key>multifileargs</key>
+	<false/>
+	<key>parameter</key>
+	<integer>3</integer>
+	<key>silent</key>
+	<true/>
+	<key>subtitle</key>
+	<string>Sends Phone, SMS, URL, Text and Image files to iPhone or iPad via myPhoneDesktop service</string>
+	<key>title</key>
+	<string>Send to iPhone</string>
+</dict>
+</plist>

@@ -1,0 +1,6 @@
+<snippet>
+	<description>GUI.Label(position,string,style)</description>
+    <content><![CDATA[GUI.Label( ${1: Rect:position} , ${2: string or image} , ${3: style (optional)} );]]></content>
+    <tabTrigger>gui</tabTrigger>
+    <scope>source.cs</scope>
+</snippet>

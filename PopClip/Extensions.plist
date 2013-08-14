@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Installed Extensions</key>
+	<array>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.pasteandenter</string>
+			<key>Extension Name</key>
+			<dict>
+				<key>en</key>
+				<string>Paste and Enter</string>
+				<key>fr</key>
+				<string>Coller et valider</string>
+			</dict>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<dict>
+				<key>en</key>
+				<string>Paste and Enter</string>
+				<key>fr</key>
+				<string>Coller et valider</string>
+			</dict>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>PasteAndEnter.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/PasteAndEnter.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.select-all</string>
+			<key>Extension Name</key>
+			<string>Select All</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>Select All</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>SelectAll.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/SelectAll.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.youtube</string>
+			<key>Extension Name</key>
+			<string>YouTube</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>YouTube</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>YouTube.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/YouTube.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.wikipedia</string>
+			<key>Extension Name</key>
+			<string>Wikipedia</string>
+			<key>Options</key>
+			<array>
+				<dict>
+					<key>Option Identifier</key>
+					<string>site</string>
+					<key>Option Label</key>
+					<dict>
+						<key>en</key>
+						<string>Wikipedia Site</string>
+						<key>ko</key>
+						<string>위키백과 사이트</string>
+					</dict>
+					<key>Option Type</key>
+					<string>multiple</string>
+					<key>Option Values</key>
+					<array>
+						<string>en.wikipedia.org</string>
+						<string>de.wikipedia.org</string>
+						<string>es.wikipedia.org</string>
+						<string>fr.wikipedia.org</string>
+						<string>it.wikipedia.org</string>
+						<string>ja.wikipedia.org</string>
+						<string>nl.wikipedia.org</string>
+						<string>pl.wikipedia.org</string>
+						<string>pt.wikipedia.org</string>
+						<string>ru.wikipedia.org</string>
+						<string>sk.wikipedia.org</string>
+						<string>sv.wikipedia.org</string>
+						<string>zh.wikipedia.org</string>
+						<string>ko.wikipedia.org</string>
+					</array>
+				</dict>
+			</array>
+			<key>Options Account Title</key>
+			<string>Wikipedia</string>
+			<key>Options Title</key>
+			<dict>
+				<key>en</key>
+				<string>Choose your preferred Wikipedia site.</string>
+				<key>ko</key>
+				<string>원하시는 언어를 고르세요.</string>
+			</dict>
+			<key>Package Name</key>
+			<string>Wikipedia.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/Wikipedia.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.twitter</string>
+			<key>Extension Name</key>
+			<string>Twitter</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>Twitter</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>Twitter.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/Twitter.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.rtc</string>
+			<key>Extension Name</key>
+			<string>Terminal</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>Terminal</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>RunCommand.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/RunCommand.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.spotlight</string>
+			<key>Extension Name</key>
+			<string>Spotlight</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>Spotlight</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>Spotlight.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/Spotlight.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.evernote</string>
+			<key>Extension Name</key>
+			<string>Evernote</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>Evernote</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>Evernote.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/Evernote.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.open-in-chrome</string>
+			<key>Extension Name</key>
+			<string>Open in Chrome</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>Open in Chrome</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>OpenInChrome.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/OpenInChrome.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.open-in-firefox</string>
+			<key>Extension Name</key>
+			<string>Open in Firefox</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>Open in Firefox</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>OpenInFirefox.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/OpenInFirefox.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.getip</string>
+			<key>Extension Name</key>
+			<string>Get IP</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>Get IP</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>GetIP.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/GetIP.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.hzlzh.popclip.extension.urlshortener</string>
+			<key>Extension Name</key>
+			<string>URL Shortener</string>
+			<key>Options</key>
+			<array>
+				<dict>
+					<key>Option Identifier</key>
+					<string>domain</string>
+					<key>Option Label</key>
+					<dict>
+						<key>en</key>
+						<string>Choose URL Prefix</string>
+					</dict>
+					<key>Option Type</key>
+					<string>multiple</string>
+					<key>Option Values</key>
+					<array>
+						<string>bit.ly</string>
+						<string>goo.gl</string>
+						<string>t.cn</string>
+						<string>j.mp</string>
+						<string>is.gd</string>
+						<string>v.gd</string>
+						<string>tiny.cc</string>
+					</array>
+				</dict>
+			</array>
+			<key>Options Account Title</key>
+			<string>URL Shortener</string>
+			<key>Options Title</key>
+			<dict>
+				<key>en</key>
+				<string>Shorter Services List</string>
+			</dict>
+			<key>Package Name</key>
+			<string>URLShortener.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/URLShortener.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>org.congxin.popclip.extension.ssh</string>
+			<key>Extension Name</key>
+			<string>SSH2</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>SSH2</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>SSH2.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/SSH2.popclipext</string>
+		</dict>
+		<dict>
+			<key>Enabled</key>
+			<true/>
+			<key>Extension Identifier</key>
+			<string>com.pilotmoon.popclip.extension.alfred</string>
+			<key>Extension Name</key>
+			<string>Alfred</string>
+			<key>Options</key>
+			<array/>
+			<key>Options Account Title</key>
+			<string>Alfred</string>
+			<key>Options Title</key>
+			<string></string>
+			<key>Package Name</key>
+			<string>Alfred.popclipext</string>
+			<key>PackagePath</key>
+			<string>/Users/jamestunick/Library/Application Support/PopClip/Extensions/Alfred.popclipext</string>
+		</dict>
+	</array>
+	<key>Version</key>
+	<integer>1</integer>
+</dict>
+</plist>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>action</key>
+	<false/>
+	<key>background</key>
+	<true/>
+	<key>category</key>
+	<string>APPLESCRIPTS</string>
+	<key>command</key>
+	<string>tell application "System Events" to set quitapps to name of every application process whose visible is true and name is not "Finder"
+repeat with closeall in quitapps
+quit application closeall
+end repeat</string>
+	<key>disabled</key>
+	<false/>
+	<key>keyword</key>
+	<string>quitall</string>
+	<key>parameter</key>
+	<integer>0</integer>
+	<key>subtitle</key>
+	<string>Quits all applications you've opened</string>
+	<key>title</key>
+	<string>Quit all open apps</string>
+</dict>
+</plist>

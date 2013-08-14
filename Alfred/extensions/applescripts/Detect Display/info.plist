@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>action</key>
+	<false/>
+	<key>background</key>
+	<true/>
+	<key>category</key>
+	<string>APPLESCRIPTS</string>
+	<key>command</key>
+	<string>(* 
+
+This is a simple script that helps alleviate the inane frustration that occurs when you initially connect an external display to your MacBook.
+
+Full credit goes to Ravi K. Udeshi for the original applescript that can be found at http://raviudeshi.com/2011/03/automatically-detect-displays
+
+If you plug in a display when your MacBook is sleeping or turned off, there are (typically) no problems. However, if your MacBook is on when you attempt to plug in an external display, it never automatically registers that a new display has been connected and therefore never turns it on accordingly. 
+
+In order to fix you have to manually go to System Preferences each time an external display is connected (which is very frequent if you're anything like me), go into the Displays preference pane, and then manually click on the "Detect Displays" button. 
+
+Even worse, if you have an external display set as the main display and you unplug said external display you're left fumbling around in the dark bringing up the system preferences with keyboard shortcuts; Alfred's "Displays" shortcut helps get a little further along but still… Ack!
+
+Now with this handy dandy script, just say "Alfred! Fix my displays!" via the keyword "fix display" and you'll no longer be "plugging it in wrong" ;-)
+
+Icon courtesy of http://www.iconfinder.com/browse/iconset/superpack/#readme
+
+*)
+--- SCRIPT BEGINS HERE ---
+
+tell application "System Preferences" to activate
+tell application "System Events"
+    tell process "System Preferences"
+        click menu item "Displays" of menu "View" of menu bar 1
+        tell button "Detect Displays" of window 1 to click
+    end tell
+end tell
+tell application "System Preferences" to quit</string>
+	<key>disabled</key>
+	<false/>
+	<key>keyword</key>
+	<string>fix display</string>
+	<key>parameter</key>
+	<integer>0</integer>
+	<key>subtitle</key>
+	<string>Alfred! Fix my external display! A script to automatically run "Detect Display"</string>
+	<key>title</key>
+	<string>Detect Display</string>
+</dict>
+</plist>

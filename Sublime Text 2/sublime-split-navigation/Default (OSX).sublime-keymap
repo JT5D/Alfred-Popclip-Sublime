@@ -1,0 +1,5 @@
+[
+	{"keys": ["alt+super+up"], "command": "split_navigation", "args": {"direction": "up"}},
+	{"keys": ["alt+super+down"], "command": "split_navigation", "args": {"direction": "down"}}
+
+]

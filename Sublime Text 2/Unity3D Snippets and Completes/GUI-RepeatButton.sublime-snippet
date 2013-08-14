@@ -1,0 +1,6 @@
+<snippet>
+	<description>GUI.RepeatButton(position,string,style)</description>
+    <content><![CDATA[GUI.RepeatButton( ${1: Rect position} , ${2: string or image} , ${3: style (optional)} )]]></content>
+    <tabTrigger>gui</tabTrigger>
+    <scope>source.cs</scope>
+</snippet>

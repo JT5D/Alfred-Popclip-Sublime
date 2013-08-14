@@ -1,0 +1,68 @@
+[
+{
+	"id": "tools",
+	"children":
+	[
+	    {"id": "sort_imports_selection"},
+	    { "command": "sort_imports" }
+	]
+},
+{
+		"caption": "Preferences",
+		"mnemonic": "n",
+		"id": "preferences",
+		"children":
+		[
+			{
+				"caption": "Package Settings",
+				"mnemonic": "P",
+				"id": "package-settings",
+				"children":
+				[
+					{
+						"caption": "Python Imports Sorter",
+						"children":
+						[
+							{
+								"command": "open_file",
+								"args": {"file": "${packages}/Python Imports Sorter/Default.sublime-settings"},
+								"caption": "Settings – Default"
+							},
+							{
+								"command": "open_file",
+								"args": {"file": "${packages}/User/python_imports_sorter.sublime-settings"},
+								"caption": "Settings – User"
+							},
+							{ "caption": "-" },
+							{
+								"command": "open_file",
+								"args": {
+									"file": "${packages}/Python Imports Sorter/Default (OSX).sublime-keymap",
+									"platform": "OSX"
+								},
+								"caption": "Key Bindings – Default"
+							},
+							{
+								"command": "open_file",
+								"args": {
+									"file": "${packages}/Python Imports Sorter/Default (Linux).sublime-keymap",
+									"platform": "Linux"
+								},
+								"caption": "Key Bindings – Default"
+							},
+							{
+								"command": "open_file",
+								"args": {
+									"file": "${packages}/Python Imports Sorter/Default (Windows).sublime-keymap",
+									"platform": "Windows"
+								},
+								"caption": "Key Bindings – Default"
+							},
+							{ "caption": "-" }
+						]
+					}
+				]
+			}
+		]
+	}
+]

@@ -1,0 +1,15 @@
+{
+  // save before running commands
+  "save_first": true,
+  // if present, use this command instead of plain "node"
+  // e.g. "/usr/bin/node" or "C:\bin\node.exe"
+  "node_command": false,
+  // Same for NPM command
+  "npm_command": false,
+  // as 'NODE_PATH' environment variable for node runtime
+  "node_path": false,
+
+  "expert_mode": false,
+
+  "ouput_to_new_tab": false
+}

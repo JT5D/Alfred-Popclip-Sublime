@@ -1,0 +1,4 @@
+{
+	"cmd": ["python", "~/local/springboard/springboard", "build"],
+	"working_dir": "${project_path:${folder}}"
+}

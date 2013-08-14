@@ -1,0 +1,4 @@
+1.0 - Nov 30
+¬ Added support for update framework
+¬ Check for remote extension updates
+¬ Download remote updates and install them

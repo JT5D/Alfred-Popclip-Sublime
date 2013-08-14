@@ -1,0 +1,21 @@
+<snippet>
+	<content><![CDATA[
+async.parallel({
+    ${1:one}: function(callback){
+        ${2://body}
+    },
+    ${3:two}: function(callback){
+        ${4://body}
+    },
+},
+function(err, ${5:results}) {
+    // results now equals: {one: 1, two: 2}
+    $6
+});
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>async_parallel</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger 
+	<scope>source.html</scope>
+    -->
+</snippet>

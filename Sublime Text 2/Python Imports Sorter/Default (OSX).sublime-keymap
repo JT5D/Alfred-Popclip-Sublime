@@ -1,0 +1,6 @@
+[
+	{
+		"keys": ["command+shift+i"], "command": "sort_imports",
+		"keys": ["command+shift+j"], "command": "split_python_arguments"
+	}
+]

@@ -1,0 +1,23 @@
+<snippet>
+	<content><![CDATA[
+async.waterfall([
+  function(callback){
+      callback(null, ${1:'one'}, ${2:'two'});
+  },
+  function(${3:arg1}, ${4:arg2}, callback){
+      callback(null, ${5:'three'});
+  },
+  function(${6:arg1}, callback){
+      // arg1 now equals 'three'
+      callback(null, ${7:'done'});
+  }
+], function (err, ${8:result}) {
+  // result now equals 'done'    
+});
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>async_waterfall</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger 
+	<scope>source.html</scope>
+    -->
+</snippet>

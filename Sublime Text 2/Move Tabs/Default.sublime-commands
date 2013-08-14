@@ -1,0 +1,16 @@
+[
+    {
+        "caption": "Preferences: MoveTabs Settings – Default",
+        "command": "open_file", "args":
+        {
+            "file": "${packages}/sublime-text-move-tabs/MoveTabs.sublime-settings"
+        }
+    },
+    {
+        "caption": "Preferences: MoveTabs Settings – User",
+        "command": "open_file", "args":
+        {
+            "file": "${packages}/User/MoveTabs.sublime-settings"
+        }
+    }
+]

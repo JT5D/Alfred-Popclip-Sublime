@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>action</key>
+	<false/>
+	<key>background</key>
+	<true/>
+	<key>category</key>
+	<string>APPLESCRIPTS</string>
+	<key>command</key>
+	<string>tell application "Finder" to activatetell application "System Events"	keystroke "r" using {command down, shift down}end tell</string>
+	<key>keyword</key>
+	<string>airdrop</string>
+	<key>subtitle</key>
+	<string>Opens Airdrop</string>
+	<key>title</key>
+	<string>Open Airdrop</string>
+</dict>
+</plist>

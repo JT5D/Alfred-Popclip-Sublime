@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>action</key>
+	<true/>
+	<key>background</key>
+	<true/>
+	<key>category</key>
+	<string>APPLESCRIPTS</string>
+	<key>command</key>
+	<string>### Controls ##### get# start or init
+# quit or kill or end or exit################################# Get: vnc get 10.0.1.6
+# Start: vnc start or vnc init
+# Quit:	vnc quit or (kill or end or exit)### END ####
+
+on replaceText(find, replace, subject)	set prevTIDs to text item delimiters of AppleScript	set text item delimiters of AppleScript to find	set subject to text items of subject		set text item delimiters of AppleScript to replace	set subject to "" &amp; subject	set text item delimiters of AppleScript to prevTIDs		return subjectend replaceTexton alfred_script(q)		set s to {"start", "init"}	set e to {"quit", "kill", "end", "exit"}		tell application "Screen Sharing"		if q is in s then			activate		else if q is in e then			quit		else if "get" is in q then			activate			GetURL my replaceText("get ", "", q)		end if	end tellend alfred_script</string>
+	<key>disabled</key>
+	<true/>
+	<key>keyword</key>
+	<string></string>
+	<key>parameter</key>
+	<integer>0</integer>
+	<key>subtitle</key>
+	<string>Connect to other computers via VNC</string>
+	<key>title</key>
+	<string>Screen Sharing</string>
+</dict>
+</plist>

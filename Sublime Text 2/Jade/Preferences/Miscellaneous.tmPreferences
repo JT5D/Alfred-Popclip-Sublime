@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Miscellaneous</string>
+	<key>scope</key>
+	<string>source.jade</string>
+	<key>settings</key>
+	<dict>
+		<key>decreaseIndentPattern</key>
+		<string>^\s*(- )?(else)\b.*$</string>
+		<key>increaseIndentPattern</key>
+		<string>(?x)
+			^\s*(  # start with any whitespace
+				([\w#.-]+(\(.*?\))?  # first tag
+				 (:\s*[\w#.-]+(\(.*?\))?)*  # additional tags
+				 \.?$)  # end tag with . or end of line
+				|(:[a-z]\w*$)  # filters
+				|(//-?$)  # multiline comments
+				|(-\s+(if|else|while)(\s+|$))  # embedded js control flow
+				|((if|else|while|for|unless|until)(\s+|$))  # jade block first-class
+			)</string>
+		<key>disableIndentNextLinePattern</key>
+		<string></string>
+	</dict>
+	<key>uuid</key>
+	<string>5F6B517C-2610-4B1B-B6FD-2153AB8C9925</string>
+</dict>
+</plist>

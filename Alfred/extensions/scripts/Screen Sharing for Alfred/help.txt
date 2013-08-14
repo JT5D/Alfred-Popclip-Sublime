@@ -1,0 +1,22 @@
+
+=========================
+
+vnc 'add' - Add a stored connection
+
+vnc 'connect' - Connect to a stored server
+
+vnc 'ls' or 'list' - List of stored connections
+
+vnc 'rm' or 'remove' - Removes a connection 
+
+vnc 'killall' - Remove ALL stored connections
+
+vnc 'open' - Open the Screen Sharing app
+
+vnc 'about' - Display more information
+
+vnc 'changelog' - View recent changes
+
+vnc 'version' - Display version number
+
+vnc 'help' - This help info

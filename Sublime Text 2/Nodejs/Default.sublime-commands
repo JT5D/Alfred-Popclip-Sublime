@@ -1,0 +1,66 @@
+[{
+  "caption": "Nodejs::Run::Current File",
+  "command": "node_run"
+},
+{
+  "caption": "Nodejs::Run::Current File + Arguments",
+  "command": "node_run_arguments"
+},
+{
+  "caption": "Nodejs::Debug::Run::Current File",
+  "command": "node_drun"
+},
+{
+  "caption": "Nodejs::Debug::Run::Current File + Arguments",
+  "command": "node_drun_arguments"
+},
+{
+  "caption": "Nodejs::NPM::Command",
+  "command": "node_npm"
+},
+{
+  "caption": "Nodejs::NPM::Install",
+  "command": "node_npm_install"
+},
+{
+  "caption": "Nodejs::NPM::Uninstall",
+  "command": "node_npm_uninstall"
+},
+{
+  "caption": "Nodejs::NPM::Update",
+  "command": "node_npm_update"
+},
+{
+  "caption": "Nodejs::NPM::List",
+  "command": "node_npm_list"
+},
+{
+  "caption": "Nodejs::NPM::Publish",
+  "command": "node_npm_publish"
+},
+{
+  "caption": "Nodejs::NPM::Search",
+  "command": "node_npm_search"
+},
+{
+  "caption": "Nodejs::Build Completions",
+  "command": "node_builddocs"
+},
+{
+  "caption": "Nodejs::UglifyJS",
+  "command": "node_uglify"
+},
+{
+  "caption": "Nodejs::Default File Settings",
+  "command": "open_file",
+  "args": {
+    "file": "${packages}/Nodejs/Nodejs.sublime-settings"
+  }
+},
+{
+  "caption": "Nodejs::User File Settings",
+  "command": "open_file",
+  "args": {
+    "file": "${packages}/User/Nodejs.sublime-settings"
+  }
+}]

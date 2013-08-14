@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Actions</key>
+	<array>
+		<dict>
+			<key>After</key>
+			<string>paste-result</string>
+			<key>Image File</key>
+			<string>sort.png</string>
+			<key>Regular Expression</key>
+			<string>(?s)^(.+)[\r\n](.+)$</string>
+			<key>Requirements</key>
+			<array>
+				<string>paste</string>
+			</array>
+			<key>Shell Script File</key>
+			<string>sortu.sh</string>
+			<key>Title</key>
+			<string>SortU</string>
+		</dict>
+	</array>
+	<key>Extension Description</key>
+	<string>Sort the selected lines in alphabetical order, and remove duplicate lines.</string>
+	<key>Extension Identifier</key>
+	<string>com.pilotmoon.popclip.extension.sort</string>
+	<key>Extension Name</key>
+	<string>Sort</string>
+	<key>Required Software Version</key>
+	<integer>693</integer>
+</dict>
+</plist>

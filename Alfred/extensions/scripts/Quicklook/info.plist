@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>action</key>
+	<true/>
+	<key>category</key>
+	<string>SCRIPTS</string>
+	<key>command</key>
+	<string>qlmanage -p {query}*</string>
+	<key>escapequery</key>
+	<true/>
+	<key>escapequerybackquotes</key>
+	<false/>
+	<key>escapequerybrackets</key>
+	<false/>
+	<key>escapequeryquotes</key>
+	<true/>
+	<key>escapequerysemicolons</key>
+	<false/>
+	<key>growloutput</key>
+	<false/>
+	<key>growloutputsticky</key>
+	<false/>
+	<key>keyword</key>
+	<string>ql</string>
+	<key>logging</key>
+	<false/>
+	<key>silent</key>
+	<true/>
+	<key>subtitle</key>
+	<string>Open Apple's Quicklook window on the item</string>
+	<key>title</key>
+	<string>Quicklook</string>
+</dict>
+</plist>

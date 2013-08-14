@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>action</key>
+	<true/>
+	<key>category</key>
+	<string>SCRIPTS</string>
+	<key>command</key>
+	<string># VERSION 4.1 - Fixes places with spaces
+# Usage: type "time in x" and it will show the time there
+# Data from Wolfram Alpha
+
+python wolframtime.py "{query}"</string>
+	<key>disabled</key>
+	<false/>
+	<key>escapedollar</key>
+	<false/>
+	<key>escapequery</key>
+	<false/>
+	<key>escapequerybackquotes</key>
+	<false/>
+	<key>escapequerybrackets</key>
+	<false/>
+	<key>escapequeryquotes</key>
+	<false/>
+	<key>escapequerysemicolons</key>
+	<false/>
+	<key>growloutput</key>
+	<true/>
+	<key>growloutputsticky</key>
+	<false/>
+	<key>keyword</key>
+	<string>time in</string>
+	<key>logging</key>
+	<true/>
+	<key>multifileargs</key>
+	<false/>
+	<key>parameter</key>
+	<integer>3</integer>
+	<key>silent</key>
+	<true/>
+	<key>subtitle</key>
+	<string>Find the time somewhere in the world</string>
+	<key>title</key>
+	<string>Find the time in '{query}'</string>
+</dict>
+</plist>

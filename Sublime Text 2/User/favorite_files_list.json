@@ -1,0 +1,55 @@
+{
+    "files": [
+        "/Users/jamestunick/Library/Application Support/Sublime Text 2/Packages/User/Package Control.sublime-settings"
+    ],
+    "groups": {
+        "ALL VIZZ FILES": [
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/93300597-FD76-42F3-8BE8-299092402876/vizz3d.module",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/F47E50DB-56B5-48DC-940D-F7BDF5901594/allxml2.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/F84906D1-9482-44EF-B4DF-CE7E45F69C85/proxy.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/C82BF9DB-101B-4DB2-A10E-2DB0F1AD03F7/gixml.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/5F745736-6D5E-4DFF-B5EA-A58F0B455316/txml.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/AB97D554-A694-45C8-B8D5-4C230BCFF720/yxml.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/DD33C098-52B6-42A4-9B85-46086ED8B142/giveback.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/C2F5B6C2-C423-4601-9A77-DD3959BBA207/gtxml.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/01645F5E-6B71-4D33-911B-1A1002D5DE83/fxmlmut.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/05A30558-CA23-4DE0-B16D-7D909903CD62/jamestunick.xml",
+            "/Applications/MAMP/lh/iCal-Analyzer/pygooglechart-0.2.1/examples/mail-trends/mail.py",
+            "/Applications/MAMP/lh/iCal-Analyzer/pygooglechart-0.2.1/examples/mail-trends/main.py"
+        ],
+        "ALLVIZZ-FINAL": [
+            "/Volumes/vizz.me/vizz.me/feeds/allxml2.php",
+            "/Volumes/vizz.me/vizz.me/canvas.js",
+            "/Volumes/vizz.me/vizz.me/sites/all/modules/vizz3d/fxmlmut.php",
+            "/Volumes/vizz.me/vizz.me/feeds/fxmlmut.php",
+            "/Volumes/vizz.me/vizz.me/feeds/giveback.php",
+            "/Volumes/vizz.me/vizz.me/feeds/gtxml.php",
+            "/Users/jamestunick/Library/Application Support/Sublime Text 2/Packages/SortTabs/Main.sublime-menu",
+            "/Volumes/vizz.me/vizz.me/feeds/proxy.php",
+            "/Volumes/vizz.me/vizz.me/feeds/simple_html_dom.php",
+            "/Volumes/vizz.me/vizz.me/feeds/txml.php",
+            "/Volumes/vizz.me/vizz.me/sites/all/modules/vizz3d/vizz3d.module",
+            "/Volumes/vizz.me/vizz.me/feeds/yxml.php",
+            "/Applications/MAMP/vizz.local/feeds/BIRD2/100,000 Stars22222.html",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/EF4BD2A8-FAC1-4B41-9864-012C7AF99CE4/error_log"
+        ],
+        "Logs": [
+            "/Users/jamestunick/Desktop/messages"
+        ],
+        "New Group": [
+            "/Users/jamestunick/Library/Application Support/Sublime Text 2/Packages/Dogs Colour Scheme/Dogs.tmTheme",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/AEEF817E-4799-4980-AE5D-518E09C37F44/fxmlmut.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/F203C143-3F9E-4671-8702-9066A6FB72C4/giveback.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/813A57AE-CF6C-41FD-870A-422BF59AF370/yxml.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/FA611CB1-0255-446F-84C7-A94B788AC17C/gixml.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/5103216A-2EAF-4B4F-9F56-E9FE80982F43/gtxml.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/7058D78A-9F77-413D-8CBB-CCC07ACCD333/allxml2.php",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/53285962-AEA2-4466-956F-23ADFC84795A/txml.php",
+            "/Users/jamestunick/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+            "/Users/jamestunick/Library/Caches/Cleanup At Startup/Transmit/8F9B76F5-98CA-4A67-B33F-126628DF1713/vizz3d.module",
+            "/Volumes/vizz.me-sites-all-modules-vizz3d/vizz3d.module",
+            "/Users/jamestunick/Library/Application Support/Sublime Text 2/Packages/User/Package Control.sublime-settings"
+        ]
+    },
+    "version": 1
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>action</key>
+	<false/>
+	<key>background</key>
+	<true/>
+	<key>category</key>
+	<string>APPLESCRIPTS</string>
+	<key>command</key>
+	<string>on alfred_script(loc)
+tell application "Finder"	set _b to bounds of window of desktop	set myWidth to item 3 of _b	set myHeight to item 4 of _bend tellset front_app to (path to frontmost application as Unicode text)if loc contains "t" then	tell application front_app		activate		set bounds of window 1 to {0, 0, 600, (myHeight / 2)}
+	end tellelse if loc contains "r" then	tell application front_app		activate		set bounds of window 1 to {(2000 / 2), 0, 600, (myHeight / 2)}	end tellelse if loc contains "l" then	tell application front_app		activate		set bounds of window 1 to {0, 0, (myWidth / 2), myHeight}	end tellelse if loc contains "b" then	tell application front_app		activate		set bounds of window 1 to {0, (myHeight / 2), myWidth, myHeight}	end tellelse	tell application front_app		activate		set bounds of window 1 to {0, 0, myWidth, myHeight}	end tellend if
+end alfred_script</string>
+	<key>disabled</key>
+	<false/>
+	<key>keyword</key>
+	<string>wr</string>
+	<key>parameter</key>
+	<integer>0</integer>
+	<key>subtitle</key>
+	<string>resizes window (t, b, r, l, or f)</string>
+	<key>title</key>
+	<string>Resize window...</string>
+</dict>
+</plist>

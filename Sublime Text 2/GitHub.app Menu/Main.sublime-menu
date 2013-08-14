@@ -1,0 +1,12 @@
+[
+    {
+        "id": "tools",
+        "children":
+        [
+            {
+                "caption": "GitHub",
+                "command": "github"
+            }
+        ]
+    }
+]

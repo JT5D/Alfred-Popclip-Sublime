@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>shader</string>
+	</array>
+	<key>name</key>
+	<string>Unity Shader</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>comment</key>
+			<string>keywords</string>
+			<key>match</key>
+			<string>(Sub)*Shader|Category|Properties|FallBack|Tags|LOD|CGPROGRAM|ENDCG|Cull|Blend|AlphaTest|ColorMask|Lighting|ZWrite|BindChannels|Pass</string>
+			<key>name</key>
+			<string>keyword.source.shader</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>comment</string>
+			<key>match</key>
+			<string>//.*$</string>
+			<key>name</key>
+			<string>comment.source.shader</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>type</string>
+			<key>match</key>
+			<string>(?&lt;=[, \s\(\)])(((float|half|fixed)[2-4]?)|SurfaceOutput|bool|Range\([-+]?([0-9]+(\.[0-9]+)?|\.[0-9]+),[-+]?([0-9]+(\.[0-9]+)?|\.[0-9]+)\)|sampler(CUBE|[23]D)|void|2D|Color|struct)(?=[,\s\(\)])</string>
+			<key>name</key>
+			<string>storage.type.source.shader</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>string literal</string>
+			<key>match</key>
+			<string>"[^"]+"</string>
+			<key>name</key>
+			<string>constant.string.source.shader</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>compiler directive</string>
+			<key>match</key>
+			<string>^\s*#(pragma|include|ifdef|endif).*$</string>
+			<key>name</key>
+			<string>string.meta.source.shader</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>storage modifier</string>
+			<key>match</key>
+			<string>\s*(inout)\s*</string>
+			<key>name</key>
+			<string>storage.modifier.source.shader</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>function</string>
+			<key>match</key>
+			<string>tex2D|UnpackNormal|saturate|dot|normalize|clip|frac|mul|TRANSFORM_TEX|SetTexture|combine</string>
+			<key>name</key>
+			<string>constant.source.shader</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>float literal</string>
+			<key>match</key>
+			<string>[,\s]+[\(]?([-+]?([0-9]+(\.[0-9]+)?|\.[0-9]+)[\s]*,[\s]*)*([-+]?([0-9]+(\.[0-9]+)?|\.[0-9]+))+[\)]?[,\s]+</string>
+			<key>name</key>
+			<string>constant.numeric.source.shader</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>source.shader</string>
+	<key>uuid</key>
+	<string>813f15c8-79fd-4617-8afe-2495dffbf4e8</string>
+</dict>
+</plist>

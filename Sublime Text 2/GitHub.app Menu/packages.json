@@ -1,0 +1,20 @@
+{
+    "schema_version": "1.1",
+    "packages": [
+        {
+            "name": "GitHub.app Menu",
+            "author": "Chris Tan",
+            "description": "Open the GitHub app from your menu",
+            "homepage": "https://github.com/csytan/sublime-text-2-github",
+            "last_modified": "2012-01-12 17:00:30",
+            "platforms": {
+                "osx": [
+                    {
+                        "version": "1.0.0",
+                        "url": "https://nodeload.github.com/csytan/sublime-text-2-github/zipball/master"
+                    }
+                ]
+            }
+        }
+    ]
+}

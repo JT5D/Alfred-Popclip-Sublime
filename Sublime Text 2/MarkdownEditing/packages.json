@@ -1,0 +1,20 @@
+{
+    "schema_version": "1.2",
+    "packages": [
+        {
+            "name": "MarkdownEditing",
+            "description": "The beginnings of a Markdown editing bundle for Sublime Text 2",
+            "author": "Brett Terpstra (@ttscoff)",
+            "homepage": "https://github.com/ttscoff/MarkdownEditing",
+            "last_modified": "2013-06-30 10:27:00",
+            "platforms": {
+                "*": [
+                    {
+                        "version": "1.2.5",
+                        "url": "https://nodeload.github.com/ttscoff/MarkdownEditing/zipball/master"
+                    }
+                ]
+            }
+        }
+    ]
+}

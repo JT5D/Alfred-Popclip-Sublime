@@ -1,0 +1,21 @@
+<snippet>
+	<content><![CDATA[
+async.series({
+  ${1:one}: function(callback){
+      ${2:callback(null,{})}
+  },
+  ${3:two}: function(callback){
+      ${4:callback(null,{})}
+  },
+},
+function(err, ${5:results}) {
+  // results is now equal to: {one: 1, two: 2}
+  ${6}
+});
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>async_series</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger 
+	<scope>source.html</scope>
+    -->
+</snippet>

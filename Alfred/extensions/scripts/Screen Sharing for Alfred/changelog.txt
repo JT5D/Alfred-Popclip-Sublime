@@ -1,0 +1,14 @@
+1.1
+Added title to all GUI windows
+1.0
+Added 'help' command
+Added 'changelog' command
+Added 'about' command
+Added 'version' command
+Added 'ls' and 'list' command
+Added 'rm' or 'remove' command
+Added 'add' or 'setup' command
+Added 'open' command
+Added 'connect' command
+Added 'killall' command
+Added Updater Extension support

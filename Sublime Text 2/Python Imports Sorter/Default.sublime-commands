@@ -1,0 +1,4 @@
+[
+{ "caption": "Python Imports Sorter: sort imports", "command": "sort_imports"},
+{ "caption": "Python Imports Sorter: split arguments", "command": "split_python_arguments"}
+]

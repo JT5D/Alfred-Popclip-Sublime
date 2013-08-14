@@ -1,0 +1,23 @@
+[
+    {
+        "caption": "Fetch: File",
+        "command": "fetch",
+        "args": {
+            "type": "single"
+        }
+    },
+    {
+        "caption": "Fetch: Package",
+        "command": "fetch",
+        "args": {
+            "type": "package"
+        }
+    },
+    {
+        "caption": "Fetch: Manage",
+        "command": "open_file", "args":
+        {
+            "file": "${packages}/User/Fetch.sublime-settings"
+        }
+    }
+]

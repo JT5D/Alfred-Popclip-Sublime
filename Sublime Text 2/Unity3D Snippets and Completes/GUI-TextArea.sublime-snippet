@@ -1,0 +1,6 @@
+<snippet>
+	<description>GUI.TextArea(position,string,maxlength,style)</description>
+    <content><![CDATA[GUI.TextArea( ${1: Rect position} , ${2: string or image}, ${3: int maxLength (optional)}  , ${4: style (optional)} )]]></content>
+    <tabTrigger>gui</tabTrigger>
+    <scope>source.cs</scope>
+</snippet>

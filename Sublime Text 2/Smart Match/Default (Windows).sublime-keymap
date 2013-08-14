@@ -1,0 +1,5 @@
+[
+    { "keys": [")"], "command": "smart_match", "args": {"character": ")"} },
+    { "keys": ["]"], "command": "smart_match", "args": {"character": "]"} },
+    { "keys": ["}"], "command": "smart_match", "args": {"character": "}"} }
+]
