@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Command</key>
+	<string>#!/usr/bin/osascript
+
+set ShowTweets to 8
+
+on replace_chars(this_text, search_string, replacement_string)
+	set text item delimiters to the search_string
+	set the item_list to every text item of this_text
+	set AppleScript's text item delimiters to the replacement_string
+	set this_text to the item_list as string
+	set AppleScript's text item delimiters to ""
+	return this_text
+end replace_chars
+
+set esc to ASCII character 27
+set nl to ASCII character 10
+set output to nl
+
+tell application "System Events"
+	set myList to (name of every process)
+end tell
+
+if myList contains "Twitter" then
+	tell application "Twitter"
+		repeat with s from 1 to ShowTweets
+			set _text to my replace_chars(display text of status s of home timeline of the current account, nl, " ")
+
+			set _auth to name of author of status s of home timeline of the current account
+			set r to retweeter of status s of home timeline of the current account
+			if r is not missing value then
+				set _retweet to _auth
+				set _auth to name of retweeter of status s of home timeline of the current account
+			end if
+
+	--		if s mod 2 = 0 then
+	--			set _auth to esc &amp; "[1;31m" &amp; _auth &amp; esc &amp; "[0m"
+	--		else
+				set _auth to esc &amp; "[1m" &amp; _auth &amp; esc &amp; "[0m"
+	--		end if
+		
+
+			if r is not missing value then
+				set output to output &amp; "   " &amp; _auth &amp; " - RT " &amp; _retweet &amp; " " &amp; _text
+			else
+				set output to output &amp; "   " &amp; _auth &amp; " - " &amp; _text
+			end if
+
+			set output to output &amp; nl
+		end repeat
+	end tell
+
+	output
+else
+	"Twitter is not running"
+end if</string>
+	<key>DropShadow</key>
+	<false/>
+	<key>FailureImage</key>
+	<data>
+	TU0AKgAABAj///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAAAAGgAAACAAAAAaAAAA
+	DQAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAgAAQFYGBYWqyso
+	KOExLy/9Kygo4RgWFqoAAQFXAAAACAAAAAAAAAAAAAAAAP///wAAAAAAAAAAAAAAAAgG
+	BgZ8Rz4+8qWXl//c09P/6+Tl/93T0/+ll5f/Rz4+8gYGBnwAAAAIAAAAAAAAAAD///8A
+	AAAAAAAAAAQHAgJkSS0t9Kt9ff/ct7j/7NHS/+7T0//s0dL/3be4/6t9ff9JLS30BwIC
+	ZQAAAAUAAAAA////AAAAAAAAAAAmLhAQzJA+P/+1TEv/xmNe/8twav/LcGr/y3Bq/8Zj
+	Xf+0TEv/kD4//y4QEMwAAAAmAAAAAP///wAAAAAABgAATmAZGvitMi//uSwh/8E+Mf/H
+	TED/yU9D/8hNQP/DPjL/uiwi/64xL/9gGRr4BwAATQAAAAD///8AAAAAARUAAGiJGBr/
+	wzgx/8tCNP/TV0n/3WZa/+BqXf/eaFr/1VhL/85DNP/GOTL/ihga/xYAAGcAAAAB////
+	AAAAAAkYAABslRoW/9JNQP/dYFL/63Jm//KAdv/2hXv/9IF3/+10Zv/gYVP/1k5B/5Ya
+	Fv8YAABrAAAACP///wAAAAANDAAAY4UZEu/iXU3/8Hhr//yFef/+lYn//puP//+Xiv/8
+	h3r/8Xlr/+ZdTv+HGRLwDQAAZAAAAAv///8AAAAADwAAAE5aDAfL4FZI//6LgP//mI7/
+	/qSY//+rnv/+p5r//5qP//+Ngf/nWEn/Ww0HywAAAE0AAAAN////AAAAAAwAAAAyDwAA
+	jJInH+z/gHL//6qe//+4rP//vrL//7uu//+soP//g3X/lioh7BEAAIsAAAAzAAAADP//
+	/wAAAAAFAAAAIAAAAF0dAACpkTUq6dt2Z/z6n5D//7Sj//qhkv/bd2r8kTYr6R4AAKoA
+	AABcAAAAIAAAAAX///8AAAAAAQAAAA0AAAAyAAAAZwYAAKI0DgrIYi4l2XlANeJiLiXZ
+	NA4KxwYAAKEAAABoAAAAMwAAAA0AAAAB////AAAAAAAAAAADAAAAEQAAADQAAABdAAAA
+	fAAAAI8AAACVAAAAjgAAAHsAAABbAAAANAAAABIAAAADAAAAAP///wAAAAAAAAAAAAAA
+	AAMAAAAOAAAAIQAAADYAAABGAAAATAAAAEUAAAA2AAAAIgAAAA4AAAAEAAAAAAAAAAD/
+	//8AAAAAAAAAAAAAAAAAAAAAAQAAAAUAAAALAAAAEAAAABMAAAARAAAACwAAAAUAAAAB
+	AAAAAAAAAAAAAAAAAA0BAAADAAAAAQAQAAABAQADAAAAAQAQAAABAgADAAAABAAABKoB
+	AwADAAAAAQABAAABBgADAAAAAQACAAABEQAEAAAAAQAAAAgBEgADAAAAAQABAAABFQAD
+	AAAAAQAEAAABFgADAAAAAQAQAAABFwAEAAAAAQAABAABHAADAAAAAQABAAABUgADAAAA
+	AQACAAABUwADAAAABAAABLIAAAAAAAgACAAIAAgAAQABAAEAAQ==
+	</data>
+	<key>FontFamily</key>
+	<string>LucidaGrande</string>
+	<key>FontSize</key>
+	<real>10</real>
+	<key>GeekletFrame</key>
+	<string>{{20, 1101}, {830, 122}}</string>
+	<key>HasShadow</key>
+	<false/>
+	<key>Identifier</key>
+	<string>org.tynsoe.geeklet.shell</string>
+	<key>Name</key>
+	<string>Twitter</string>
+	<key>RefreshInterval</key>
+	<integer>10</integer>
+	<key>SetLocale</key>
+	<true/>
+	<key>ShadowBlur</key>
+	<real>0.0</real>
+	<key>ShadowColor</key>
+	<data>
+	BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
+	ZmZmAAAAg4Tlnj6G
+	</data>
+	<key>ShadowSize</key>
+	<string>{2.5003775855252743, -2.5003775855252752}</string>
+	<key>StatusImagePosition</key>
+	<integer>1</integer>
+	<key>SuccessImage</key>
+	<data>
+	TU0AKgAABAj///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAAAAGgAAACAAAAAaAAAA
+	DQAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAgBAQFYFhUWqygn
+	KOEvLi/9KCco4RYVFqsBAQFYAAAACAAAAAAAAAAAAAAAAP///wAAAAAAAAAAAAAAAAgG
+	AwZ8Pj0+8peYl//S0tP/4+Tl/9LS0/+XmJf/Pj0+8gYDBnwAAAAIAAAAAAAAAAD///8A
+	AAAAAAAAAAUDAQJlLTEt9HqRff+40Ln/1efT/9jo1f/V59P/uNG5/3qRff8tMS30AwEC
+	ZQAAAAUAAAAA////AAAAAAAAAAAmEBYQyz1tP/9Xm03/eLJX/4e6YP+HuWL/h7pg/3ix
+	V/9Wmk3/PWw//xAWEMsAAAAmAAAAAP///wAAAAAAAAAAThY8Gvc8jjD/TJwb/2CnHf9r
+	ryz/bLEv/2ywLP9iqR7/TJ4b/zyQMP8WPBr3AAAATQAAAAD///8AAAAAAQAIAGgeYRv/
+	VaUq/2WvIP91uzb/gsZI/4bIS/+DyEj/d743/2exIP9WqSr/HmIb/wAIAGcAAAAB////
+	AAAAAAgADABsJ3MY/3C6Nv9/xz3/kNNT/57dYv+i32f/n99k/5HWVP+AyD3/cr02/yd0
+	GP8ADQBsAAAACf///wAAAAAMAAYAYydqEPB/yD7/lNhW/6PlZv+x8Xb/uPd8/7P0eP+k
+	6Gf/ldpX/4DLQP8maxDvAAYAYwAAAAv///8AAAAADwAAAE4XRwXLd8Y5/6foa/+393v/
+	wv6F/8r/i//F/4b/uPt8/6rubP95yTr/F0kFygAAAEwAAAAN////AAAAAAwAAAAyAAwA
+	jEB6GOyh7Vz/yP+J/9X/mP/b/5//2P+b/83/i/+m9F3/Qn4X7AEMAIsAAAAzAAAADP//
+	/wAAAAAFAAAAIAAAAF4GFQCpTIQc6ZbZU/zC+3n/2P+L/8T6fP+a21b8UIkd6AYXAKkA
+	AABcAAAAIAAAAAX///8AAAAAAQAAAA0AAAAzAAAAZwAFAKIaMwTHQGIZ2FV5JuFAYhnZ
+	GzQEyAAFAKAAAABnAAAAMgAAAA0AAAAB////AAAAAAAAAAADAAAAEQAAADQAAABdAAAA
+	ewAAAI8AAACWAAAAjwAAAHsAAABcAAAAMwAAABEAAAADAAAAAP///wAAAAAAAAAAAAAA
+	AAMAAAAOAAAAIQAAADYAAABGAAAATAAAAEcAAAA2AAAAIQAAAA0AAAAEAAAAAAAAAAD/
+	//8AAAAAAAAAAAAAAAAAAAAAAQAAAAUAAAALAAAAEAAAABMAAAASAAAADAAAAAUAAAAB
+	AAAAAAAAAAAAAAAAAA0BAAADAAAAAQAQAAABAQADAAAAAQAQAAABAgADAAAABAAABKoB
+	AwADAAAAAQABAAABBgADAAAAAQACAAABEQAEAAAAAQAAAAgBEgADAAAAAQABAAABFQAD
+	AAAAAQAEAAABFgADAAAAAQAQAAABFwAEAAAAAQAABAABHAADAAAAAQABAAABUgADAAAA
+	AQACAAABUwADAAAABAAABLIAAAAAAAgACAAIAAgAAQABAAEAAQ==
+	</data>
+	<key>TextColor</key>
+	<data>
+	BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
+	ZmZmAQEBAYY=
+	</data>
+	<key>TextStrikethrough</key>
+	<integer>0</integer>
+	<key>TextUnderline</key>
+	<integer>0</integer>
+</dict>
+</plist>

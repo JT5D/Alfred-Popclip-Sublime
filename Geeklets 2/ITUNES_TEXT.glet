@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Command</key>
+	<string>theme=`echo Default`
+itnsps=`osascript -e "tell application \"System Events\"" -e "if (exists application process \"iTunes\") then" -e "return \"yes\"" -e "else" -e "return \"no\"" -e "end if" -e "end tell"`
+lasttrack=`tail /tmp/itunestrack`
+
+
+if [ "$itnsps" = "yes" ] 
+then 
+itnsplst=`osascript -e "tell application \"iTunes\"" -e "return (get player state as string)" -e "end tell"`
+
+		if [ "$itnsplst" = "playing" ] 
+		then
+			track=`osascript -e "tell application \"iTunes\"" -e "set curTrack to current track" -e "name of curTrack as string" -e "end tell"`
+			album=`osascript -e "tell application \"iTunes\"" -e "set curTrack to current track" -e "album of curTrack as string" -e "end tell"`
+			artist=`osascript -e "tell application \"iTunes\"" -e "set curTrack to current track" -e "artist of curTrack as string" -e "end tell"`
+			itnesstat=`osascript -e "tell application \"iTunes\"" -e "set trackname to name of current track" -e "set trackduration to duration of current track" -e "set trackposition to player position" -e "set elapsed to round (trackposition / trackduration * 100)" -e "set output to elapsed" -e "end tell"`
+			if [ "$track" != "" ]
+				then
+					echo $track
+					if [ "$album" != "" ]
+					then
+						echo $album	
+					else 
+						echo "UNKNOW"
+					fi
+					if [ "$artist" != "" ]
+					then
+						echo $artist
+					else 
+						echo "UNKNOW"
+					fi
+				fi
+			playtrack=`echo $track-$artist-$album`;
+			if [ "$lasttrack" != "$playtrack" ]
+			then
+				echo $track-$artist-$album &gt; /tmp/itunestrack
+				osascript -e "set myPath to ((path to home folder) as text) &amp; \"Documents:\" &amp; \"MINIMAL:\" &amp; \"iTunes:\"" -e "set artworkItunes to POSIX path of myPath &amp; \"iTunes-Cover.png\"" -e "set defaultPic to POSIX path of myPath &amp; \"default.png\"" -e "tell application \"iTunes\"" -e "set artData to data of artwork 1 of current track" -e "set fileRef to (open for access artworkItunes with write permission)" -e "try" -e "write artData to fileRef starting at 0" -e "close access fileRef" -e "on error" -e "try" -e "close access fileRef" -e "end try" -e "error" -e "end try" -e "end tell"
+				if [ -f ~/Documents/MINIMAL/iTunes/iTunes-Cover.png ]
+				then
+ 					mv ~/Documents/MINIMAL/iTunes/iTunes-Cover.png /tmp/iTunes-Cover.png
+				else 
+ 					ln -sf ~/Documents/MINIMAL/iTunes/$theme/default.png /tmp/iTunes-Cover.png
+				fi
+			fi
+			if [[ "$itnesstat" -ge 0 &amp;&amp; "$itnesstat" -lt 5 &amp;&amp; "$itnesstat" != "" ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/0.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 5 &amp;&amp; "$itnesstat" -lt 10 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/5.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 10 &amp;&amp; "$itnesstat" -lt 15 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/10.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 15 &amp;&amp; "$itnesstat" -lt 20 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/15.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 20 &amp;&amp; "$itnesstat" -lt 25 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/20.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 25 &amp;&amp; "$itnesstat" -lt 30 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/25.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 30 &amp;&amp; "$itnesstat" -lt 35 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/30.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 35 &amp;&amp; "$itnesstat" -lt 40 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/35.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 40 &amp;&amp; "$itnesstat" -lt 45 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/40.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 45 &amp;&amp; "$itnesstat" -lt 50 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/45.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 50 &amp;&amp; "$itnesstat" -lt 55 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/50.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 55 &amp;&amp; "$itnesstat" -lt 60 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/55.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 60 &amp;&amp; "$itnesstat" -lt 65 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/60.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 65 &amp;&amp; "$itnesstat" -lt 70 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/65.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 70 &amp;&amp; "$itnesstat" -lt 75 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/70.png /tmp/iTunes-stat.png
+				elif [[ "$itnesstat" -ge 75 &amp;&amp; "$itnesstat" -lt 80 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/75.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 80 &amp;&amp; "$itnesstat" -lt 85 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/80.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 85 &amp;&amp; "$itnesstat" -lt 90 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/85.png /tmp/iTunes-stat.png
+			elif [[ "$itnesstat" -ge 90 &amp;&amp; "$itnesstat" -lt 95 ]]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/90.png /tmp/iTunes-stat.png
+			else
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/95.png /tmp/iTunes-stat.png
+			fi
+
+		else
+			if [ "$lasttrack" != "" ]
+			then
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/empty.png /tmp/iTunes-Cover.png
+				ln -sf ~/Documents/MINIMAL/iTunes/$theme/1.png /tmp/iTunes-stat.png
+				echo "" &gt; /tmp/itunestrack
+			fi
+		fi
+		
+else
+	if [ "$lasttrack" != "" ]
+	then
+		ln -sf ~/Documents/MINIMAL/iTunes/$theme/empty.png /tmp/iTunes-Cover.png
+		ln -sf ~/Documents/MINIMAL/iTunes/$theme/1.png /tmp/iTunes-stat.png
+		echo "" &gt; /tmp/itunestrack
+	fi
+fi
+</string>
+	<key>DropShadow</key>
+	<false/>
+	<key>FailureImage</key>
+	<data>
+	TU0AKgAABAj///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAAAAGgAAACAAAAAaAAAA
+	DQAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAgAAQFYGBYWqyso
+	KOExLy/9Kygo4RgWFqoAAQFXAAAACAAAAAAAAAAAAAAAAP///wAAAAAAAAAAAAAAAAgG
+	BgZ8Rz4+8qWXl//c09P/6+Tl/93T0/+ll5f/Rz4+8gYGBnwAAAAIAAAAAAAAAAD///8A
+	AAAAAAAAAAQHAgJkSS0t9Kt9ff/ct7j/7NHS/+7T0//s0dL/3be4/6t9ff9JLS30BwIC
+	ZQAAAAUAAAAA////AAAAAAAAAAAmLhAQzJA+P/+1TEv/xmNe/8twav/LcGr/y3Bq/8Zj
+	Xf+0TEv/kD4//y4QEMwAAAAmAAAAAP///wAAAAAABgAATmAZGvitMi//uSwh/8E+Mf/H
+	TED/yU9D/8hNQP/DPjL/uiwi/64xL/9gGRr4BwAATQAAAAD///8AAAAAARUAAGiJGBr/
+	wzgx/8tCNP/TV0n/3WZa/+BqXf/eaFr/1VhL/85DNP/GOTL/ihga/xYAAGcAAAAB////
+	AAAAAAkYAABslRoW/9JNQP/dYFL/63Jm//KAdv/2hXv/9IF3/+10Zv/gYVP/1k5B/5Ya
+	Fv8YAABrAAAACP///wAAAAANDAAAY4UZEu/iXU3/8Hhr//yFef/+lYn//puP//+Xiv/8
+	h3r/8Xlr/+ZdTv+HGRLwDQAAZAAAAAv///8AAAAADwAAAE5aDAfL4FZI//6LgP//mI7/
+	/qSY//+rnv/+p5r//5qP//+Ngf/nWEn/Ww0HywAAAE0AAAAN////AAAAAAwAAAAyDwAA
+	jJInH+z/gHL//6qe//+4rP//vrL//7uu//+soP//g3X/lioh7BEAAIsAAAAzAAAADP//
+	/wAAAAAFAAAAIAAAAF0dAACpkTUq6dt2Z/z6n5D//7Sj//qhkv/bd2r8kTYr6R4AAKoA
+	AABcAAAAIAAAAAX///8AAAAAAQAAAA0AAAAyAAAAZwYAAKI0DgrIYi4l2XlANeJiLiXZ
+	NA4KxwYAAKEAAABoAAAAMwAAAA0AAAAB////AAAAAAAAAAADAAAAEQAAADQAAABdAAAA
+	fAAAAI8AAACVAAAAjgAAAHsAAABbAAAANAAAABIAAAADAAAAAP///wAAAAAAAAAAAAAA
+	AAMAAAAOAAAAIQAAADYAAABGAAAATAAAAEUAAAA2AAAAIgAAAA4AAAAEAAAAAAAAAAD/
+	//8AAAAAAAAAAAAAAAAAAAAAAQAAAAUAAAALAAAAEAAAABMAAAARAAAACwAAAAUAAAAB
+	AAAAAAAAAAAAAAAAAA0BAAADAAAAAQAQAAABAQADAAAAAQAQAAABAgADAAAABAAABKoB
+	AwADAAAAAQABAAABBgADAAAAAQACAAABEQAEAAAAAQAAAAgBEgADAAAAAQABAAABFQAD
+	AAAAAQAEAAABFgADAAAAAQAQAAABFwAEAAAAAQAABAABHAADAAAAAQABAAABUgADAAAA
+	AQACAAABUwADAAAABAAABLIAAAAAAAgACAAIAAgAAQABAAEAAQ==
+	</data>
+	<key>FontFamily</key>
+	<string>MyriadPro-Regular</string>
+	<key>FontSize</key>
+	<real>13</real>
+	<key>ForceCR</key>
+	<false/>
+	<key>GeekletFrame</key>
+	<string>{{151, 829}, {232, 63}}</string>
+	<key>HasShadow</key>
+	<false/>
+	<key>Identifier</key>
+	<string>org.tynsoe.geeklet.shell</string>
+	<key>Name</key>
+	<string>NOW PLAYING</string>
+	<key>RefreshInterval</key>
+	<integer>2</integer>
+	<key>SetLocale</key>
+	<true/>
+	<key>SuccessImage</key>
+	<data>
+	TU0AKgAABAj///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAAAAGgAAACAAAAAaAAAA
+	DQAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAgBAQFYFhUWqygn
+	KOEvLi/9KCco4RYVFqsBAQFYAAAACAAAAAAAAAAAAAAAAP///wAAAAAAAAAAAAAAAAgG
+	AwZ8Pj0+8peYl//S0tP/4+Tl/9LS0/+XmJf/Pj0+8gYDBnwAAAAIAAAAAAAAAAD///8A
+	AAAAAAAAAAUDAQJlLTEt9HqRff+40Ln/1efT/9jo1f/V59P/uNG5/3qRff8tMS30AwEC
+	ZQAAAAUAAAAA////AAAAAAAAAAAmEBYQyz1tP/9Xm03/eLJX/4e6YP+HuWL/h7pg/3ix
+	V/9Wmk3/PWw//xAWEMsAAAAmAAAAAP///wAAAAAAAAAAThY8Gvc8jjD/TJwb/2CnHf9r
+	ryz/bLEv/2ywLP9iqR7/TJ4b/zyQMP8WPBr3AAAATQAAAAD///8AAAAAAQAIAGgeYRv/
+	VaUq/2WvIP91uzb/gsZI/4bIS/+DyEj/d743/2exIP9WqSr/HmIb/wAIAGcAAAAB////
+	AAAAAAgADABsJ3MY/3C6Nv9/xz3/kNNT/57dYv+i32f/n99k/5HWVP+AyD3/cr02/yd0
+	GP8ADQBsAAAACf///wAAAAAMAAYAYydqEPB/yD7/lNhW/6PlZv+x8Xb/uPd8/7P0eP+k
+	6Gf/ldpX/4DLQP8maxDvAAYAYwAAAAv///8AAAAADwAAAE4XRwXLd8Y5/6foa/+393v/
+	wv6F/8r/i//F/4b/uPt8/6rubP95yTr/F0kFygAAAEwAAAAN////AAAAAAwAAAAyAAwA
+	jEB6GOyh7Vz/yP+J/9X/mP/b/5//2P+b/83/i/+m9F3/Qn4X7AEMAIsAAAAzAAAADP//
+	/wAAAAAFAAAAIAAAAF4GFQCpTIQc6ZbZU/zC+3n/2P+L/8T6fP+a21b8UIkd6AYXAKkA
+	AABcAAAAIAAAAAX///8AAAAAAQAAAA0AAAAzAAAAZwAFAKIaMwTHQGIZ2FV5JuFAYhnZ
+	GzQEyAAFAKAAAABnAAAAMgAAAA0AAAAB////AAAAAAAAAAADAAAAEQAAADQAAABdAAAA
+	ewAAAI8AAACWAAAAjwAAAHsAAABcAAAAMwAAABEAAAADAAAAAP///wAAAAAAAAAAAAAA
+	AAMAAAAOAAAAIQAAADYAAABGAAAATAAAAEcAAAA2AAAAIQAAAA0AAAAEAAAAAAAAAAD/
+	//8AAAAAAAAAAAAAAAAAAAAAAQAAAAUAAAALAAAAEAAAABMAAAASAAAADAAAAAUAAAAB
+	AAAAAAAAAAAAAAAAAA0BAAADAAAAAQAQAAABAQADAAAAAQAQAAABAgADAAAABAAABKoB
+	AwADAAAAAQABAAABBgADAAAAAQACAAABEQAEAAAAAQAAAAgBEgADAAAAAQABAAABFQAD
+	AAAAAQAEAAABFgADAAAAAQAQAAABFwAEAAAAAQAABAABHAADAAAAAQABAAABUgADAAAA
+	AQACAAABUwADAAAABAAABLIAAAAAAAgACAAIAAgAAQABAAEAAQ==
+	</data>
+	<key>TextAlignment</key>
+	<integer>1</integer>
+	<key>TextColor</key>
+	<data>
+	BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMDhAJm
+	ZgEBhg==
+	</data>
+	<key>TextStrikethrough</key>
+	<integer>0</integer>
+	<key>TextUnderline</key>
+	<integer>0</integer>
+	<key>Timeout</key>
+	<integer>0</integer>
+</dict>
+</plist>

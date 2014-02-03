@@ -1,0 +1,557 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>James Tunick</title>
+<meta name="Author" content="James Tunick at http://JamesTunick.com">
+<meta http-equiv="imagetoolbar" content="no">
+<style type="text/css">
+	html {
+		overflow: hidden;
+	}
+	body {
+		margin: 0px;
+		padding: 0px;
+		background: #FFF;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		filter: alpha(opacity=100);
+	}
+	#screen {
+		position:absolute;
+		left: 0%;
+		top: 0%;
+		width: 100%;
+		height: 98%;
+		background: #FFF;
+		overflow: hidden;
+		visibility: hidden;
+	}
+	.ref {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		cursor: default;
+	}
+	.prx {
+		position: absolute;
+		color: #000;
+		font-family: verdana, arial, helvetica, sans-serif;
+		font-size: 14px;
+		overflow: hidden;
+	}
+	.link {
+		font-size: 16px;
+		text-align: center;
+	}
+	.text {
+		background: #000;
+		border: #000 solid 1px;
+		padding: 5px;
+	}
+
+
+
+.twitter {
+    		    background-image:url(http://dcbdluf1ahqio.cloudfront.net/twitter/32x32.png);
+    		    		width: 100px;
+
+    		}
+    		.googleplus {
+    		    background-image:url(http://dcbdluf1ahqio.cloudfront.net/googleplus/32x32.png);
+    		}
+    	.tumblr {
+    		    background-image:url(http://dcbdluf1ahqio.cloudfront.net/tumblr/32x32.png);
+    		}
+    	 li a.vimeo,
+    		ul.servicelinklist li .vimeo {
+    		    background-image:url(http://dcbdluf1ahqio.cloudfront.net/vimeo/32x32.png);
+    		}
+    	 li a.youtube,
+    		ul.servicelinklist li .youtube {
+    		    background-image:url(http://dcbdluf1ahqio.cloudfront.net/youtube/32x32.png);
+    		}
+    	 li a.github,
+    		ul.servicelinklist li .github {
+    		    background-image:url(http://dcbdluf1ahqio.cloudfront.net/github/32x32.png);
+    		}
+
+
+</style>
+
+<style type="text/css">
+
+.wireframemenu{
+border: 1px solid #C0C0C0;
+background-color: white;
+border-bottom-width: 0;
+width: 170px;
+position: absolute;
+}
+
+* html .wireframemenu{ /*IE only rule. Original menu width minus all left/right paddings */
+width: 164px;
+}
+
+.wireframemenu ul{
+padding: 0;
+margin: 0;
+list-style-type: none;
+}
+.wireframemenu a{
+font: bold 13px Verdana;
+padding: 4px 3px;
+display: block;
+width: 100%; /*Define width for IE6's sake*/
+color: #595959;
+text-decoration: none;
+border-bottom: 1px solid #C0C0C0;
+}
+.wireframemenu a:visited{
+}
+html>body .wireframemenu a{ /*Non IE rule*/
+width: auto;
+}
+.wireframemenu a:hover{
+background-color: #DDF5FF;
+color: black;
+}
+</style>
+
+
+<script language="JavaScript">
+window.resizeTo(1024,768)
+window.moveTo(0, 0)
+</script>
+
+<!-- images_loading_bar -->
+<link href="library/images_loading_bar.css" rel="stylesheet" type="text/css">
+
+<!-- dhteumeuleu utilities -->
+<script type="text/javascript" src="library/dhteumeuleu.js"></script>
+
+<script type="text/javascript">
+// ==================================================
+//        ===== 3D parallax navigator ====
+// script written by Gerard Ferrandez - January 2007
+// http://www.dhteumeuleu.com
+// ==================================================
+
+var prx = {
+	cx  : 0,
+	cy  : 0,
+	X   : 0,
+	Y   : 0,
+	CX  : 0,
+	CY  : 0,
+	FO  : 6, // focal
+	RS  : .05, // speed
+	RC  : 1,
+	/* ==== mouse move event ==== */
+	mousemove : function (e) {
+		if (window.event) e = window.event;
+		prx.xm = (((e.x || e.clientX) - prx.nx + (prx.nw * .5))/5)+950;
+		prx.ym = (((e.y || e.clientY) - prx.ny + (prx.nh * .5))/5)+410;
+	},
+	/* ==== window resize event ==== */
+	resize : function () {
+		prx.nx = pxLeft(prx.scr);
+		prx.ny = pxTop(prx.scr);
+		prx.nw = prx.scr.offsetWidth;
+		prx.nh = prx.scr.offsetHeight;
+	},
+	/* ==== main loop ==== */
+	run : function () {
+		/* ==== mouse soften ==== */
+		prx.cx += (prx.xm - prx.cx) * (prx.RS * 2 * prx.RC);
+		prx.cy += (prx.ym - prx.cy) * (prx.RS * 2 * prx.RC);
+		/* ==== goto soften ==== */
+		prx.CX += (prx.X - prx.CX) * (prx.RS * prx.RC);
+		prx.CY += (prx.Y - prx.CY) * (prx.RS * prx.RC);
+		/* ==== prx move ==== */
+		for (var i = 0; i < prx.N; i++) {
+			var o = prx.spa[i];
+			o.style.left = px(o.m + prx.nw * .5 + (o.X - prx.cx * .5 - prx.CX) * o.d);
+			o.style.top  = px(o.m + prx.nh * .5 + (o.Y - prx.cy * .5 - prx.CY) * o.d);
+		}
+		setTimeout(prx.run, 16);
+	},
+	/* ==== init script ==== */
+	init : function (container) {
+		this.scr = id(container);
+		this.ref = {};
+		this.spa = [];
+		var k = 0;
+		var r = this.scr.childNodes;
+		for (var i = 0, n = r.length; i < n; i++) {
+			/* ==== for each group ==== */
+			var o = r[i];
+			if (o.id) {
+				/* ==== save coordinates ==== */
+				var X = o.offsetLeft;
+				var Y = o.offsetTop;
+				this.ref[o.id] = {};
+				this.ref[o.id].X = X;
+				this.ref[o.id].Y = Y;
+				this.ref[o.id].W = o.offsetWidth;
+				this.ref[o.id].H = o.offsetHeight;
+				o.style.position = 'static';
+				var c = o.getElementsByTagName('*');
+				for (var j = 0, m = c.length; j < m; j++) {
+					/* ==== for each parallax object [class="prx"] ==== */
+					if (c[j].className.indexOf('prx') >= 0) {
+						var s = this.spa[k] = c[j];
+						/* ==== zIndex = parallax level ==== */
+						s.Z = s.style.zIndex;
+						s.d = Math.min(prx.FO, prx.FO / (prx.FO + 1 - s.Z));
+						/* ==== x,y coordinates - group + local ==== */
+						s.X = X + s.offsetLeft;
+						s.Y = Y + s.offsetTop;
+						/* ==== zoom factor (% sizes only) ==== */
+						s.W = s.offsetWidth * ((!s.style.width || s.style.width.indexOf('px') > 0) ? 1 : s.d);
+						s.H = s.offsetHeight * ((!s.style.height || s.style.width.indexOf('px') > 0) ? 1 : s.d);
+						s.style.width  = px(s.W);
+						s.style.height = px(s.H);
+						/* ==== buttons/links ==== */
+						if(s.onclick) {
+							s.style.cursor = 'pointer';
+							s.style.zIndex = 100;
+							s.onmouseover  = function() {
+								this.m = 2;
+								prx.RC = .5;
+							}
+							s.onmouseout   = function() {
+								this.m = 0;
+								prx.RC = 1;
+							}
+						}
+						/* ==== navigation functions ==== */
+						s.goto = function (o, ret) {
+							prx.RC = 1;
+							if (!ret) id(o).O = this.oid;
+							id(o).style.visibility = 'visible';
+							prx.X = prx.ref[o].X - .5 * (prx.nw - prx.ref[o].W);
+							prx.Y = prx.ref[o].Y - .5 * (prx.nh - prx.ref[o].H);
+						}
+						s.ret = function () {
+							this.goto(this.p.O, true);
+						}
+						s.hide = function () {
+							setTimeout('id("' + this.oid + '").style.visibility = "hidden";', 500);
+						}
+						s.oid = o.id;
+						s.p = o;
+						s.m = 0;
+						k++;
+					}
+				}
+			}
+		}
+		this.N = this.spa.length;
+		/* ==== resize & mouse events ==== */
+		addEvent(window, 'resize', this.resize);
+		addEvent(window.document, 'mousemove', this.mousemove);
+		/* ==== start ==== */
+		this.resize();
+		this.xm = this.nw;
+		this.ym = this.nh;
+		this.scr.style.visibility = 'visible';
+		this.run();
+	}
+}
+
+onload = function() {
+	/* ==== init ==== */
+	setTimeout("prx.init('screen')", 500);
+}
+
+</script>
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-806600-13']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</head>
+
+<body>
+
+
+
+
+
+<div id="screen">
+
+<div style="z-index:0;">
+		<ul class="HC tma" style="z-index:0;">
+			<a class="nX url" href="http://www.linkedin.com/in/jamestunick" rel="me" target="_blank" title="on LinkedIn"><img alt="" class="bz" src="//s2.googleusercontent.com/s2/favicons?alt=p&amp;domain=www.linkedin.com"> LinkedIn</a>
+
+
+			<a class="nX url" href="http://www.facebook.com/jamestunick" rel="me" target="_blank" title="on Facebook"><img alt="" class="bz" src="//s2.googleusercontent.com/s2/favicons?alt=p&amp;domain=www.facebook.com"> Facebook</a>
+
+			<a class="nX url" href="http://www.youtube.com/jat32" rel="me" target="_blank" title="on YouTube"><img alt="" class="bz" src="https://plus.google.com/_/favicon?alt=p&domain=www.youtube.com"> YouTube - The IMC Lab</a>
+
+			<a class="nX url" href="http://www.youtube.com/jamestunickvideoart" rel="me" target="_blank" title="on YouTube"><img alt="" class="bz" src="https://plus.google.com/_/favicon?alt=p&domain=www.youtube.com"> YouTube - Personal</a>
+
+			<a class="nX url" href="https://vimeo.com/jamestunick" rel="me" target="_blank" title="on Vimeo"><img alt="" class="bz" src="//s2.googleusercontent.com/s2/favicons?alt=p&amp;domain=vimeo.com"> Vimeo</a>
+
+			<a class="nX url" href="http://twitter.com/jamestunick" rel="me" target="_blank" title="on Twitter"><img alt="" class="bz" src="//s2.googleusercontent.com/s2/favicons?alt=p&amp;domain=twitter.com"> Twitter</a>
+
+			<a class="nX url" href="http://soundcloud.com/jt5d" rel="me" target="_blank" title="jt5d on soundcloud"><img alt="" class="bz" src="//s2.googleusercontent.com/s2/favicons?alt=p&amp;domain=soundcloud.com"> Soundcloud</a></ul>
+
+</div>
+
+<!-- main -->
+<div id="pan1" class="ref" style="left:0%;top:0%">
+<img alt="" src="sky4.jpg" class="prx" style="left:-50%;top:-50%;z-index:0">
+
+
+<div class="prx link" onclick="this.goto('pan7');" style="left:96%;top:10%;width:150px;z-index:0;color:#000;font-size:22px;font-weight:bold;text-align:left"><img alt="" src="r.gif"><br>About +<br>Contact</div>
+
+
+
+<div class="prx" style="left:20%;top:32%;width:100%;z-index:3;color:#FF0000;font-size:26px;font-weight:bold;text-align:center">James Tunick</div>
+
+
+<div class="prx" style="left:20%;top:38%;width:100%;z-index:3;color:#FF0000;font-size:12px;font-weight:bold;text-align:center">
+
+
+Recent News:<br>
+<a href="http://www.youtube.com/watch?v=s_iONQJZkD0" target="_blank">Talk at Google</a><br>
+<a href="http://theprojectroom.org/digitalartatgoogle2" target="_blank">City of the Future Installation in Google Lobby</a><br>
+<a href="http://StudioIMC.com" target="_blank">Interactive Billboard in Times Square for Sony and News Corp</a><br>
+<a href="http://Web5design.com" target="_blank">Interactive Infographic & Search App for Inc Magazine</a><br>
+<a href="http://Web5design.com" target="_blank">Web Software for Asia Society</a><br>
+
+</div>
+
+<div class="prx link" onclick="this.goto('pan3');" style="left:30%;top:5%;width:253px;height:100px;font-size:28px;valign:middle;font-weight:bold;z-index:1"><img alt="" src="r.gif"> Outernet</div>
+<div class="prx link" onclick="this.goto('pan2');" style="left:30%;top:15%;width:150px;height:50px;font-size:28px;font-weight:bold;z-index:1"><img alt="" src="r.gif"> Web</div>
+
+<div class="prx link" onclick="this.goto('pan4');" style="left:27%;top:25%;width:150px;height:50px;font-size:28px;font-weight:bold;z-index:1"><img alt="" src="r.gif"> Art</div>
+<div class="prx link" onclick="this.goto('pan6');" style="left:25%;top:35%;width:150px;height:50px;font-size:28px;font-weight:bold;z-index:1"><img alt="" src="r.gif"> Music</div>
+
+
+</div>
+
+
+
+<!-- TECHNOLOGY -->
+<div id="pan3" class="ref" style="left:100%;top:-100%">
+
+<img alt="" src="uspace.jpg" class="prx" style="left:25%;top:-20%;width:550px;z-index:1">
+
+
+<div class="prx" style="left:30%;top:39%;width:100%;z-index:2;color:#000;font-size:88px;font-weight:bold;">Outernet</div>
+<div class="prx" style="left:40%;top:54%;width:40%;z-index:2;font-size:14px;">
+James Tunick's digital agency <a href="http://www.StudioIMC.com" target="_blank">StudioIMC</a> builds software for the Outernet that invites audience participation with billboards, movie screens, and other screens via video tracking, cell phone, and voice. Tunick is creator of the following software products for StudioIMC:
+</div>
+<div class="prx" style="left:40%;top:66%;width:40%;z-index:2;font-size:10px;font-weight:bold;">
+
+IMCtv (patent pending) is advanced interactive media player software for digital screens & interactive advertising. See <a href="http://www.studioimc.com" target="_blank">www.StudioIMC.com</a>
+<br>
+IMCmobile is mobile software that ties into traditional ads as well as IMCtv screens. See <a href="http://www.studioimc.com" target="_blank">www.StudioIMC.com</a>
+<br>
+IMCfaceplate (patent pending) is software that accurately tracks how many people have looked at a billboard or screen. See <a href="http://www.IMCfaceplate.com" target="_blank" class="style1">www.IMCfaceplate.com</a>
+<br>
+
+IMCspace is a 3D visualization tool that integrates with IMCtv & IMCmobile. See <a href="http://www.studioimc.com" target="_blank">www.StudioIMC.com</a>
+</div>
+<img alt="" onclick="this.ret();" src="arrows.gif" class="prx" style="width:50px;height:50px;left:40%;top:55%;z-index:4">
+
+</div>
+
+
+
+	<!-- ART -->
+	<div id="pan4" class="ref" style="left:-120%;top:-80%">
+
+		<img alt="" src="park.jpg" class="prx" style="left:37%;top:0%;width:50%;height:35%;z-index:1">
+		<div class="prx" style="left:50%;top:32%;width:100%;z-index:2;color:#000;font-size:88px;font-weight:bold;">Art</div>
+
+<div class="prx" style="left:35%;top:44%;width:45%;z-index:2;">
+James Tunick's artworks are about the need for free speech in public spaces. The works invite audience particiaption and combine media such as immersive video, sculpture, AI, 3D, gaming, and spatial sound. See videos of some of Tunick's interactive installations on <a href="http://www.youtube.com/jat32" target="_blank">The IMC Lab Youtube page</a> or on his <a href="http://www.youtube.com/jamestunickvideoart" target="_blank">personal Youtube channel</a>.</div>
+
+<div class="prx" style="left:25%;top:55%;width:70%;z-index:2;font-size:10px;font-weight:bold;text-align:left">
+Solo StudioIMC Shows
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2009: <a href="http://www.imcexpo.net" target="_blank"><i>3rd IMC Exposition</i></a>, StudioIMC Lab & Gallery, New York, NY, USA
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2006: <a href="http://www.paleycenter.org/pressrelease-2006-new-media-art-studio-imc" target="_blank"><i>Beyond TV</i></a>, The Paley Center for Media (formely the Museum of TV & Radio), New York, NY, USA
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2005: <i><a href="http://www.imcexpo.net/gallery.htm" target="_blank">2nd IMC Exposition</i></a>, The Chelsea Art Museum, New York, NY, USA
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2004: <a href="http://www.ionone.com/artevechels.htm" target="_blank"><i>Convergence</i></a>, The Chelsea Art Museum, New York, NY, USA
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2003: <a href="http://www.observer.com/node/48578" target="_blank"><i>1st IMC Exposition</i></a>, Remote Lounge, New York, NY, USA
+<br>
+
+
+Group Shows
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2011: <a href="http://nolongerempty.com/exhibitions/FACE/AboutFace.html" target="_blank"><i>ABOUT FACE - No Longer Empty</i></a>, New Museum Festival of Ideas for the New City, New York, NY, USA
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2010: <a href="http://www.chelseaartmuseum.org/digitalartatgoogle/" target="_blank"><i>Digital Art @ Google: We Write This to You From the Distant Future</i></a>, Google Inc., New York, NY, USA
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2010: <a href="http://www.aec.at/center_exhibitions_area_en.php?id=145" target="_blank"><i>The World in 100 Years</i></a>, Ars Electronica Center, Linz, Austria
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2009: <a href="http://eyebeam.org/projects/add-art" target="_blank"><i>Add-Art</i></a>, Eyebeam, New York, NY, USA
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2009: <a href="http://www.streamingmuseum.org/past/artists-and-innovators-for-the-environment/" target="_blank"><i>Artists and Innovators for the Environment</i></a>, Streaming Museum, 7 Continents
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2008: <a href="http://stendhalgallery.com/?page_id=529" target="_blank"><i>From Fluxus to Media Art</i></a>, Maya Stendhal Gallery, New York, NY, USA
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2007: <a href="http://www.usfcam.usf.edu/CAM/exhibitions/2007_06_StereoVision/stereovision.html" target="_blank"><i>Stereovision</i></a>, USF Contemporary Art Museum, Tampa, FL, USA
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2002: <a href="http://www.yaledailynews.com/news/university-news/2002/02/13/yalies-sept-11-sculpture-attracts-national-attenti/" target="_blank">9/11 interactive memorial sculpture "WHY"</a>, in large format photograph in 9/11 exhibition at the Museum of Modern Art (MoMA).
+<br>
+
+Other
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2006: Park of the Future proposal for interactive art works in a park in LA finalist in compeitions with UCSD and featured in the <a href="http://www.google.com/url?sa=t&source=web&ct=res&cd=4&ved=0CA8QFjAD&url=http%3A%2F%2Fwww.learcenter.org%2Fimages%2Fevent_uploads%2FGrandLACMA.pdf&rct=j&q=grand+intervention+park+of+the+future+studioimc&ei=OdJKS5ezIcGXtgfk8rTkDQ&usg=AFQjCNETCk1e3AiVk_lYEs72iknbWAW2OQ" target="_blank">LA Times</a>.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2005: CINE (Collaborative Immersive Networked Environment) finalist in <a href="http://dotank.nyls.edu/SOP/" target="_blank">SOP III Design Competition</a> w/ Yale Law School & Harvard Berkman Center.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2004: Infinite City published in Jean-Marc Gauthier's book, <a href="http://www.amazon.ca/Building-Interactive-Worlds-3D-Pre-visualization/dp/0240806220/sr=1-1/qid=1171236893/ref=sr_1_1/702-3007060-2940857?ie=UTF8&s=books" target"_blank">"Virtual Sets and Pre-Visualization for Games, Movies and the Web"</a> (2005).
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2001: <a href="http://www.yaledailynews.com/news/university-news/2002/02/13/yalies-sept-11-sculpture-attracts-national-attenti/" target="_blank">9/11 Sculpture</a> featured in full page photograph in Rolling Stone Magazine, November 22nd issue.
+
+</div>
+<img alt="" onclick="this.ret();" src="arrowr.gif" class="prx" style="width:50px;height:50px;left:70%;top:45%;z-index:4">
+
+</div>
+
+<!-- MUSIC -->
+<div id="pan6" class="ref" style="left:-100%;top:100%">
+
+<img alt="" src="IMCtv-fcrc-med.jpg" class="prx" style="left:37%;top:-10%;width:60%;height:47%;z-index:1">
+<div class="prx" style="left:50%;top:40%;width:100%;z-index:2;color:#000;font-size:88px;font-weight:bold;">Music</div>
+
+<div class="prx" style="left:50%;top:55%;width:40%;z-index:2">
+James Tunick's computer music compositions are used as soundtracks for interactive video installations in Times Square, artworks in museums, and immersive environments in movie theaters, as well as in several short films. <br><br>
+
+<br><br>
+</div>
+		<img alt="" onclick="this.ret();" src="arrowr.gif" class="prx" style="width:50px;height:50px;left:50%;top:40%;z-index:4">
+
+
+				<div class="prx" style="left:20%;top:20%;width:40%;z-index:2;font-size:10px;font-weight:bold;">
+								<img src="atom01.gif" width="16" height="12">
+								<a href="84. DJT - Dubstep1 - StudioIMC.com.mp3" target="_blank">84. Dubstep1 - DJT.mp3</a><br>
+								<a href="83. DJT - Sensi Remix - StudioIMC.com.mp3" target="_blank">83. Sensi Remix - DJT.mp3</a><br>
+								<a href="82. DJT - Red Wine Remix - StudioIMC.com.mp3" target="_blank">82. Red Wine Remix - DJT.mp3</a><br>
+
+								<a href="81. DJT - Selecta - StudioIMC.com.mp3" target="_blank">81. Selecta - DJT.mp3</a><br>
+								<a href="80. DJT - NewT - StudioIMC.com.mp3" target="_blank">80. NewT - DJT.mp3</a><br>
+								<a href="79. LongLive - DJT StudioIMC.com.mp3" target="_blank">79. LongLive - DJT.mp3</a><br>
+
+								<a href="78. JammyJam - DJT - StudioIMC.com.mp3" target="_blank">78. JammyJam - DJT.mp3</a><br>
+								<a href="77. NewDoc - DJT - StudioIMC.com.mp3" target="_blank">77. NewDoc - DJT.mp3</a><br>
+								<a href="76. Drops3 - DJT - StudioIMC.com.mp3" target="_blank">76. Drops3 - DJT.mp3</a><br>
+								<a href="75. wavesofblue - DJT - StudioIMC.com.mp3" target="_blank">75. wavesofblue - DJT.mp3</a><br>
+								<a href="74. Real Acid - DJT - StudioIMC.com.mp3" target="_blank">74. Real Acid - DJT.mp3</a><br>
+								<a href="73. DJT - DeepSpace7-StudioIMC.com.mp3" target="_blank">73. DJT - DeepSpace7.mp3</a><br>
+
+								<a href="72. DJT- Gold-StudioIMC.com.mp3" target="_blank">72. DJT- Gold.mp3</a><br>
+								<a href="71. DJT- LongLake-3-StudioIMC.com.mp3" target="_blank">71. DJT- LongLake.mp3</a><br>
+								<a href="70. DJT- Cityscape.mp3" target="_blank">70. DJT- Cityscape.mp3</a><br>
+								<a href="69. DJT-newjant9.mp3" target="_blank">69. DJT-newjant9.mp3</a><br>
+																<a href="68. DJT-bornnew-StudioIMC.mp3" target="_blank">68. DJT-bornnew-StudioIMC.mp3</a><br>
+
+
+
+								<a href="67. DJT-Ambient3-StudioIMC.com.mp3" target="_blank">67. DJT-Ambient3-.mp3</a><br>
+
+								<img src="atom01.gif" width="16" height="12"><a href="66. DJT- Whalesong- StudioIMC.com.mp3" target="_blank">66. DJT- Whalesong- .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="65. DJT- Round5- StudioIMC.com.mp3" target="_blank">65. DJT- Round5- .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="64. DJT- TitleWave2- StudioIMC.com.mp3" target="_blank">64. DJT- TitleWave2- .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="63. DJT- RAIN5- StudioIMC.com.mp3" target="_blank">63. DJT- RAIN5- .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="62. DJT- New Paradigm- StudioIMC.com.mp3" target="_blank">62. DJT- New Paradigm- .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="61. DJT-At This Time- StudioIMC.com.mp3" target="_blank">61. DJT-At This Time- .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="60. DJT-uncontroled6- StudioIMC.com.mp3" target="_blank">60. DJT-uncontroled6- .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="59. DJT-newhizle4- StudioIMC.com.mp3" target="_blank">59. DJT-newhizle4- .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="58. DJT- skipper v2 - StudioIMC.com.mp3" target="_blank">58. DJT- skipper v2 - .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="57. DJT- newb - StudioIMC.com.mp3" target="_blank">57. DJT- newb - .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="56. DJT- parallel cityscapes - StudioIMC.com.mp3" target="_blank">56. DJT- parallel cityscapes - .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="55. DJT- waterfalls v3 - StudioIMC.com.mp3" target="_blank">55. DJT- waterfalls v3 - .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="54. DJT - water3 - StudioIMC.com.mp3" target="_blank">54. DJT - water3 - .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="53. DJT - waveridingv3 - StudioIMC.com.mp3" target="_blank">53. DJT - waveridingv3 - .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="52. DJT - texturesv4 - StudioIMC.com.mp3" target="_blank">52. DJT - texturesv4 - .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="51. DJT - bgstudioimc2 - StudioIMC.com.mp3" target="_blank">51. DJT - bgstudioimc2 - .mp3</a><br><img src="atom01.gif" width="16" height="12"><a href="50. DJT - videospace6 - StudioIMC.com.mp3" target="_blank">50. DJT - videospace6 - .mp3</a><br><img src="atom01.gif" width="16" height="12">
+
+				</div>
+
+	</div>
+
+<!-- WEBSITES -->
+<div id="pan2" class="ref" style="left:100%;top:120%">
+<img alt="" src="imcspace-big-final.jpg" class="prx" style="left:40%;top:0%;width:50%;height:50%;z-index:1">
+<div class="prx" style="left:40%;top:45%;width:100%;z-index:2;color:#000;font-size:88px;font-weight:bold;">Web</div>
+
+<div class="prx" style="left:45%;top:60%;width:40%;z-index:2;font-size:14px;">
+Tunick is an avid Web developer. He has built many dynamic Web applications, social platforms, and content management systems for clients large and small. Most of his Web work can be found at <a href="http://www.Web5design.com" target="_blank">Web5design.com</a>
+</div>
+
+<div class="prx" style="left:20%;top:20%;width:40%;z-index:2;font-size:10px;font-weight:bold;">
+
+Personal Web Portfolio<br>
+<a href="http://www.Web5design.com" target="_blank">Web5design.com</a><br>
+<a href="http://www.StudioIMC.com" target="_blank">StudioIMC.com</a><br>
+<a href="http://www.Mapcidy.com" target="_blank">Mapcidy.com</a><br>
+<a href="http://www.Web5design.com" target="_blank">Web5design.com</a><br>
+<a href="http://www.imcexpo.net" target="_blank">IMCexpo.net</a><br>
+<a href="http://www.Webbyslist.com" target="_blank">Webbyslist.com</a><br>
+<a href="http://www.Twitt3D.com" target="_blank">Twitt3D.com</a><br><br>
+
+Client Web Portfolio<br>
+<a href="http://www.FastCoDesign.com" target="_blank">FastCoDesign.com</a><br>
+<a href="http://www.CurrentProtocols.com" target="_blank">CurrentProtocols.com</a><br>
+<a href="http://www.lmk.com/realitytv" target="_blank">LMK.com/realitytv</a><br>
+<a href="http://www.BusinessByGarson.com" target="_blank">BusinessByGarson.com</a><br>
+<a href="http://www.Columbia-icap.org" target="_blank">Columbia-icap.org</a><br>
+<a href="http://www.Emerson.edu" target="_blank">Emerson.edu</a><br><br>
+
+Mobile Web<br>
+GoldsGymMobi.com<br>
+WildcatMobile.com<br><br>
+
+Social Media<br>
+NRDC Facebook Application<br>
+Green Day/NRDC Social Marketing
+
+
+
+</div>
+<img alt="" onclick="this.ret();" src="arrows.gif" class="prx" style="width:50px;height:50px;left:40%;top:58%;z-index:3">
+</div>
+
+<!-- ABOUT -->
+<div id="pan7" class="ref" style="left:0%;top:-150%">
+<div class="prx" style="left:25%;top:10%;width:100%;z-index:2;color:#000;font-size:58px;font-weight:bold;">About</div>
+<a href="http://www.StudioIMC.com" target="_blank"><img alt="" src="IMC-logo.jpg" class="prx" style="left:37%;top:3%;width:150px;z-index:1"></a>
+<a href="http://www.TheIMClab.com" target="_blank"><img alt="" src="IMC-Logo-PNGResized-with-BG.png" class="prx" style="left:50%;top:3%;width:150px;z-index:1">
+<a href="http://www.Web5design.com" target="_blank"><img alt="" src="http://www.web5design.com/sites/default/files/logo.jpeg" class="prx" style="left:64%;top:2%;z-index:1; width:150px;"></a>
+<img alt="" src="mapcidylogosmall.jpg" class="prx" style="left:80%;top:3%;z-index:1">
+<img alt="" src="jtbiopic.jpg" class="prx" style="left:74%;top:23%;z-index:1">
+<div class="prx" style="left:20%;top:25%;width:46%;z-index:2">
+JAMES A. TUNICK is a programmer, artist, & entrepreneur. He is owner of two software companies & a digital art gallery / research lab in New York City. His work merges creativity & technology, public spaces & the Web. <br><br>
+Tunick is founder of the agency <a href="http://www.StudioIMC.com" target="_blank">StudioIMC</a> (www.StudioIMC.com), which makes software for big screens in public spaces. StudioIMC technologies for the "Outernet" power the world's 1st network of interactive movie screens, as well as billboards in Times Square, concerts, & stadiums for clients like Sony, Verizon, U.S. Army, Heineken, Clear Channel, Live Nation, National Amusements, & NBA teams. <br><br>
+
+Tunick is also CEO of the Web software firm, <a href="http://www.Web5design.com" target="_blank">Web5design</a> (www.Web5design.com), which builds enterprise Web applications & cloud collaboration software for clients like United Nations, the Federal Government, NY Senate, NBC Universal, Columbia University, Teach for America, John Wiley & Sons, Asia Society, Fast Company, NRDC, & Green Day.
+<br><br>
+Tunick also owns the media art space, <a href="http://www.TheIMClab.com" target="_blank">The IMC Lab + Gallery</a> (www.TheIMClab.com), which is a research lab & digital art gallery in New York City. The IMC Lab invests in technology companies & supports artists & programmers focused on areas such as creative software tools, data visualizations, & interactive art installations. Notable art / technology shows Tunick has produced include "<a href="http://IMCexpo.net" target="_blank">The IMC Exposition</a>" (www.IMCexpo.net), held at the IMC Lab + Gallery, & "Beyond TV" held in the Spielberg Gallery at the Paley Center for Media (previously named The Museum of TV & Radio) in New York City, as well as other shows across the U.S. & Europe. He has also been published extensively, he has patents pending, & his work has been featured in MoMA, Ars Electronica Center, Yale University, Chelsea Art Museum, New Museum, Eyebeam, Streaming Museum, USF Contemporart Art Museum, as well as in Rollingstone Magazine, LA Times, NY Observer, NY1 News, The Discovery Channel, & other news outlets. His work has also been published in the book, Virtual Sets and Pre-Visualization for Games, Movies and the Web, by Jean-Marc Gauthier, Focal Press (2004). His software work has also appeared in movie theaters, in stadiums, & on billboards across the US, in Times Square, Philadelphia, Dallas, Boston, Chicago, & Europe.
+<br><br>
+Tunick attended Yale University as an undergraduate & he received his Masters in New Media from NYU Tisch Interactive Telecommunications Program (ITP).
+</div>
+<div class="prx" style="left:25%;top:35%;width:40%;z-index:2">
+</div>
+<br><br>
+<img alt="" onclick="this.ret();" src="arrows-down.gif" class="prx" style="width:50px;height:50px;left:60%;top:55%;z-index:4">
+
+<div class="prx" style="left:70%;top:47%;width:100%;z-index:2;color:#000;font-size:38px;font-weight:bold;">Contact</div>
+<div class="prx" style="left:71%;top:55%;width:40%;z-index:2">
+Phone: 917-446-8116<br>
+Email: <a href="mailto:JTunick@StudioIMC.com" class="style1">JTunick@StudioIMC.com</a><br>
+Twitter: <a href="http://www.twitter.com/jamestunick" class="style1" target="_blank">www.Twitter.com/jamestunick</a><br>
+LinkedIn: <a href="http://www.linkedin.com/profile?viewProfile=&key=13793715&locale=en_US&trk=tab_pro" class="style1" target="_blank">LinkedIn</a><br></div>
+</div>
+
+</div>
+<script type="text/javascript" src="library/images_loading_bar.js"></script>
+</body>
+</html>

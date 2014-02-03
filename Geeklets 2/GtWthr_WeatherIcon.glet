@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>GeekletFrame</key>
+	<string>{{1291, 22}, {126, 134}}</string>
+	<key>HasShadow</key>
+	<false/>
+	<key>Identifier</key>
+	<string>org.tynsoe.geeklet.image</string>
+	<key>ImageURL</key>
+	<string>http://gtwthr.com/USKY1096/icon_light</string>
+	<key>Name</key>
+	<string>Curr_Cond_icon</string>
+	<key>RefreshInterval</key>
+	<integer>3600</integer>
+</dict>
+</plist>

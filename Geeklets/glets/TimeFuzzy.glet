@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Command</key>
+	<string># convert time to British spoken (fuzzy) format
+
+time=$(date '+%I:%M')
+
+# remove the leading zero so we can do math with the hour
+current_hour=$(echo $time | cut -c 1,2 | sed 's/^0//')
+
+current_minute=$(echo $time | cut -c 4,5)
+
+if [ ${current_minute} -gt 30 ]
+then
+        let current_hour=${current_hour}+1
+else
+        :
+fi
+
+case $current_hour in
+        1) hour='one';;
+        2) hour='two';;
+        3) hour='three';;
+        4) hour='four';;
+        5) hour='five';;
+        6) hour='six';;
+        7) hour='seven';;
+        8) hour='eight';;
+        9) hour='nine';;
+        10) hour='ten';;
+        11) hour='eleven';;
+        12) hour='twelve';;
+        13) hour='one';;
+esac
+
+case $current_minute in
+        00) minute="o'clock";;
+        01) minute='one past';;
+        02) minute='two past';;
+        03) minute='three past';;
+        04) minute='four past';;
+        05) minute='five past';;
+        06) minute='six past';;
+        07) minute='seven past';;
+        08) minute='eight past';;
+        09) minute='nine past';;
+        10) minute='ten past';;
+        11) minute='eleven past';;
+        12) minute='twelve past';;
+        13) minute='thirteen past';;
+        14) minute='fourteen past';;
+        15) minute='quarter past';;
+        16) minute='sixteen past';;
+        17) minute='seventeen past';;
+        18) minute='eighteen past';;
+        19) minute='nineteen past';;
+        20) minute='twenty past';;
+        21) minute='twenty-one past';;
+        22) minute='twenty-two past';;
+        23) minute='twenty-three past';;
+        24) minute='twenty-four past';;
+        25) minute='twenty-five past';;
+        26) minute='twenty-six past';;
+        27) minute='twenty-seven past';;
+        28) minute='twenty-eight past';;
+        29) minute='twenty-nine past';;
+        30) minute='half past';;
+        31) minute='twenty-nine to';;
+        32) minute='twenty-eight to';;
+        33) minute='twenty-seven to';;
+        34) minute='twenty-six to';;
+        35) minute='twenty-five to';;
+        36) minute='twenty-four to';;
+        37) minute='twenty-three to';;
+        38) minute='twenty-two to';;
+        39) minute='twenty-one to';;
+        40) minute='twenty to';;
+        41) minute='nineteen to';;
+        42) minute='eighteen to';;
+        43) minute='seventeen to';;
+        44) minute='sixteen to';;
+        45) minute='quarter to';;
+        46) minute='fourteen to';; 
+        47) minute='thirteen to';;
+        48) minute='twelve to';;
+        49) minute='eleven to';;
+        50) minute='ten to';;
+        51) minute='nine to';;
+        52) minute='eight to';;
+        53) minute='seven to';;
+        54) minute='six to';;
+        55) minute='five to';;
+        56) minute='four to';;
+        57) minute='three to';;
+        58) minute='two to';;
+        59) minute='one to';;
+esac
+
+case $current_minute in
+        00) echo "$hour $minute";;
+        *) echo "$minute $hour";;
+esac</string>
+	<key>DropShadow</key>
+	<false/>
+	<key>FailureImage</key>
+	<data>
+	TU0AKgAABAj///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAAAAGgAAACAAAAAaAAAA
+	DQAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAgAAQFYGBYWqyso
+	KOExLy/9Kygo4RgWFqoAAQFXAAAACAAAAAAAAAAAAAAAAP///wAAAAAAAAAAAAAAAAgG
+	BgZ8Rz4+8qWXl//c09P/6+Tl/93T0/+ll5f/Rz4+8gYGBnwAAAAIAAAAAAAAAAD///8A
+	AAAAAAAAAAQHAgJkSS0t9Kt9ff/ct7j/7NHS/+7T0//s0dL/3be4/6t9ff9JLS30BwIC
+	ZQAAAAUAAAAA////AAAAAAAAAAAmLhAQzJA+P/+1TEv/xmNe/8twav/LcGr/y3Bq/8Zj
+	Xf+0TEv/kD4//y4QEMwAAAAmAAAAAP///wAAAAAABgAATmAZGvitMi//uSwh/8E+Mf/H
+	TED/yU9D/8hNQP/DPjL/uiwi/64xL/9gGRr4BwAATQAAAAD///8AAAAAARUAAGiJGBr/
+	wzgx/8tCNP/TV0n/3WZa/+BqXf/eaFr/1VhL/85DNP/GOTL/ihga/xYAAGcAAAAB////
+	AAAAAAkYAABslRoW/9JNQP/dYFL/63Jm//KAdv/2hXv/9IF3/+10Zv/gYVP/1k5B/5Ya
+	Fv8YAABrAAAACP///wAAAAANDAAAY4UZEu/iXU3/8Hhr//yFef/+lYn//puP//+Xiv/8
+	h3r/8Xlr/+ZdTv+HGRLwDQAAZAAAAAv///8AAAAADwAAAE5aDAfL4FZI//6LgP//mI7/
+	/qSY//+rnv/+p5r//5qP//+Ngf/nWEn/Ww0HywAAAE0AAAAN////AAAAAAwAAAAyDwAA
+	jJInH+z/gHL//6qe//+4rP//vrL//7uu//+soP//g3X/lioh7BEAAIsAAAAzAAAADP//
+	/wAAAAAFAAAAIAAAAF0dAACpkTUq6dt2Z/z6n5D//7Sj//qhkv/bd2r8kTYr6R4AAKoA
+	AABcAAAAIAAAAAX///8AAAAAAQAAAA0AAAAyAAAAZwYAAKI0DgrIYi4l2XlANeJiLiXZ
+	NA4KxwYAAKEAAABoAAAAMwAAAA0AAAAB////AAAAAAAAAAADAAAAEQAAADQAAABdAAAA
+	fAAAAI8AAACVAAAAjgAAAHsAAABbAAAANAAAABIAAAADAAAAAP///wAAAAAAAAAAAAAA
+	AAMAAAAOAAAAIQAAADYAAABGAAAATAAAAEUAAAA2AAAAIgAAAA4AAAAEAAAAAAAAAAD/
+	//8AAAAAAAAAAAAAAAAAAAAAAQAAAAUAAAALAAAAEAAAABMAAAARAAAACwAAAAUAAAAB
+	AAAAAAAAAAAAAAAAAA0BAAADAAAAAQAQAAABAQADAAAAAQAQAAABAgADAAAABAAABKoB
+	AwADAAAAAQABAAABBgADAAAAAQACAAABEQAEAAAAAQAAAAgBEgADAAAAAQABAAABFQAD
+	AAAAAQAEAAABFgADAAAAAQAQAAABFwAEAAAAAQAABAABHAADAAAAAQABAAABUgADAAAA
+	AQACAAABUwADAAAABAAABLIAAAAAAAgACAAIAAgAAQABAAEAAQ==
+	</data>
+	<key>FontFamily</key>
+	<string>HelveticaNeue-UltraLight</string>
+	<key>FontSize</key>
+	<real>24</real>
+	<key>GeekletFrame</key>
+	<string>{{13.2578125, 249}, {270, 47}}</string>
+	<key>HasShadow</key>
+	<false/>
+	<key>Identifier</key>
+	<string>org.tynsoe.geeklet.shell</string>
+	<key>KeepOnTop</key>
+	<false/>
+	<key>Name</key>
+	<string>TimeFuzzy</string>
+	<key>RefreshInterval</key>
+	<integer>10</integer>
+	<key>SetLocale</key>
+	<true/>
+	<key>StatusImagePosition</key>
+	<integer>5</integer>
+	<key>SuccessImage</key>
+	<data>
+	TU0AKgAABAj///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAAAAGgAAACAAAAAaAAAA
+	DQAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAAAgBAQFYFhUWqygn
+	KOEvLi/9KCco4RYVFqsBAQFYAAAACAAAAAAAAAAAAAAAAP///wAAAAAAAAAAAAAAAAgG
+	AwZ8Pj0+8peYl//S0tP/4+Tl/9LS0/+XmJf/Pj0+8gYDBnwAAAAIAAAAAAAAAAD///8A
+	AAAAAAAAAAUDAQJlLTEt9HqRff+40Ln/1efT/9jo1f/V59P/uNG5/3qRff8tMS30AwEC
+	ZQAAAAUAAAAA////AAAAAAAAAAAmEBYQyz1tP/9Xm03/eLJX/4e6YP+HuWL/h7pg/3ix
+	V/9Wmk3/PWw//xAWEMsAAAAmAAAAAP///wAAAAAAAAAAThY8Gvc8jjD/TJwb/2CnHf9r
+	ryz/bLEv/2ywLP9iqR7/TJ4b/zyQMP8WPBr3AAAATQAAAAD///8AAAAAAQAIAGgeYRv/
+	VaUq/2WvIP91uzb/gsZI/4bIS/+DyEj/d743/2exIP9WqSr/HmIb/wAIAGcAAAAB////
+	AAAAAAgADABsJ3MY/3C6Nv9/xz3/kNNT/57dYv+i32f/n99k/5HWVP+AyD3/cr02/yd0
+	GP8ADQBsAAAACf///wAAAAAMAAYAYydqEPB/yD7/lNhW/6PlZv+x8Xb/uPd8/7P0eP+k
+	6Gf/ldpX/4DLQP8maxDvAAYAYwAAAAv///8AAAAADwAAAE4XRwXLd8Y5/6foa/+393v/
+	wv6F/8r/i//F/4b/uPt8/6rubP95yTr/F0kFygAAAEwAAAAN////AAAAAAwAAAAyAAwA
+	jEB6GOyh7Vz/yP+J/9X/mP/b/5//2P+b/83/i/+m9F3/Qn4X7AEMAIsAAAAzAAAADP//
+	/wAAAAAFAAAAIAAAAF4GFQCpTIQc6ZbZU/zC+3n/2P+L/8T6fP+a21b8UIkd6AYXAKkA
+	AABcAAAAIAAAAAX///8AAAAAAQAAAA0AAAAzAAAAZwAFAKIaMwTHQGIZ2FV5JuFAYhnZ
+	GzQEyAAFAKAAAABnAAAAMgAAAA0AAAAB////AAAAAAAAAAADAAAAEQAAADQAAABdAAAA
+	ewAAAI8AAACWAAAAjwAAAHsAAABcAAAAMwAAABEAAAADAAAAAP///wAAAAAAAAAAAAAA
+	AAMAAAAOAAAAIQAAADYAAABGAAAATAAAAEcAAAA2AAAAIQAAAA0AAAAEAAAAAAAAAAD/
+	//8AAAAAAAAAAAAAAAAAAAAAAQAAAAUAAAALAAAAEAAAABMAAAASAAAADAAAAAUAAAAB
+	AAAAAAAAAAAAAAAAAA0BAAADAAAAAQAQAAABAQADAAAAAQAQAAABAgADAAAABAAABKoB
+	AwADAAAAAQABAAABBgADAAAAAQACAAABEQAEAAAAAQAAAAgBEgADAAAAAQABAAABFQAD
+	AAAAAQAEAAABFgADAAAAAQAQAAABFwAEAAAAAQAABAABHAADAAAAAQABAAABUgADAAAA
+	AQACAAABUwADAAAABAAABLIAAAAAAAgACAAIAAgAAQABAAEAAQ==
+	</data>
+	<key>TextAlignment</key>
+	<integer>1</integer>
+	<key>TextColor</key>
+	<data>
+	BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
+	ZmZmAQEBAYY=
+	</data>
+	<key>TextStrikethrough</key>
+	<integer>0</integer>
+	<key>TextUnderline</key>
+	<integer>0</integer>
+</dict>
+</plist>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>GeekletFrame</key>
+	<string>{{404, 544}, {247, 247}}</string>
+	<key>HasShadow</key>
+	<false/>
+	<key>Identifier</key>
+	<string>org.tynsoe.geeklet.image</string>
+	<key>ImageURL</key>
+	<string>file://localhost/tmp/instagramphoto</string>
+	<key>Name</key>
+	<string>INSTAGRAM SLIDE</string>
+	<key>Random</key>
+	<true/>
+	<key>RefreshInterval</key>
+	<integer>90</integer>
+</dict>
+</plist>

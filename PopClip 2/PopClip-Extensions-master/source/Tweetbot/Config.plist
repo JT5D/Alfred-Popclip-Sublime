@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Version</key>
+	<integer>2</integer>
+	<key>Extension Name</key>
+	<string>Tweetbot</string>
+	<key>Extension Identifier</key>
+	<string>com.pilotmoon.popclip.extension.tweetbot</string>
+	<key>Extension Description</key>
+	<string>Compose a new tweet using Tweetbot.</string>
+	<key>Apps</key>
+	<array>
+		<dict>
+			<key>Check Installed</key>
+			<true/>
+			<key>Link</key>
+			<string>http://tapbots.com/tweetbot</string>
+			<key>Name</key>
+			<string>Tweetbot</string>
+			<key>Bundle Identifier</key>
+			<string>com.tapbots.TweetbotMac</string>
+		</dict>
+	</array>
+	<key>Actions</key>
+	<array>
+		<dict>
+			<key>Image File</key>
+			<string>botduck.png</string>
+			<key>Shell Script File</key>
+			<string>post.sh</string>
+			<key>Title</key>
+			<string>TweetBot</string>
+			<key>Regular Expression</key>
+			<string>(?s)^.{1,195}$</string>
+		</dict>
+		<dict>
+			<key>Shell Script File</key>
+			<string>username.sh</string>
+			<key>Title</key>
+			<string>{popclip text}</string>
+			<key>Regular Expression</key>
+			<string>^@\w{1,20}$</string>
+		</dict>
+	</array>
+</dict>
+</plist>

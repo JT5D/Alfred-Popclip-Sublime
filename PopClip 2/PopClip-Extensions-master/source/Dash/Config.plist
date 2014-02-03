@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Actions</key>
+	<array>
+		<dict>
+			<key>Image File</key>
+			<string>256-head.png</string>
+			<key>Regular Expression</key>
+			<string>(?s)^.{1,160}$</string>
+			<key>URL</key>
+			<string>dash://{popclip text}</string>
+			<key>Title</key>
+			<string>Dash</string>
+		</dict>
+	</array>
+	<key>Apps</key>
+	<array>
+		<dict>
+			<key>Bundle Identifier</key>
+			<string>com.kapeli.dash</string>
+			<key>Check Installed</key>
+			<true/>
+			<key>Link</key>
+			<string>http://kapeli.com/dash</string>
+			<key>Name</key>
+			<string>Dash</string>
+		</dict>
+	</array>
+	<key>Extension Description</key>
+	<string>Search developer documentation using Dash.</string>
+	<key>Extension Identifier</key>
+	<string>com.pilotmoon.popclip.extension.dash</string>
+	<key>Extension Name</key>
+	<string>Dash</string>
+	<key>Version</key>
+	<integer>2</integer>
+</dict>
+</plist>

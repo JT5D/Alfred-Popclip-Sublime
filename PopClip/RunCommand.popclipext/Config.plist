@@ -25,7 +25,7 @@
 	<key>Extension Description</key>
 	<string>Run the selected text as a Terminal command. (Be careful!)</string>
 	<key>Extension Identifier</key>
-	<string>com.pilotmoon.popclip.extension.rtc</string>
+	<string>com.web5.popclip.extension.rtc</string>
 	<key>Extension Image File</key>
 	<string>RTC.png</string>
 	<key>Extension Name</key>

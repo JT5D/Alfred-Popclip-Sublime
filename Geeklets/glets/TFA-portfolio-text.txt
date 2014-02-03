@@ -1,0 +1,1 @@
+<p>This Content Managament platform is a sophisticated Web application which allows Teach for America to collaborate and manage content and campaigns, integrating with a range of page layouts and images, to video and Webforms.</p> <p><a target="_blank" href="http://www.TeachforAmerica.com">TeachforAmerica.com</a></p>

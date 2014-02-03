@@ -1,0 +1,4 @@
+wtheme=`echo White`
+tx=`curl --silent "http://xml.weather.yahoo.com/forecastrss?p=THXX0024&u=c" | grep  '/us/we/52/' | tail -n1 | awk '{print $2}'`;i=`echo ${#tx}`;let y=$i-10;let z=$y-36;n=`echo ${tx:36:$z}`;ln -sf ~/Documents/MINIMAL/Weather/$wtheme/$n.png /tmp/weather_icons.png
+
+strx=`curl --silent "http://xml.weather.yahoo.com/forecastrss?p=THXX0024&u=c" | grep -E '(Current Conditions:|C<BR)' | sed -e 's/Current Conditions://' -e 's/<br \/>//' -e 's/<b>//' -e 's/<\/b>//' -e 's/<BR \/>//' -e 's/<description>//' -e 's/<\/description>//' -e 's/,//' | tail -n1 | tr '[:lower:]' '[:upper:]'`;i=`echo ${#strx}`;let y=$i-4;echo ${strx:0:$y};

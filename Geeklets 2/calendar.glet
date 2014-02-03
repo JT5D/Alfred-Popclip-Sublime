@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Alignment</key>
+	<integer>0</integer>
+
+	<key>GeekletFrame</key>
+	<string>{{30, 42}, {250, 250}}</string>
+
+	<key>HasShadow</key>
+	<true/>
+
+	<key>Identifier</key>
+	<string>org.tynsoe.geeklet.image</string>
+
+	<key>ImageURL</key>
+	<string>file://localhost/Users/Dave/GeekTool/Calendar.png</string>
+
+	<key>Name</key>
+	<string>Background</string>
+
+	<key>Opacity</key>
+	<real>0.9</real>
+
+	<key>Random</key>
+	<false/>
+
+	<key>RefreshInterval</key>
+	<integer>0</integer>
+</dict>
+</plist>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Alignment</key>
+	<integer>6</integer>
+	<key>GeekletFrame</key>
+	<string>{{708.27734375, 742.234375}, {95, 45}}</string>
+	<key>HasShadow</key>
+	<false/>
+	<key>Identifier</key>
+	<string>org.tynsoe.geeklet.image</string>
+	<key>ImageURL</key>
+	<string>file://localhost/Users/xenatt/Documents/METRO/Metro/calendar.png</string>
+	<key>Name</key>
+	<string>VCALENDAR LOGO</string>
+</dict>
+</plist>

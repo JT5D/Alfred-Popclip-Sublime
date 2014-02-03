@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>Version</key>
+<string>1</string>
+<key>Extension Identifier</key>
+<string>com.sebaszwarc.2pastebin</string>
+<key>Actions</key>
+<array>
+<dict>
+	<key>After</key>
+	<string>copy-result</string>
+	<key>After</key>
+	<string>preview-result</string>       
+	<key>Title</key>
+	<string>PasteBin</string>
+	<key>Image File</key>
+	<string>pastebin.png</string>
+	<key>Script Interpreter</key>
+	<string>/opt/local/bin/php</string>
+	<key>Shell Script File</key>
+	<string>sendtopastebin.php</string>
+ </dict>	
+</array>
+<key>Options</key>
+<array>
+<dict>
+			<key>Option Identifier</key>
+			<string>syntax</string>
+			<key>Option Label</key>
+			<string>Syntax</string>
+			<key>Option Type</key>
+			<string>multiple</string>
+			<key>Option Values</key>
+ 						 <array>
+								<string>text</string>
+								<string>php</string>
+								<string>java</string>
+								<string>html5</string>
+								<string>haskell</string>
+								<string>vim</string>
+								<string>c</string>
+								<string>bash</string>
+								<string>python</string>
+								<string>ruby</string>
+								<string>tcl</string>
+								<string>xml</string>
+								<string>sql</string>
+							</array>  
+</dict>
+<dict>
+	<key>Option Identifier</key>
+	<string>waznosc</string>
+	<key>Option Label</key>
+	<string>Valid For</string>
+	<key>Option Type</key>
+	<string>multiple</string>
+	<key>Option Values</key>
+			<array>
+			<string>N</string>
+			<string>10M</string>
+			<string>1H</string>
+			<string>1D</string>
+			<string>1W</string>
+			<string>2W</string>
+			<string>1M</string>
+			</array>
+</dict>	
+</array>
+<key>Options Title</key>
+<string>Default Syntax</string> 
+<key>Extension Name</key>
+<string>Send2Pastebin</string>
+<key>Required OS Version</key>
+<string>10.6.8</string>
+<key>Required Software Version</key>
+<string>701</string>
+</dict>
+</plist>

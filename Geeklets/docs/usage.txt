@@ -1,0 +1,107 @@
+Usage: ultimate_weather_parser_beta03.py [options]
+ ULTIMATE WEATHER PARSER BETA 03
+ ROBERT WOLTERMAN (xtacocorex) - 2012
+
+ GRABS THE WEATHER FROM THE WEATHER SITE OF YOUR CHOOSING SO YOU CAN DISPLAY IT ON
+ YOUR DESKTOP WITH GEEKTOOL/NERDTOOL
+ 
+ SITES SUPPORTED:
+ - YAHOO WEATHER
+ - WEATHER UNDERGROUND
+ - US NATIONAL WEATHER SERVICE
+ 
+ LOCATION GRABBING:
+  - SUPPORTED AND CAN BE PULLED FROM THE FOLLOWING SITE
+    - http://ipinfodb.com/my_ip_location.php
+ 
+ WEATHER IMAGE AUTOMATIC DOWNLOAD:
+  WEATHER IMAGES ARE AUTOMATICALLY DOWNLOADED WHEN THE SCRIPT IS RUN
+  IMAGES ARE STORED IN /tmp, THIS IS CUSTOMIZABLE WITH THE IMAGESAVELOCATION VARIABLE
+  IMAGE TYPES:
+   - YAHOO! -> 
+       CURRENT:          yahoo_current_wx.gif
+       TWO DAY:          yahoo_fcast_day1.gif & yahoo_fcast_day2.gif
+       FIVE DAY:         NOT SUPPORTED
+   - WEATHER.COM ->
+       CURRENTLY NOT IMPLEMENTED
+   - WUNDERGROUND ->
+       CURRENT:          wunderground_current_wx.gif
+       MULTI-DAY:        wunderground_fcast_dayX.gif WHERE X IS 1 TO NUMBER OF DAYS YOU SET
+   - WEATHERBUG ->
+       CURRENTLY NOT IMPLEMENTED
+   - NATIONAL WEATHER SERVICE ->
+       CURRENT:          NOT SUPPORTED
+       MULTI-DAY SIMPLE: usnws_fcast_dayX
+ 
+ ********************************************************************************
+ I DO NOT RECOMMEND RUNNING MULTIPLE INSTANCES OF THIS SCRIPT TO OUTPUT DIFFERENT
+    SETS OF DATA - THIS IS A COMPLEX SCRIPT THAT WILL EAT UP SYSTEM RESOURCES
+ ********************************************************************************
+ 
+ *** MAKE SURE TO SET THE REFRESH RATE IN GEEKTOOL/NERDTOOL TO A REASONABLE VALUE
+
+
+Options:
+  -h, --help            show this help message and exit
+  -d, --debug           Enable debugging
+  -M, --metric          Use Metric Units (not supported for all sites,
+                        currently only works for Yahoo! Weather)
+  -H, --hideprovides    Hide the Provided by line in the output
+  -U URL, --url=URL     User input URL if you are bypassing the automatic
+                        location grabbing feature
+  -T WEATHERTYPE, --weathertype=WEATHERTYPE
+                        Specify the place you want your weather from: yahoo,
+                        weatherchannel, wunderground, weatherbug, usnws
+  -o ORIENTATION, --orientation=ORIENTATION
+                        Specify the orientation of weather data for Weather
+                        Underground-> multiday or US NWS-> multidaysimple:
+                        horizontal/vertical
+  -s CURRENTOUTPUTTYPE, --currentoutputtype=CURRENTOUTPUTTYPE
+                        Specify how the Current weather data for the weather
+                        sites is displayed: detailed/simple
+
+  Location Options:
+    Options Specific to Location Services
+
+    -L LOCSERV, --locserv=LOCSERV
+                        Specify the IP to Location grabbing service to use:
+                        ipinfodb
+    -Q YQL_LOC_TYPE, --yql_loc_type=YQL_LOC_TYPE
+                        Specify how the YQL gets the WOEID: zip/full
+    -A, --locgrabber    Tell the script to use the Location grabbing function
+    -B, --locfeeder     Tell the script to use the Location you provide with
+                        the -C, -S, -O, and -Z options
+    -C CITY, --city=CITY
+                        City of user input location
+    -S STATEPROV, --stateprov=STATEPROV
+                        State or Province of user input location
+    -O COUNTRY, --country=COUNTRY
+                        Country of user input location
+    -Z ZIPCODE, --zipcode=ZIPCODE
+                        Zip code of user input location
+
+  Yahoo! Weather Options:
+    Options Specific to Yahoo! Weather, use only if -T is set to: yahoo
+
+    -e YAHOOFCASTTYPE, --yahoofcasttype=YAHOOFCASTTYPE
+                        Specify the type of forecast to display:
+                        current,twoday,fivedaysimple,fivedaydetail
+
+  Weather Underground Options:
+    Options Specific to Weather Underground, use only if -T is set to:
+    wunderground
+
+    -g WUNDERGROUNDFCASTTYPE, --wundergroundfcasttype=WUNDERGROUNDFCASTTYPE
+                        Specify the type of forecast to display:
+                        current,multiday
+    -n WUNDERGROUNDNUMDAYS, --wundergroundnumdays=WUNDERGROUNDNUMDAYS
+                        Specify the number of days to grab for the
+                        wunderground multi-day forecast (1 to 10)
+
+  US National Weather Service Options:
+    Options Specific to US National Weather Service, use only if -T is set
+    to: uwnws
+
+    -i USNWSFCASTTYPE, --usnwsfcasttype=USNWSFCASTTYPE
+                        Specify the type of forecast to display:
+                        current,multidaysimple,multidaydetailed

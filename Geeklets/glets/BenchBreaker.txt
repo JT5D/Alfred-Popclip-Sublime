@@ -1,0 +1,96 @@
+// Source: http://www.kongregate.com/forums/65-tyrant/topics/220972-sim-batch-eval-decks?page=1#posts-4769301
+ACE:Atlas,Earthquake Generator,Earthquake Generator,Earthquake Generator,Colossus,Colossus,Colossus,Electromagnetic Pulse,Apollo,Electromagnetic Pulse,Dozer Tank
+AZR Jam:Dracorex,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Gatling Tower,Dozer Tank,Stealthy Niaq,Gatling Tower,Gatling Tower
+AZR Spam I:Dracorex,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Beetle Bomber,Apollo,Azure Reaper,Rifter,Stealthy Niaq
+AZR Spam II:Vyander,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Stealthy Niaq,Daemon,Apollo,Rifter,Predator
+Avatars		:Empress,Avatar(4),Adytum(4),Bridge of Destiny,Pantheon
+Atlas Multi I:Atlas,Azure Reaper,Electromagnetic Pulse,Titan,Stealthy Niaq,Dozer Tank,Predator,Rifter,Fighter Jet,Omega,Tiamat
+Atlas Multi II:Atlas,Dozer Tank,Apollo,Azure Reaper,Azure Reaper,Stealthy Niaq,Beetle Bomber,Predator,bulldozer,Electromagnetic Pulse,Tiamat
+BT Rush:Lord of Tartarus,Hatchet,Hatchet,Ravenous Dredge,Shapeshifter,Venomous Raptor,Brawler,Razogoth's Heir,Asylum,Asylum,Asylum
+Balanced Strike:Atlas,Tiamat,Predator,Omega,Ravenous Dredge,Stealthy Niaq,Azure Reaper,Hierophant,Elusive Panzer,Sharpshooter,T-46 Leonidas
+Berserkers	:Dracorex,Support Carrier,Support Carrier,Support Carrier,Support Carrier,Support Carrier,Apollo,Gorivore,Elemental,Abominable Horror,Abominable Horror
+Blood Wall	:Dracorex,BullDozer,Missile Silo,Missile Silo,Missile Silo,Gatling Tower,Gatling Tower,Gatling Tower,Blood Wall,Blood Wall,Blood Wall
+Bloodthirsty Rush I:Lord of Tartarus,Hatchet,Hatchet,Hatchet,Hatchet,Sulfuris Sentry,Asylum,Asylum,Asylum,Asylum,Venomous Raptor
+Bloodthirsty Rush II:Lord of Tartarus,Hatchet,Hatchet,Hatchet,Hovering Pest,Annelid Mass,Asylum,Asylum,Asylum,Mortar Bunker,Annelid Mass
+Brawlers:Lord of Tartarus,Malgoth,Brawler,Brawler,Brawler,Brawler,Brawler,Brawler,Brawler,Brawler,Brawler
+Carrier I:Dracorex,Support Carrier,Support Carrier,Support Carrier,Support Carrier,Support Carrier,Apollo,Gorivore,Elemental,Stealthy Niaq,Azure Reaper
+Carrier II:Dracorex,Support Carrier,Support Carrier,Support Carrier,Support Carrier,Support Carrier,Apollo,Gorivore,Elemental,Abominable Horror,Abominable Horror
+Carriers	:Dracorex,Support Carrier,Support Carrier,Support Carrier,Support Carrier,Apollo,Gorivore,Elemental,Destructive Ram,Stealthy Niaq,Bridge of Destiny
+Colossus I:Atlas,Colossus,Colossus,Colossus,Colossus,Missile Silo,Command Center,Dozer Tank,Command Center,Gatling Tower,Missile Silo
+Colossus II:Yurich,Colossus,Colossus,Colossus,Colossus,Colossus,Bulldozer,Command Center,Command Center,Missile Silo,Dozer Tank
+Counter Strike	:Atlas,Trident,Trident,Trident,Trident,Trident,Tiamat,Predator,Rifter,Dozer Tank,Electromagnetic Pulse
+Counter Wall	:Atlas,BullDozer,Missile Silo,Missile Silo,Missile Silo,Gatling Tower,Gatling Tower,Gatling Tower,Fortified Cannons,Fortified Cannons,Command Center
+Daemon Spam:Vyander,Daemon,Daemon,Daemon,Daemon,Daemon,Predator,Stealthy Niaq,Dominated Hatchlings,Xeno Mothership,Rifter
+Daemons:Vyander,Daemon,Daemon,Daemon,Daemon,Daemon,Azure Reaper,Azure Reaper,Stealthy Niaq,Rifter,Predator
+Draco Armor:Dracorex,Rifter,Metalhead,Apollo,Bolide Walker,Toxic Cannon,Pummeller,Bolster Xeno,Fortifier,Poseidon,Titan
+Draco Evade I:Dracorex,Hierophant,Hierophant,Beetle Bomber,Apollo,Azure Reaper,Azure Reaper,Azure Reaper,Stealthy Niaq,Warehouse,Warehouse
+Draco Evade II:Dracorex,Hierophant,Hierophant,Lance Rider,Razogoth's Heir,Azure Reaper,Azure Reaper,Stealthy Niaq,Warehouse,Warehouse,Warehouse
+Draco Multi I:Dracorex,Bolide Walker,Poseidon,Aegis,Apollo,Pummeller,Azure Reaper,Metalhead,Rifter,Titan,Dozer Tank
+Draco Multi II:Dracorex,Hierophant,Hierophant,Bulldozer,Apollo,Pummeller,Azure Reaper,Azure Reaper,Stealthy Niaq,Sharpshooter,Dozer Tank
+Draco Multi III:Dracorex,Abominable Horror,Apollo,Bolide Walker,Pummeller,Azure Reaper,Rifter,Titan,Dozer Tank,Recurring Darkness,Poseidon
+Enforcer Mechs:Freddie,Enforcer Mech,Enforcer Mech,Enforcer Mech,Enforcer Mech,Helios,Titan,Poseidon,Metalhead,Psycho,T-46 Leonidas
+Fattest Fat	:Dracorex,Apollo,Kraken,Rumbler,Mech Aid,Titan,Xanadu,Bulldozer,Destructive Ram,Elemental,Solar Powerhouse
+Fear Rush I:Lord of Tartarus,Intruder,Intruder,Mortar Bunker,Asylum,Beholder
+Fear Rush II:Lord of Tartarus,Grim Specter,Grim Specter,Grim Specter,Grim Specter,Warehouse,Warehouse
+Fear Rush III:Dracorex,Grim Specter,Grim Specter,Grim Specter,Grim Specter,Warehouse,Warehouse
+Fear Rush IV:Lord of Tartarus,Grim Specter,Grim Specter,Grim Specter,Grim Specter,Asylum,Asylum
+GS Fear:Dracorex,Grim Specter,Grim Specter,Grim Specter,Grim Specter,Warehouse,Warehouse
+Hades Wall	:Dracorex,Hades,Pantheon,Noxious Den,Command Center,Command Center,Missile Silo,Gatling Tower,Gatling Tower,Gatling Tower,Gatling Tower
+II Rush:Aiko,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Ravenous Dredge,Predator,Tiamat,Mortar Bunker
+II spam:Thadius,Mortar Bunker,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Irradiated Infantry,Tiamat
+Imperial Mixed:Eva,Sharpshooter,Sharpshooter,Sharpshooter,Trident,Trident,Warehouse,Warehouse,Tiamat,Exodrone,Poseidon
+Imperial Rush:Thadius,Irradiated Infantry,Irradiated Infantry,Trident,Trident,Sharpshooter,Sharpshooter,Tiamat,Fighter Jet,Rox Chainblade,Mortar Bunker
+Imperial Slowroll:Freddie,Helios,Poseidon,Enforcer Mech,Lance Rider,Enforcer Mech,Titan,Lance Rider,Enforcer Mech,Enforcer Mech,Enforcer Mech
+Interceptors	:Invasion Coordinator,Xeno Interceptor,Xeno Interceptor,Xeno Interceptor,Xeno Interceptor,Revoker,Revoker,Azure Reaper,Stealthy Niaq,Rifter,Predator
+Jam Hax:Atlas,Loki's Scion,Stealthy Niaq,Missile Launcher,Missile Launcher,Hellion,Hellion,Demon,Demon,Daemon,Daemon
+Jam I:Dracorex,Missile Launcher,Barracuda,Daemon,Daemon,Gatling Tower,Gatling Tower,Gatling Tower,Barracuda,Loki's Scion,Stealthy Niaq
+Jam II:Dracorex,Daemon,Daemon,Daemon,Daemon,Daemon,Stealthy Niaq,Gatling Tower,Gatling Tower,Gatling Tower,Gatling Tower
+Lance I:Dracorex,Lance Rider,Lance Rider,Lance Rider,Lance Rider,Recurring Darkness,Recurring Darkness,Recurring Darkness,Support Carrier,Support Carrier,Support Carrier
+Lance II:Freddie,Lance Rider,Lance Rider,Lance Rider,Lance Rider,Lance Rider,Lance Rider,Lance Rider,Lance Rider,Comsat Terminal,Comsat Terminal
+Lance Riders	:Thadius,Lance Rider,Lance Rider,Lance Rider,Elusive Panzer,Elusive Panzer,Rox Chainblade,Tiamat,Psycho,Irradiated Infantry,Mortar Bunker
+Lancers:Freddie,Lance Rider,Lance Rider,Lance Rider,Trident,Trident,Irradiated Infantry,Irradiated Infantry,Psycho,ComSat Terminal,ComSat Terminal
+MC Wallstall:Atlas,Mind Controller,Mind Controller,Mind Controller,Dozer Tank,Missile Silo,Missile Silo,Tesla Cannon,Tesla Cannon,Missile Silo,Missile Silo
+Micromech Spam I:Duncan,Micromech,Micromech,Micromech,Micromech,Micromech,Micromech,Micromech,Dozer Tank,Command Center,Command Center
+Micromech Spam II:Duncan,Micromech,Micromech,Micromech,Micromech,Micromech,Micromech,Cannon Walker,Command Center,Command Center,Command Center
+Micromechs:Duncan,Micromech,Micromech,Micromech,Micromech,Micromech,Micromech,Dozer Tank,Command Center,Command Center,Command Center
+Mixed Raiders:Duncan,Salvager,Salvager,Cannon Walker,Cannon Walker,Micromech,Micromech,Juggernaut,Dozer Tank,Command Center,Command Center
+Noxius Dens	:Dracorex,Noxious Den,Noxious Den,Apollo,Rifter,Xeno Overlord,Demolition Bot,T-46 Leonidas,Elusive Panzer,Support Carrier,Support Carrier
+Pathrazers:Dalia,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer
+Pummeller Pool I:Dementia,Pummeller,Pummeller,Pummeller,Pummeller,Valefar,Blood Pool,Blood Pool,Blood Pool,Draconian Queen,Asylum
+Pummeller Pool II:Dracorex,Pummeller,Pummeller,Pummeller,Pummeller,Valefar,Blood Pool,Blood Pool,Noxious Den,Gorivore,Noxious Den
+Pumpool		:Dracorex,Pummeller,Pummeller,Pummeller,Gorivore,Destructive Ram,Valefar,Blood Pool,Blood Pool,Blood Pool,Asylum
+Pure Strike:Lucina the Wicked,Tiamat,Predator,Omega,Hunter,Sabre,Sabre,Sharpshooter,Sharpshooter,Sharpshooter,Sharpshooter
+Quick Strike:Atlas,Electromagnetic Pulse,Electromagnetic Pulse,Predator,Omega,Tiamat,Ravenous Dredge,Shapeshifter,Stealthy Niaq,Sharpshooter,Hierophant
+Raider:Yurich,Toxic Cannon,Colossus,Colossus,Colossus,Havoc,Darkon Destroyer,Command Center,Command Center,Dozer Tank,Bulldozer
+Raider Muscle:Yurich,Colossus,Colossus,Colossus,Bulldozer,Dozer Tank,Toxic Cannon,Juggernaut,Darkon Destroyer,Waypoint,Command Center
+Rainbow Counter:Atlas,Mind Controller,Mind Controller,Mind Controller,Trident,Trident,Trident,Colossus,Colossus,Dozer Tank,Electromagnetic Pulse
+Reapers		:Dracorex,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Azure Reaper,Support Carrier,Support Carrier,Support Carrier
+Regen Troll	:Dracorex,Recurring Darkness,Recurring Darkness,Recurring Darkness,Recurring Darkness,Recurring Darkness,Recurring Darkness,Recurring Darkness,Recurring Darkness,Hades,Rifter
+Retro slowbow	:Dracorex,Aegis,Aegis,Bolide Walker,Bolide Walker,Pummeller,Pummeller,Rifter,Nimbus,Poseidon,Titan
+Righteous Muscle:Empress,Benediction,Guerilla Leader,Reclaimer,Vigil,Vigil,Angelwing,Angelwing,Equalizer,Equalizer,Equalizer
+Righteous Rally	:Empress,Benediction,Guerilla Leader,Reclaimer,Vigil,Vigil,Angelwing,Angelwing,Equalizer,Equalizer,Equalizer
+SS Rush:Lord of Tartarus,Asylum,Asylum,Asylum,Asylum,Asylum,Sulfuris Sentry,Sulfuris Sentry,Sulfuris Sentry,Hovering Pest,Hovering Pest
+Salvager Spam I:Duncan,Salvager,Salvager,Salvager,Salvager,Salvager,Cannon Walker,Cannon Walker,Command Center,Command Center,Command Center
+Salvager Spam II:Duncan,Salvager,Salvager,Salvager,Salvager,Command Center,Command Center,Command Center,Salvager,Salvager,Salvager
+Salvager Spam III:Duncan,Cannon Walker,Cannon Walker,Salvager,Salvager,Salvager,Salvager,Dozer Tank,Mortar Bunker,Command Center,Command Center
+Salvagers:Duncan,Salvager,Salvager,Salvager,Salvager,Salvager,Cannon Walker,Cannon Walker,Command Center,Command Center,Command Center
+Sharpie Spam:Freddie,Sharpshooter,Sharpshooter,Sharpshooter,Sharpshooter,Sharpshooter,Sharpshooter,Tiamat,Poseidon,Mortar Bunker,Mortar Bunker
+Strike Rush I:Atlas,Sharpshooter,Trident,Trident,Stealthy Niaq,Dozer Tank,Predator,Rifter,Electromagnetic Pulse,Omega,Tiamat
+Strike Rush II:Petrisis,Sharpshooter,Electromagnetic Pulse,Hunter,Sabre,Rifter,Predator,Dozer Tank,Rifter,Omega,Tiamat
+Sulfuris Sentry Rush:Lord of Tartarus,Sulfuris Sentry,Sulfuris Sentry,Sulfuris Sentry,Sulfuris Sentry,Sulfuris Sentry,Asylum,Asylum,Asylum,Asylum,Asylum
+Supported Berserkers:[what DarkBlood said]
+Tac Inf Fear:Dalia,Tactical Infantry,Tactical Infantry,Tactical Infantry,Tactical Infantry,Tactical Infantry,Tactical Infantry,Tactical Infantry,Tactical Infantry,Tactical Infantry,Tactical Infantry
+Toxic Dodger	:Dracorex,Toxic Cannon,Sharpshooter,Hierophant,Azure Reaper,Azure Reaper,Rifter,Stealthy Niaq,Ravenous Dredge,Warehouse,Warehouse
+Toxic Evasion:Atlas,Toxic Cannon,Toxic Cannon,Sharpshooter,Sharpshooter,Warehouse,Warehouse,Azure Reaper,Azure Reaper,Hierophant,Stealthy Niaq
+Trident Spam I:Atlas,Trident,Trident,Trident,Trident,Trident,Predator,Tiamat,Warehouse,Electromagnetic Pulse,Exodrone
+Trident Spam II:Freddie,Trident,Trident,Trident,Trident,Trident,Trident,Trident,Mortar Bunker,Tiamat,Exodrone
+Tridents:Freddie,Trident,Trident,Trident,Trident,Trident,Trident,Rox Chainblade,Tiamat,Exodrone,Electromagnetic Pulse
+Wall Stall:Atlas,Bulldozer,Missile Silo,Missile Silo,Missile Silo,Gatling Tower,Gatling Tower,Gatling Tower,Command Center,Command Center,Command Center
+Wall Jam:Dracorex,Missile Silo,Missile Silo,Tesla Cannon,Gatling Tower,Gatling Tower,Gatling Tower,Blood Wall,Command Center,Tesla Cannon,Dozer Tank
+Wall Stall:Dracorex,Missile Silo,Missile Silo,Missile Silo,Blood Wall,Blood Wall,Command Center,Gatling Tower,Gatling Tower,Bulldozer,Dozer Tank
+Xeno Assault I:Vyander,Azure Reaper,Azure Reaper,Daemon,Xeno Mothership,Daemon,Rifter,Predator,Stealthy Niaq,Dominated Hatchlings,Dominated Hatchlings
+Xeno Assault II:Invasion Coordinator,Dominated Hatchlings,Dominated Hatchlings,Daemon,Dominated Hatchlings,Predator,Apex,Stealthy Niaq,Daemon,Warehouse,Warehouse
+Xeno Fear Rush I:Invasion Coordinator,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer
+Xeno Fear Rush II:Dalia,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer,Pathrazer
+Xeno Muscle:Vyander,Ragnarok,Rifter,Azure Reaper,Azure Reaper,Daemon,Daemon,Beetle Bomber,Beetle Bomber,Dominated Hatchlings,Elemental
+Xeno Rush:Invasion Coordinator,Revoker,Revoker,Beetle Bomber,Beetle Bomber,Predator,Apex,Stealthy Niaq,Dominated Hatchlings,Enclave Signal,Enclave Signal
