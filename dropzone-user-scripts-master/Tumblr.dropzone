@@ -1,0 +1,120 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Tumblr
+# Description: Share stuff on Tumblr. Holding down Option allows you to enter a post title, holding down Control allows you to make the post private.
+# Handles: NSStringPboardType, NSFilenamesPboardType
+# Events: Clicked, Dragged
+# KeyModifiers: Option, Control
+# Creator: MyFreeWeb & Tinu Cleatus
+# URL: http://blog.tinucleatus.com
+# IconURL: http://dl.dropbox.com/u/177542/tumblr_logo.png
+# OptionsNIB: Login
+# LoginTitle: Tumblr Login Details
+
+module Tumblr
+  class Api
+    require 'net/http'
+    require 'uri'
+    require 'rexml/document'
+
+    attr_accessor :form_data, :result_body
+
+    def initialize(type, &block)
+      self.form_data = Hash.new
+
+      self.add_form_data('email', ENV['USERNAME'])
+      self.add_form_data('password', ENV['PASSWORD'])
+      if ENV['KEY_MODIFIERS'].include? "Control"
+        self.add_form_data('private', 1)
+      end
+      self.add_form_data('type', type)
+
+      block.call(self)
+      self.result_body = self.get_url(self.run_commands.body)
+    end
+
+    def add_form_data(key, value)
+      self.form_data[key] = value
+    end
+
+    def run_commands
+      url = URI.parse("http://www.tumblr.com/api/write")
+      req = Net::HTTP::Post.new(url.path)
+      req.set_form_data(self.form_data)
+      h = Net::HTTP.new(url.host, url.port)
+      return h.start {|http| http.request(req) }
+    end
+
+    def get_url(id)
+      url = URI.parse("http://www.tumblr.com/api/authenticate")
+      res = Net::HTTP.post_form(url, {'email' => ENV['USERNAME'], 'password' => ENV['PASSWORD']})
+      doc = REXML::Document.new(res.body)
+      blog = doc.root.elements["tumblelog[@is-primary='yes']"]
+      return "#{blog.attributes["url"]}post/#{id}"
+    end
+  end
+end
+
+
+def dragged
+  $dz.determinate(false)
+  item = $items[0]
+  title_text = ""
+
+  if ENV['KEY_MODIFIERS'].include? "Option"
+    output = `./CocoaDialog standard-inputbox --title "Enter Title" --e --informative-text "Enter the title for your post:"`
+    button, title_text = output.split("\n")
+
+    if button == "2" or title_text == nil
+      return_error("Cancelled")
+    end
+  end
+
+  begin
+    case ENV['DRAGGED_TYPE']
+    when 'NSStringPboardType'
+      $dz.begin("Posting text...")
+      url = Tumblr::Api.new("regular") do |config|
+        config.add_form_data('title', title_text)
+        config.add_form_data('body', item)
+      end
+    when 'NSFilenamesPboardType'
+      filename = File.basename(item)
+      $dz.begin("Uploading #{filename}...")
+      mime = `file --mime -b #{item}`.split("/")[0]
+      case mime
+      when "image"
+        type = "photo"
+      when "video"
+        type = "video"
+      when "application"
+        if file.path.split(".")[-1] = "mp3"
+          type = "music"
+        else
+          raise Exception
+        end
+      else
+        raise Exception
+      end
+      url = Tumblr::Api.new(type) do |config|
+        config.add_form_data('caption', title_text)
+        config.add_form_data('data', File.open(item).read)
+      end
+    end
+    $dz.finish("URL is now on clipboard.")
+    $dz.url(url.result_body)
+  rescue Exception => e
+    return_error("Error uploading!")
+  end
+end
+
+def clicked
+  `open "http://tumblr.com"`
+end
+
+def return_error(message)
+  $dz.finish(message)
+  $dz.url(false)
+  return
+end

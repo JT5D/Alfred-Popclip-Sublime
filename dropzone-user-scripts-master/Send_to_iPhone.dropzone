@@ -1,0 +1,112 @@
+#!/usr/bin/ruby
+# encoding: utf-8
+
+# myPhoneDesktop for Dropzone extension
+# v2.0, 03/03/2013
+# Author: jProductivity
+# Copyright © 2013 jProductivity, LLC
+# http://www.myphonedesktop.com/
+
+# Dropzone Destination Info
+# Name: Send to iPhone
+# Description: Sends dropped files, dragged text or the clipboard (on click) to your iPhone, iPad or iPod touch via myPhoneDesktop service
+# Handles: NSFilenamesPboardType, NSStringPboardType
+# Creator: jProductivity, LLC
+# URL: http://myphonedesktop.com/
+# IconURL: http://www.myphonedesktop.com/dwn/dropzone/mpd.png
+# Events: Dragged, Clicked
+
+
+APP_NAME = "mpd"
+APP_PATH = "/Applications/myPhoneDesktop.app"
+
+def mpd_installed?
+  File.exist?("#{APP_PATH}") ? true : false
+end
+
+def mpd_running?(app_name)
+  `ps aux` =~ /#{app_name}/ ? true : false
+end
+
+def can_send_to_mpd?
+  unless mpd_installed?
+    system("open http://www.myphonedesktop.com/")
+    $dz.error("myPhoneDesktop is not installed", "There is no myPhoneDesktop installed on your computer. Visit the myPhoneDesktop site to download and install myPhoneDesktop on your computer, iPhone, iPad or iPod touch.")
+    Process.exit
+  end
+
+  unless mpd_running?("myPhoneDesktop.app")
+    `open -a \"#{APP_PATH}\"`
+    sleep(5)
+  end
+  return mpd_running?("myPhoneDesktop.app")
+end
+
+def process_query(data, was_clicked)
+
+  if was_clicked
+    is_file_in_pb = `osascript -e '((clipboard info) as text)  contains "class furl"'`
+
+    if is_file_in_pb.strip == "true"
+      file_path = `osascript -e 'set a to quoted form of POSIX path of ((the clipboard as «class furl») as alias)'`
+      data = file_path.gsub(/[\n']/i, '')
+    end
+  end
+
+  is_file = File.exist?(data) && ! File.directory?(data)
+
+  if is_file
+      t = Thread.new do
+        `osascript -e 'set the clipboard to POSIX file "#{data}"'`
+      end
+      t.join
+  else
+    if ! was_clicked
+      data = data.gsub(/["]/i, '\\"')
+      t = Thread.new do
+        `osascript -e 'set the clipboard to "#{data}" as Unicode text'`
+      end
+      t.join
+    end
+  end
+
+  send_to_mpd
+end
+
+def send_to_mpd
+  `osascript -e 'tell application "System Events"' -e 'key code 113 using {shift down, control down, option down, command down}' -e 'end tell'`
+end
+
+def dragged
+  # Check that we can send data to myPhoneDesktop
+  if not can_send_to_mpd?
+    $dz.finish("Unable to send to myPhoneDesktop")
+    $dz.url(false)
+    return
+  end
+
+  # Handle Drag
+  if $items.length > 1
+    $dz.finish("Multiple Files Unsupported")
+    $dz.url(false)
+  elsif File.directory?($items[0])
+    $dz.finish("Unable to Process Folders")
+    $dz.url(false)
+  else
+    data = $items[0]
+  end
+  process_query(data, was_clicked=false)
+end
+
+def clicked
+  # Check if we can send data to myPhoneDesktop
+  if not can_send_to_mpd?
+    $dz.finish("Unable to send to myPhoneDesktop")
+    $dz.url(false)
+    return
+  else
+    # Send data stored in the clipboard to myPhoneDesktop
+    data = `pbpaste`
+    process_query(data, was_clicked=true)
+  end
+end

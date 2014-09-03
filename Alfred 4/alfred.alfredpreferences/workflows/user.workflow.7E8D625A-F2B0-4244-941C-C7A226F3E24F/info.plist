@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.alfredapp.andrew.xmlformat</string>
+	<key>connections</key>
+	<dict/>
+	<key>createdby</key>
+	<string>Andrew Pepperrell</string>
+	<key>description</key>
+	<string>An example of the XML format needed for script filter feedback into Alfred's main results</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Script Filter XML format</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>keyword</key>
+				<string>xmlformat</string>
+				<key>script</key>
+				<string>cat &lt;&lt; EOB
+
+&lt;?xml version="1.0"?&gt;
+
+&lt;items&gt;
+
+&lt;!--
+  Example of using icon type 'fileicon' to load the file icon directly.
+  This item is of type "file" which means it will be treated as a file in
+  Alfred's results, so can be actioned and revealed in finder.
+  Autocomplete sets what will complete when the user autocompletes.
+--&gt;
+
+  &lt;item uid="desktop" arg="~/Desktop" valid="YES" autocomplete="Desktop" type="file"&gt;
+    &lt;title&gt;Desktop&lt;/title&gt;
+    &lt;subtitle&gt;~/Desktop&lt;/subtitle&gt;
+    &lt;icon type="fileicon"&gt;~/Desktop&lt;/icon&gt;
+  &lt;/item&gt;
+
+&lt;!--
+  Example of loading an icon from the Workflow's folder.
+  This item is set as valid no, which means it won't be actioned
+--&gt;
+
+  &lt;item uid="flickr" valid="no" autocomplete="flickr"&gt;
+    &lt;title&gt;Flickr&lt;/title&gt;
+    &lt;icon&gt;flickr.png&lt;/icon&gt;
+  &lt;/item&gt;
+
+&lt;!--
+  Example of using icon type 'filetype' to load the icon for the file type.
+  This item is of type "file" which means it will be treated as a file in
+  Alfred's results, so can be actioned and revealed in finder.
+--&gt;
+
+  &lt;item uid="image" autocomplete="My holiday photo" type="file"&gt; 
+    &lt;title&gt;My holiday photo&lt;/title&gt; 
+    &lt;subtitle&gt;~/Pictures/My holiday photo.jpg&lt;/subtitle&gt; 
+    &lt;icon type="filetype"&gt;public.jpeg&lt;/icon&gt; 
+  &lt;/item&gt; 
+
+&lt;/items&gt;
+
+EOB</string>
+				<key>title</key>
+				<string>Script Filter XML format</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>6C68D0BB-A89A-4FDD-BB99-B5A5B460646E</string>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>6C68D0BB-A89A-4FDD-BB99-B5A5B460646E</key>
+		<dict>
+			<key>ypos</key>
+			<real>60</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>alfredapp.com</string>
+</dict>
+</plist>

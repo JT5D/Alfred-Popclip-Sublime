@@ -1,0 +1,113 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: TwitPic
+# Description: Share photos via the TwitPic service. Holding down option allows you to enter a tweet to send now.
+# Handles: NSFilenamesPboardType
+# Events: Clicked, Dragged
+# KeyModifiers: Option
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/twitpic.png
+# OptionsNIB: Login
+# LoginTitle: Twitter Login Details
+ 
+require "rexml/document"
+
+def dragged
+  $dz.determinate(true)
+  
+  file_path = $items[0]
+  filename = File.basename(file_path)
+  should_tweet = false
+  tweet_text = ""
+  
+  allowed_exts = ["jpg", "jpeg", "gif", "tif", "tiff", "png", "bmp"]
+  ext = File.extname(file_path).downcase[1..-1]
+  
+  if not allowed_exts.include?(ext)
+    $dz.finish("Not an Image")
+    $dz.url(false)
+    Process.exit
+  end
+  
+  if ENV['KEY_MODIFIERS'] == "Option"
+    should_tweet = true
+    output = `./CocoaDialog standard-inputbox --title "Enter Tweet" --e --informative-text "Enter the text for your tweet:"`
+    button, tweet_text = output.split("\n")
+
+    if button == "2" or tweet_text == nil
+      $dz.finish("Cancelled")
+      $dz.url(false)
+      return
+    end
+  end
+  
+  $dz.begin("Uploading #{filename}...")
+
+  last_output = 0
+  is_receiving_xml = false
+  xml_output = ""
+ 
+  api_action = (should_tweet ? "uploadAndPost" : "upload")
+  tweet_text.gsub!('"', '\"')
+  tweet_text.gsub!('$', '\$')
+  file_path = file_path.gsub('"', '\"')
+  
+  IO.popen("/usr/bin/curl -# -F 'username=#{ENV['USERNAME']}' -F 'password=#{ENV['PASSWORD']}' -F \"media=@#{file_path}\" -F \"message=#{tweet_text}\" http://twitpic.com/api/#{api_action} 2>&1 | tr -u \"\r\" \"\n\"") do |f|
+    while line = f.gets do
+      if line =~ /%/ and not is_receiving_xml
+        line_split = line.split(" ")
+        file_percent_raw = line_split[1]
+        if file_percent_raw != nil
+          file_percent = file_percent_raw.to_i
+          if last_output != file_percent
+            $dz.percent(file_percent) 
+            $dz.determinate(false) if file_percent == 100
+          end
+          last_output = file_percent
+        end
+      else
+        if line =~ /xml/ or is_receiving_xml
+          is_receiving_xml = true
+          xml_output += line
+        else
+          handle_errors(line)
+        end
+      end
+    end
+  end
+
+  begin
+    url = ""
+    doc = REXML::Document.new(xml_output)
+    root = doc.root
+    status = (should_tweet ? root.attributes["status"] : root.attributes["stat"])
+    
+    if status == "ok"
+      doc.elements.each("rsp/mediaurl") {|e| url = e.text}      
+    else
+      $dz.error("TwitPic Upload Error", root.elements[1].attributes["msg"])
+    end
+
+    $dz.finish("URL is now on clipboard")
+    $dz.url(url)
+  rescue
+    $dz.finish("Upload Failed")
+    $dz.url(false)
+  end
+end
+
+def handle_errors(line)
+  if line[0..4] == "curl:"
+    if line[6..-1] =~ /Couldn't resolve/
+      $dz.error("TwitPic Upload Error", "Please check your network connection.")
+    else
+      $dz.error("TwitPic Upload Error", line[6..-1])
+    end
+  end
+end
+
+def clicked
+  system("open http://twitpic.com/")
+end

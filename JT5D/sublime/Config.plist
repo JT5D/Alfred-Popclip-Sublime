@@ -6,23 +6,17 @@
 	<array>
 		<dict>
 			<key>AppleScript File</key>
-			<string>addEvent.applescript</string>
+			<string>sublime.applescript</string>
 			<key>Title</key>
-			<string>Event</string>
-		</dict>
-		<dict>
-			<key>AppleScript File</key>
-			<string>addTodo.applescript</string>
-			<key>Title</key>
-			<string>Todo</string>
+			<string>Sublime</string>
 		</dict>
 	</array>
 	<key>Extension Description</key>
-	<string>Create an iCal event</string>
+	<string>Create Sublime doc</string>
 	<key>Extension Identifier</key>
-	<string>com.xinthink.popclip.extension.ical</string>
+	<string>com.web5.popclip.extension.sublime</string>
 	<key>Extension Name</key>
-	<string>iCal</string>
+	<string>Sublime</string>
 	<key>Required Software Version</key>
 	<integer>701</integer>
 </dict>

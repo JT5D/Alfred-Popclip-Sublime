@@ -1,0 +1,36 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Google Clipboard
+# Description: This will search Google using text on the clipboard
+# Events: Clicked
+# Handles: NSStringPboardType
+# Creator: Wes Delp
+# URL: None
+# IconURL: https://cdn1.iconfinder.com/data/icons/yooicons_set01_socialbookmarks/512/social_google_box.png
+
+def pbcopy(input)
+  str = input.to_s
+  IO.popen('pbcopy', 'w') { |f| f << str }
+  str
+end
+
+def pbpaste
+  `pbpaste`
+end
+
+def parse
+  splitStr = pbpaste.split(/ /)
+  joinstr = splitStr.join("+")
+  return joinstr
+end
+
+def clicked
+  system("open https://www.google.com/#q=%s" % [parse])
+end
+
+
+
+
+
+

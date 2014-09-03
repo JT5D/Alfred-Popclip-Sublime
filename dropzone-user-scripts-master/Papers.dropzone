@@ -1,0 +1,72 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Papers
+# Description: Open URL or import PDF files in Papers.
+# Handles: NSStringPboardType, NSFilenamesPboardType
+# Creator: Jan Mol
+# URL: None
+# IconURL: http://gigapple.files.wordpress.com/2007/12/papers-icon.png
+# Events: Dragged, Clicked
+
+def importurl(url)
+    # Open Papers using Applescript
+  begin
+    `osascript -e 'tell application "Papers"'\
+               -e	'activate'\
+	       -e       'open location "#{url}"'\
+               -e       'end tell'`
+  rescue Exeption => e
+    $dz.finish("Error uploading in Papers! %s" % e)
+    $dz.url(false)
+    exit
+  end
+end
+
+def importpdf(path)
+  # Open Papers using Applescript
+  begin
+    `osascript -e 'tell application "Papers"'\
+               -e	'activate'\
+	       -e       'open POSIX file "#{path}"'\
+               -e       'end tell'`
+  rescue Exeption => e
+    $dz.finish("Error importing in Papers! %s" % e)
+    $dz.url(false)
+    exit
+  end
+end
+
+def dragged
+  $dz.determinate(false)
+  begin 
+    case ENV['DRAGGED_TYPE']
+      when 'NSStringPboardType'
+        $dz.begin("Opening URL in Papers...")
+        importurl($items[0])
+        $dz.finish("Opened URL in Papers")
+      when 'NSFilenamesPboardType'
+        $dz.begin("Importing PDF in Papers...")
+        importpdf($items[0])
+        $dz.finish("Imported PDF in Papers")
+    end
+    $dz.url(false)
+  rescue Exeption => e
+    $dz.finish("Error importing in Papers! %s" % e)
+    $dz.url(false)
+    exit
+  end
+end
+
+def clicked
+  # Open Papers using Applescript
+  begin
+    `osascript -e 'tell application "Papers"'\
+               -e   'activate'\
+               -e 'end tell'`
+  rescue Exeption => e
+    $dz.finish("Error importing Papers! %s" % e)
+    $dz.url(false)
+    exit
+  end
+end

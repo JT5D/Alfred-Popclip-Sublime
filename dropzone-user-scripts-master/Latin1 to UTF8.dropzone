@@ -1,0 +1,39 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Encode to uf8
+# Description: Converts a text file from latin1 to utf8
+# Handles: NSFilenamesPboardType
+# Events: Dragged
+# Creator: Walter Cruz
+# URL: http://waltercruz.com
+# IconURL: http://waltercruz.com/devel/unicode.png
+
+require 'iconv'
+require 'fileutils'
+
+def dragged
+  $dz.determinate(false)
+  $dz.begin("Converting file to UTF-8...")
+  file_path = $items[0]
+  file_name = File.basename(file_path)
+
+  allowed_exts = ["txt", "srt"]
+  ext = File.extname(file_path).downcase[1..-1]
+
+  if allowed_exts.include?(ext)
+  	FileUtils.cp(file_path, file_path + '.orig')
+
+ 	content = File.open(file_path).read
+ 	utf8_text = Iconv.conv("utf-8", "latin1", content)
+
+	File.open(file_path, 'w') do |f| 
+	  f.puts utf8_text 
+	end 
+
+    $dz.finish("File Converted to UTF-8")
+  end
+
+  $dz.url(false)
+
+end

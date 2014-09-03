@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>381</string>
+	<key>AMApplicationVersion</key>
+	<string>2.4</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>2.0.3</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<dict/>
+					<key>CheckedForUserDefaultShell</key>
+					<dict/>
+					<key>inputMethod</key>
+					<dict/>
+					<key>shell</key>
+					<dict/>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run Shell Script.action</string>
+				<key>ActionName</key>
+				<string>Run Shell Script</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<string>#!/usr/bin/env ruby
+# SearchLink 2.1.2 by Brett Terpstra 2014 (http://brettterpstra.com)
+# Free to use and modify, please maintain attribution
+require 'net/https'
+require 'shellwords'
+require 'yaml'
+require 'rubygems'
+require 'json'
+require 'cgi'
+
+if RUBY_VERSION.to_f &gt; 1.9
+  Encoding.default_external = Encoding::UTF_8
+  Encoding.default_internal = Encoding::UTF_8
+end
+
+# You can optionally copy any config variables to a text file
+# at "~/.searchlink" to make them permanent during upgrades
+# Values found in ~/.searchlink will override defaults in
+# this script
+
+if File.exists? File.expand_path("~/.searchlink")
+  $cfg = YAML.load_file(File.expand_path("~/.searchlink"))
+else
+  $cfg = {}
+end
+
+# set to true to force inline links
+$cfg['inline'] ||= false
+
+# set to true to add titles to links based on site title
+$cfg['include_titles'] ||= false
+
+# if true, a failed iTunes search will fall back to Google
+$cfg['itunes_fallback'] ||= false
+
+# change this to set a specific country for search (default US)
+$cfg['country_code'] ||= "US"
+
+# set to true to include a random string in ref titles
+# allows running SearchLink multiple times w/out conflicts
+$cfg['prefix_random'] ||= true
+
+# append affiliate link info to iTunes urls, empty quotes for none
+# example:
+# $itunes_affiliate = "&amp;at=10l4tL&amp;ct=searchlink"
+$cfg['itunes_affiliate'] ||= "&amp;at=10l4tL&amp;ct=searchlink"
+
+# to create Amazon affiliate links, set amazon_partner to:
+# [tag, camp, creative]
+# Use the amazon link tool to create any affiliate link and examine
+# to find the needed parts. Set to [] to return regular amazon links
+# example: amazon_partner = ["bretttercom-20","1789","390957"]
+$cfg['amazon_partner'] ||= []
+
+# To create custom abbreviations for Google Site Searches,
+# add to (or replace) the hash below.
+# "abbreviation" =&gt; "site.url",
+# This allows you, for example to use [search term](!bt)
+# as a shortcut to search brettterpstra.com. Keys in this
+# hash can override existing search triggers.
+$cfg['custom_site_searches'] ||= {
+  "bt" =&gt; "brettterpstra.com",
+  "md" =&gt; "www.macdrifter.com"
+}
+
+if RUBY_VERSION.to_f &gt; 1.9
+  input = STDIN.read.force_encoding('utf-8')
+else
+  input = STDIN.read
+end
+
+$originput = input.dup
+
+if input.strip =~ /^help$/i
+  %x{open http://brettterpstra.com/projects/searchlink/}
+  Process.exit
+end
+
+$cfg['inline'] = true if input.scan(/\]\(/).length == 1
+
+class String
+  def clean
+    self.gsub(/\n+/,' ').gsub(/"/,"&amp;quot").gsub(/\|/,"-").strip
+  end
+end
+
+def wiki(terms)
+  uri = URI.parse("http://en.wikipedia.org/w/api.php?action=query&amp;format=json&amp;prop=info&amp;inprop=url&amp;titles=#{CGI.escape(terms)}")
+  req = Net::HTTP::Get.new(uri.request_uri)
+  req['Referer'] = "http://brettterpstra.com"
+  req['User-Agent'] = "SearchLink (http://brettterpstra.com)"
+  res = Net::HTTP.start(uri.host, uri.port) {|http|
+    http.request(req)
+  }
+  result = JSON.parse(res.body)
+
+  if result
+    result['query']['pages'].each do |page,info|
+      return [info['fullurl'],info['title']]
+    end
+  end
+end
+
+def zero_click(terms)
+  url = URI.parse("http://api.duckduckgo.com/?q=#{CGI.escape(terms)}&amp;format=json&amp;no_redirect=1&amp;no_html=1&amp;skip_disambig=1")
+  res = Net::HTTP.get_response(url).body
+  result = JSON.parse(res)
+  if result
+    definition = result['Definition'] || false
+    definition_link = result['DefinitionURL'] || false
+    wiki_link = result['AbstractURL'] || false
+    title = result['Heading'] || false
+    return [title, definition, definition_link, wiki_link]
+  else
+    return false
+  end
+end
+
+def itunes(entity, terms, dev, aff='')
+  aff = $cfg['itunes_affiliate']
+
+  url = URI.parse("http://itunes.apple.com/search?term=#{CGI.escape(terms)}&amp;country=#{$cfg['country_code']}&amp;entity=#{entity}&amp;attribute=allTrackTerm")
+  res = Net::HTTP.get_response(url).body
+  json = JSON.parse(res)
+  if json['resultCount'] &amp;&amp; json['resultCount'] &gt; 0
+    result = json['results'][0]
+    case entity
+    when /(mac|iPad)Software/
+      output_url = dev &amp;&amp; result['sellerUrl'] ? result['sellerUrl'] : result['trackViewUrl']
+      output_title = result['trackName']
+    when /(musicArtist|song|album)/
+      case result['wrapperType']
+      when 'track'
+        output_url = result['trackViewUrl']
+        output_title = result['trackName'] + " by " + result['artistName']
+      when 'collection'
+        output_url = result['collectionViewUrl']
+        output_title = result['collectionName'] + " by " + result['artistName']
+      when 'artist'
+        output_url = result['artistLinkUrl']
+        output_title = result['artistName']
+      end
+    when /podcast/
+      output_url = result['collectionViewUrl']
+      output_title = result['collectionName']
+    end
+    return false unless output_url and output_title
+    if dev
+      return [output_url, output_title]
+    else
+      return [output_url + aff, output_title]
+    end
+  else
+    if $cfg['itunes_fallback']
+      case entity
+      when /(mac|iPad)Software/
+        url, title = google(%Q{(software OR app OR mac OR ipad OR iphone OR ios) #{terms}})
+      when /(musicArtist|song|album)/
+        url, title = google(%Q{music #{terms}})
+      when /podcast/
+        url, title = google(%Q{podcast #{terms}})
+      end
+
+      if url =~ /^https:\/\/itunes.apple.com\// &amp;&amp; !dev
+        url += aff
+      end
+      return [url, title]
+    else
+      return false
+    end
+  end
+end
+
+def lastfm(entity, terms)
+  url = URI.parse("http://ws.audioscrobbler.com/2.0/?method=#{entity}.search&amp;#{entity}=#{CGI.escape(terms)}&amp;api_key=2f3407ec29601f97ca8a18ff580477de&amp;format=json")
+  res = Net::HTTP.get_response(url).body
+  json = JSON.parse(res)
+  if json['results']
+    begin
+      case entity
+      when 'track'
+        result = json['results']['trackmatches']['track'][0]
+        url = result['url']
+        title = result['name'] + " by " + result['artist']
+      when 'artist'
+        result = json['results']['artistmatches']['artist'][0]
+        url = result['url']
+        title = result['name']
+      end
+      return [url, title]
+    rescue
+      return false
+    end
+  else
+    return false
+  end
+end
+
+def google(terms, define = false)
+  uri = URI.parse("http://ajax.googleapis.com/ajax/services/search/web?v=1.0&amp;filter=1&amp;rsz=small&amp;q=#{CGI.escape(terms)}")
+  req = Net::HTTP::Get.new(uri.request_uri)
+  req['Referer'] = "http://brettterpstra.com"
+  res = Net::HTTP.start(uri.host, uri.port) {|http|
+    http.request(req)
+  }
+  json = JSON.parse(res.body)
+  if json['responseData']
+    result = json['responseData']['results'][0]
+    return false if result.nil?
+    output_url = result['unescapedUrl']
+    if define &amp;&amp; output_url =~ /dictionary/
+      output_title = result['content'].gsub(/&lt;\/?.*?&gt;/,'')
+    else
+      output_title = result['titleNoFormatting']
+    end
+    return [output_url, output_title]
+  else
+    return false
+  end
+end
+
+def amazon_affiliatize(url, amazon_partner)
+
+  if url =~ /http:\/\/www.amazon.com\/(?:(.*?)\/)?dp\/([^\?]+)/
+    title = $1
+    id = $2
+    tag = $3
+    if amazon_partner.length == 3
+      az_url = "http://www.amazon.com/gp/product/#{id}/ref=as_li_ss_tl?ie=UTF8&amp;camp=#{amazon_partner[1]}&amp;creative=#{amazon_partner[2]}&amp;creativeASIN=#{id}&amp;linkCode=as2&amp;tag=#{amazon_partner[0]}"
+      return [az_url, title]
+    else
+      az_url = "http://www.amazon.com/gp/product/#{id}/"
+      return [az_url, title]
+    end
+  else
+    return [url,'']
+  end
+end
+
+def valid_search?(term)
+  valid = false
+  valid = true if term =~ /(^a$|^g$|^wiki$|^def$|^masd?$|^itud?$|^s$|^isong$|^iart$|^ialb$|^lsong$|^lart|^@(t|adn)|^ipod$)/
+  unless valid
+    valid = true if $cfg['custom_site_searches'].keys.include? term
+  end
+  valid
+end
+
+def do_search(search_type, search_terms, link_text='')
+  case search_type
+  when /^@t/ # twitterify username
+    if search_terms.strip =~ /^@?[0-9a-z_$]+$/i
+
+      handle = search_terms.sub(/^@/,'').strip
+      url = "https://twitter.com/#{handle}"
+      title = "@#{handle} on Twitter"
+      link_text = title if link_text == ''
+    else
+      return [false, search_terms, link_text]
+    end
+  when /^@adn/ # adnify username
+    if search_terms.strip =~ /^@?[0-9a-z_]+$/i
+      handle = search_terms.sub(/^@/,'').strip
+      url = "https://alpha.app.net/#{handle}"
+      title = "@#{handle} on App.net"
+      link_text = title if link_text == ''
+    else
+      return [false, search_terms, link_text]
+    end
+  when /^a$/
+    az_url, title = google(%Q{site:amazon.com #{search_terms}}, false)
+    url, title = amazon_affiliatize(az_url, $cfg['amazon_partner'])
+
+  when /^g$/ # google lucky search
+    url, title = google(search_terms)
+
+  when /^wiki$/
+    url, title = wiki(search_terms)
+
+  when /^def$/ # wikipedia/dictionary search
+    # title, definition, definition_link, wiki_link = zero_click(search_terms)
+    # if search_type == 'def' &amp;&amp; definition_link != ''
+    #   url = definition_link
+    #   title = definition.gsub(/'+/,"'")
+    # elsif wiki_link != ''
+    #   url = wiki_link
+    #   title = "Wikipedia: #{title}"
+    # end
+    url, title = google("define " + search_terms, true)
+
+  when /^masd?$/ # Mac App Store search (mas = itunes link, masd = developer link)
+    dev = search_type =~ /d$/
+    url, title = itunes('macSoftware',search_terms, dev, $cfg['itunes_affiliate'])
+  # Stopgap:
+  #when /^masd?$/
+  # url, title = google("site:itunes.apple.com Mac App Store #{search_terms}")
+  # url += $itunes_affiliate
+  when /^itud?$/ # iTunes app search
+    dev = search_type =~ /d$/
+    url, title = itunes('iPadSoftware',search_terms, dev, $cfg['itunes_affiliate'])
+
+  when /^s$/ # software search (google)
+    url, title = google(%Q{(software OR app OR mac) #{search_terms}})
+    link_text = title if link_text == ''
+
+  when /^ipod$/
+    url, title = itunes('podcast', search_terms, false)
+
+  when /^isong$/ # iTunes Song Search
+    url, title = itunes('song', search_terms, false)
+
+  when /^iart$/ # iTunes Artist Search
+    url, title = itunes('musicArtist', search_terms, false)
+
+  when /^ialb$/ # iTunes Album Search
+    url, title = itunes('album', search_terms, false)
+
+  when /^lsong$/ # Last.fm Song Search
+    url, title = lastfm('track', search_terms)
+
+  when /^lart$/ # Last.fm Artist Search
+    url, title = lastfm('artist', search_terms)
+  else
+    if search_terms
+      if search_type =~ /.+?\.\w{2,4}$/
+        url, title = google(%Q{site:#{search_type} #{search_terms}})
+      else
+        url, title = google(search_terms)
+      end
+    end
+  end
+  [url, title, link_text]
+end
+
+def print_or_copy(text, clipboard, input="")
+  # Process.exit unless text
+  if clipboard
+    %x{echo #{Shellwords.escape(text)}|tr -d "\n"|pbcopy}
+    print $originput
+  else
+    print text
+  end
+end
+
+links = {}
+footer = ''
+prefix = $cfg['prefix_random'] ? ("%04d" % rand(9999)).to_s + "-" : ''
+highest_marker = 0
+
+input.scan(/\[(?:#{prefix}-)?(\d+)\]: /).each do |match|
+  highest_marker = $1.to_i if $1.to_i &gt; highest_marker
+end
+
+if input =~ /\[(.*?)\]\((.*?)\)/
+
+  input.gsub!(/\[(.*?)\]\((.*?)\)/) do |match|
+    link_text = $1
+    link_info = $2
+    search_type = ''
+    search_terms = ''
+    link_only = false
+    clipboard = false
+
+
+    if link_info =~ /^(?:\!(.+) )?"(.*?)"$/
+      if $1.nil?
+        search_type = 'g'
+      else
+        search_type = $1
+      end
+      search_terms = $2
+      search_terms.strip!
+
+      # if the end of input contain "^", copy to clipboard instead of STDOUT
+      clipboard = true if search_terms =~ /(!!)?\^(!!)?$/
+
+      # if the end of input contains "!!", only print the url
+      link_only = true if search_terms =~ /!!\^?$/
+
+      search_terms.sub!(/(!!)?\^?(!!)?$/,"")
+    elsif link_info =~ /^\!/
+      search_word = link_info.match(/^\!(.+)/)
+      search_type = search_word[1] unless search_word.nil?
+      search_terms = link_text
+    elsif link_text &amp;&amp; link_text.length &gt; 0 &amp;&amp; (link_info.nil? || link_info.length == 0)
+      search_type = 'g'
+      search_terms = link_text
+    else
+      search_type = false
+      search_terms = false
+    end
+
+    $cfg['custom_site_searches'].each {|k,v|
+      if search_type == k
+        search_type = 'g'
+        search_terms = "site:#{v} #{search_terms}"
+      end
+    } if search_type &amp;&amp; search_terms &amp;&amp; search_terms.length &gt; 0
+
+    url = false
+    title = false
+    url, title, link_text = do_search(search_type, search_terms, link_text)
+
+    if url
+      link_text = title if link_text == '' &amp;&amp; title
+      if link_only
+        url
+      elsif $cfg['inline']
+        title &amp;&amp; $cfg['include_titles'] ? %Q{[#{link_text}](#{url} "#{title.clean}")} : %Q{[#{link_text}](#{url})}
+      else
+        if links.has_key? url
+          marker = prefix + ("%03d" % (links[url].to_i + highest_marker))
+        else
+          links[url] = prefix + ("%03d" % (links.length + 1 + highest_marker)).to_s
+          footer += %Q{\n[#{links[url]}]: #{url}}
+          footer += %Q{ "#{title.clean}"} if title &amp;&amp; $cfg['include_titles']
+        end
+
+        if title
+          %Q{[#{link_text}][#{links[url]}]}
+        else
+          %Q{[#{link_text}](#{url})}
+        end
+      end
+    else
+      match
+    end
+  end
+
+
+  if $cfg['inline']
+    print input
+  else
+    puts input
+    puts footer
+  end
+
+else
+  link_only = false
+  clipboard = false
+
+  input.strip!
+
+  # remove quotes from terms, just in case
+  input.sub!(/^(!\S+)?\s*(["'])(.*?)\2([\!\^]+)?$/, "\\1 \\3\\4")
+
+  # if the end of input contain "^", copy to clipboard instead of STDOUT
+  clipboard = true if input =~ /(!!)?\^(!!)?$/
+
+  # if the end of input contains "!!", only print the url
+  link_only = true if input =~ /!!\^?$/
+
+  input.sub!(/(!!)?\^?(!!)?$/,"")
+
+  reference_link = input =~ /^\S.*?:\s*$/
+  input.sub!(/:\s*$/,'')
+
+  if input =~ /^!(\S+)\s+(.*)$/
+    type = $1
+    terms = $2
+
+    if valid_search?(type)
+      search_type = type
+      search_terms = terms
+
+      $cfg['custom_site_searches'].each {|k,v|
+        if search_type == k
+          search_type = 'g'
+          search_terms = "site:#{v} #{search_terms}"
+          break
+        end
+      } if search_type &amp;&amp; search_terms &amp;&amp; search_terms.length &gt; 0
+
+      url, title, link_text = do_search(search_type, search_terms)
+
+    end
+
+    input = terms
+  else
+    url, title = google(input)
+  end
+
+  if url
+    if link_only
+      print_or_copy(url,clipboard)
+    elsif reference_link
+      if $cfg['include_titles']
+        print_or_copy %Q{[#{input.strip}]: #{url} "#{title.clean}"}, clipboard
+      else
+        print_or_copy %Q{[#{input.strip}]: #{url}}, clipboard
+      end
+    else
+      if $cfg['include_titles']
+        print_or_copy %Q{[#{input.strip}](#{url} "#{title.clean}")}, clipboard
+      else
+        print_or_copy %Q{[#{input.strip}](#{url})}, clipboard
+      end
+    end
+  else
+    print $originput
+  end
+end
+</string>
+					<key>CheckedForUserDefaultShell</key>
+					<true/>
+					<key>inputMethod</key>
+					<integer>0</integer>
+					<key>shell</key>
+					<string>/usr/bin/ruby</string>
+					<key>source</key>
+					<string></string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.RunShellScript</string>
+				<key>CFBundleVersion</key>
+				<string>2.0.3</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunShellScriptAction</string>
+				<key>InputUUID</key>
+				<string>1B92DCEB-5863-44D2-BBFD-E97F0318316D</string>
+				<key>Keywords</key>
+				<array>
+					<string>Shell</string>
+					<string>Script</string>
+					<string>Command</string>
+					<string>Run</string>
+					<string>Unix</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>34FFFEE7-9E94-42F4-89C2-2F66196FF67A</string>
+				<key>UUID</key>
+				<string>348C55FD-D93F-4CDE-A8A8-DC31888F8448</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<integer>0</integer>
+						<key>name</key>
+						<string>inputMethod</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+					<key>1</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>1</string>
+					</dict>
+					<key>2</key>
+					<dict>
+						<key>default value</key>
+						<false/>
+						<key>name</key>
+						<string>CheckedForUserDefaultShell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>2</string>
+					</dict>
+					<key>3</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>COMMAND_STRING</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>3</string>
+					</dict>
+					<key>4</key>
+					<dict>
+						<key>default value</key>
+						<string>/bin/sh</string>
+						<key>name</key>
+						<string>shell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>4</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>309.500000:825.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict/>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>serviceInputTypeIdentifier</key>
+		<string>com.apple.Automator.text</string>
+		<key>serviceOutputTypeIdentifier</key>
+		<string>com.apple.Automator.text</string>
+		<key>serviceProcessesInput</key>
+		<integer>0</integer>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.servicesMenu</string>
+	</dict>
+</dict>
+</plist>

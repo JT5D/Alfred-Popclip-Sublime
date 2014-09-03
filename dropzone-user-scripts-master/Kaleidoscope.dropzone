@@ -1,0 +1,22 @@
+# Dropzone Destination Info
+# Name: Diff files with Kaleidoscope
+# Description: Drag two files to run a diff with Kaleidoscope.app (must install the Terminal utility from the Kaleidoscope preferences)
+# Handles: NSFilenamesPboardType
+# Events: dragged
+# Creator: Brett Terpstra, w/code by Gergo Sulymosi
+# URL: http://brettterpstra.com
+# IconURL: http://assets.brettterpstra.com/Kaleidoscope_icon.png
+
+def dragged
+	$dz.begin("Opening Changes...")
+
+	unless $items.size == 2
+		$dz.finish("You must drag two files!")
+		$dz.url(false)
+		exit
+	end
+
+	system('ksdiff', $items.first, $items.last)
+
+	$dz.url(false)
+end

@@ -1,0 +1,211 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: AFP Copy
+# Description: Copy files to a specified path on a specified server.
+# Handles: NSFilenamesPboardType
+# Creator: Aloha Silver
+# URL: http://alohasilver.wordpress.com/afp-copy/
+# IconURL: http://alohasilver.files.wordpress.com/2010/03/downloads.png
+# Events: Dragged, Clicked, TestConnection
+# OptionsNIB: ExtendedLogin
+
+def dragged
+  # Verifies if the server is online
+  if isonline?
+    itisonline = true
+  else
+    itisonline = false
+  end
+  
+  # In case the server is offline, tells the user that and stops acting
+  if itisonline == false
+    $dz.finish("This Server is Offline!")
+    $dz.url(false)
+    return
+    
+  # In case the server is online, acts as expected, copying the files
+  else
+    
+    # Checks for a mounted volume.
+    path = "/Volumes/#{ENV['USERNAME']}/"
+    if File.exists?(path) && File.directory?(path)
+      tomount = false
+    else
+      tomount = true
+    end
+  
+    # Mounts the volume, if it wasn't mounted before running the script.
+    if tomount == true
+      case failproof
+      when 0
+        $dz.determinate(true)
+        $dz.begin("Mounting Volume...")
+        `mkdir /Volumes/#{ENV['USERNAME']}`
+        `/sbin/mount_afp afp://#{ENV['USERNAME']}:#{ENV['PASSWORD']}@"#{ENV['SERVER']}"/#{ENV['USERNAME']} /Volumes/#{ENV['USERNAME']}`
+      when 1
+        $dz.error("Authentication Error", "You provided either a wrong username or a wrong password.\nPlease check your settings and test the connection.")
+      when 2
+        $dz.error("User Folder Missing", "You provided a wrong username.\nPlease check your settings and test the connection.")
+      when 3
+        $dz.error("Wrong Path", "You provided an invalid path on the remote server.\nPlease check your settings and test the connection.")
+      when 5
+        $dz.error("Unknown Error", "An Unknown error has ocurred.")
+      end
+    end
+
+    # Copies the dragged file(s)
+    $dz.begin("Copying...")
+    Rsync.do_copy($items, "/Volumes/#{ENV['USERNAME']}/#{ENV['REMOTE_PATH']}", false)
+  
+    # If the script mounted the volume, it is then ejected.
+    if tomount == true
+      `umount /Volumes/#{ENV['USERNAME']}`
+    end
+  
+    $dz.finish("File(s) Copied")
+    $dz.url(false)
+  end
+end
+
+def clicked
+  # Verifies if the server is online
+  if isonline?
+    itisonline = true
+  else
+    itisonline = false
+  end
+  
+  # In case the server is offline, tells the user that and stops acting
+  if itisonline == false
+    $dz.finish("This Server is Offline!")
+    $dz.url(false)
+    return
+    
+  # In case the server is online, acts as expected, opening the folder
+  else
+    
+    # Checks for a mounted volume.
+    path = "/Volumes/#{ENV['USERNAME']}/"
+    if File.exists?(path) && File.directory?(path)
+      tomount = false
+    else
+      tomount = true
+    end
+  
+    # Mounts the volume, if it wasn't mounted before running the script.
+    # It also double checks for errors.
+    if tomount == true
+      case failproof
+      when 0
+        $dz.determinate(false)
+        $dz.begin("Mounting Volume...")
+        `mkdir /Volumes/#{ENV['USERNAME']}`
+        `/sbin/mount_afp afp://#{ENV['USERNAME']}:#{ENV['PASSWORD']}@"#{ENV['SERVER']}"/#{ENV['USERNAME']} /Volumes/#{ENV['USERNAME']}`
+        system("open \"#{"/Volumes/#{ENV['USERNAME']}/#{ENV['REMOTE_PATH']}"}\"")
+        $dz.finish("Done")
+        $dz.url(false)
+      when 1
+        $dz.error("Authentication Error", "You provided either a wrong username or a wrong password.\nPlease check your settings and test the connection.")
+      when 2
+        $dz.error("User Folder Missing", "You provided a wrong username.\nPlease check your settings and test the connection.")
+      when 3
+        $dz.error("Wrong Path", "You provided an invalid path on the remote server.\nPlease check your settings and test the connection.")
+      when 5
+        $dz.error("Unknown Error", "An Unknown error has ocurred.")
+      end
+   # If the volume was already mounted, just shows the folder
+   else
+     system("open \"#{"/Volumes/#{ENV['USERNAME']}/#{ENV['REMOTE_PATH']}"}\"")
+     $dz.finish("Done")
+     $dz.url(false)
+   end
+    
+  end
+end
+
+def isonline?
+  # This function tests for the availability of a server.
+  # It returns true if the server is online, false if it is offline.
+  pinganswer = `ping -t 1 -o #{ENV['SERVER']}`
+  if pinganswer == ''
+    return false
+  else
+    return true
+  end
+end
+
+def testconnection
+  # This function allows the user to test the connection before
+  # adding the script to the grid
+  
+  # Verifies if the server is online
+  if isonline?
+    itisonline = true
+  else
+    itisonline = false
+  end
+  
+  # In case the server is offline, tells the user that and stops acting
+  if itisonline == false
+    $dz.error("Could Not Reach Server.", "There is a problem with this server.\nIt is either offline or nonexistent.")
+  end
+  
+  # In case the server is online, verifies if it is already mounted
+  path = "/Volumes/#{ENV['USERNAME']}/"
+  if File.exists?(path) && File.directory?(path)
+    $dz.error("Server Mounted", "Please eject the server and try again.\nThis is only needed for this test.")  
+  
+  # In case the server is online and not mounted, acts as expected, checking the info provided
+  else
+    `mkdir /Volumes/#{ENV['USERNAME']}`
+    `/sbin/mount_afp afp://#{ENV['USERNAME']}:#{ENV['PASSWORD']}@"#{ENV['SERVER']}"/#{ENV['USERNAME']}/#{ENV['REMOTE_PATH']} /Volumes/#{ENV['USERNAME']}`
+    mount_success = $?
+    case mount_success
+    when 0
+     `umount /Volumes/#{ENV['USERNAME']}`
+     $dz.alert("Connection Successful", "The script is properly configured")
+     #$dz.alert("Connection Successful", mount_success)
+    when 24832
+     system("rmdir /Volumes/#{ENV['USERNAME']}")
+     $dz.error("Authentication Error", "There is a problem with either your username or your password.\nCould not authenticate.")
+     #$dz.error("Authentication Error", mount_success)
+    when 30720
+     system("rmdir /Volumes/#{ENV['USERNAME']}")
+     $dz.error("User Folder Missing", "This user folder does not exist on the remote server.")
+     #$dz.error("No Folder", mount_success)
+    when 25856
+     system("rmdir /Volumes/#{ENV['USERNAME']}")
+     $dz.error("Wrong Path", "This path does not exist on the remote server.\nPlease check the remote path field.")
+    #when 14848
+     #$dz.error("Server Mounted", "Please eject the server and try again.\nThis is only needed for this test.")
+    else
+     $dz.error("Unknown Error", "An Unknown error has ocurred.")
+     #$dz.error("Unknown Error", mount_success)
+    end
+  end
+end
+
+def failproof
+  `mkdir /Volumes/#{ENV['USERNAME']}`
+  `/sbin/mount_afp afp://#{ENV['USERNAME']}:#{ENV['PASSWORD']}@"#{ENV['SERVER']}"/#{ENV['USERNAME']}/#{ENV['REMOTE_PATH']} /Volumes/#{ENV['USERNAME']}`
+  mount_success = $?
+  case mount_success
+  when 0
+   `umount /Volumes/#{ENV['USERNAME']}`
+   return 0
+  when 24832
+   system("rmdir /Volumes/#{ENV['USERNAME']}")
+   return 1
+  when 30720
+   system("rmdir /Volumes/#{ENV['USERNAME']}")
+   return 2
+  when 25856
+   system("rmdir /Volumes/#{ENV['USERNAME']}")
+   return 3
+  #when 14848
+   #$dz.error("Server Mounted", "Please eject the server and try again.\nThis is only needed for this test.")
+  else
+   return 5
+  end
+end

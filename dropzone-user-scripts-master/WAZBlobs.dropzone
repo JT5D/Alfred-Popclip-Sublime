@@ -1,0 +1,80 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: WAZ Blobs
+# Description: Upload your Blobs to Windows Azure Blobs service dragging and dropping your files to Dropzone.
+# Handles: NSFilenamesPboardType
+# Creator: Juan Pablo Garcia Dalolla
+# URL: http://blogs.southworks.net/jpgarcia
+# IconURL: http://waz-explorer.heroku.com/images/azure-logo.png
+# Events: Dragged, Clicked
+# OptionsNIB: Login
+# LoginTitle: Windows Azure Login Details (account_name, access_key)
+
+require 'rubygems'
+
+WAZ_EXPLORER_URL = "http://waz-explorer.heroku.com/containers/dropzone/blobs"
+
+def meet_gem_deps?
+  dep = Gem::Dependency.new('waz-storage', Gem::Requirement.default)
+  !Gem.source_index.search(dep).empty?
+end
+
+if !meet_gem_deps?
+  $dz.error("waz-storage gem required!", "Install the required gem from a terminal:\r\n'sudo gem install waz-storage --source http://gemcutter.org'")
+  $dz.url(false)  
+else
+  require 'waz-blobs'
+end
+
+def dragged
+  begin
+    $dz.determinate(true)
+
+    WAZ::Storage::Base.establish_connection!( :account_name => ENV['USERNAME'], 
+                                              :access_key => ENV['PASSWORD'])
+
+    if !WAZ::Storage::Base.connected?
+      $dz.error("Connection Failed!", "Check your Windows Azure account_name and access_key on Dropzone settings section.")
+      $dz.url(false)
+      return
+    end
+
+    container = WAZ::Blobs::Container.find('dropzone')
+    container = WAZ::Blobs::Container.create('dropzone') if container.nil?
+    container.public_access = true
+      
+    $items.each_with_index{ |item,i|
+      $dz.begin("Storing item #{i+1}/#{$items.length} on Windows Azure...")          
+      mimetype = IO.popen("file -Ib '#{item}'").readline.gsub(/\n/,"")
+      mimetype = 'plain/text' if mimetype.empty?
+      contents = ""
+      File.open(item, 'r') { |file|  
+        while line = file.gets  
+         contents << line  
+        end  
+      }
+
+      $dz.percent(((i+1).to_f/$items.length)*100)
+      sleep(1)
+      container.store(CGI.escape(File.basename(item)), contents, mimetype)
+    }
+  
+    $dz.finish("#{$items.length} #{$items.length == 1 ? "Blob" : "Blobs"} uploaded.")
+    $dz.url(WAZ_EXPLORER_URL)          
+  rescue RestClient::RequestFailed
+    $dz.error("Upload error!", "Check your Windows Azure account_name and access_key on Dropzone settings section.") if $!.message.match(/'HTTP status code 403'/)
+    $dz.url(false)          
+  rescue SocketError
+    $dz.error("Upload error!", "Check your network connection.")
+    $dz.url(false)      
+  rescue
+    $dz.error("WAZ Blobs error!", "View the debug console for for info 'Command-Shift-D'. [#{$!}]")    
+    $dz.url(false)
+  end
+end
+
+def clicked
+  system("open #{WAZ_EXPLORER_URL}")
+end
+    

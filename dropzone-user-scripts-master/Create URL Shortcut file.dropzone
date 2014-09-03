@@ -1,0 +1,43 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Create URL Shortcut File
+# Description: Creates webloc file of the dragged URL
+# Handles: NSStringPboardType
+# Creator: Hubert CAMPAN
+# URL: http://omnimaki.com
+# IconURL: http://omnimaki.com/imagespool/icones/link.png
+# OptionsNIB: ChooseFolder
+
+def dragged
+  destination = "#{ENV['EXTRA_PATH']}"
+
+  $dz.determinate(false)
+  $dz.begin("Creating URL Shortcut File...")
+
+  # variables
+  url   = $items[0]
+  title = $items[0].gsub(/https?:\/\//, '').gsub("\/", '_')
+  
+  # creating the webloc file
+  File.open("#{destination}/#{title}.webloc", "w") { |f|
+    f << %Q{<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>URL</key>
+            <string>#{url}</string>
+        </dict>
+        </plist>}
+    }
+
+  # hiding the webloc extension
+  %x{/usr/bin/SetFile -a E \"#{destination}/#{title}.webloc\"}
+
+  $dz.finish("URL Shortcut File created")
+  $dz.url(false)
+end
+
+def clicked
+  %x{open "#{ENV['EXTRA_PATH']}"}
+end

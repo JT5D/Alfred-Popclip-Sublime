@@ -1,0 +1,31 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Desktop Picture
+# Description: A dropped image will be set as the current desktop background.
+# Handles: NSFilenamesPboardType
+# Events: Dragged
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/desktop.png
+
+def dragged
+  $dz.determinate(false)
+  
+  file_path = $items[0]
+  file_name = File.basename(file_path)
+  
+  $dz.begin("Changing to #{file_name}...")
+  
+  allowed_exts = ["jpg", "jpeg", "gif", "tif", "tiff", "png", "bmp"]
+  ext = File.extname(file_path).downcase[1..-1]
+  
+  if allowed_exts.include?(ext)
+    %x(osascript -e 'tell application "System Events" to set picture of current desktop to "#{file_path}"' >& /dev/null)
+    $dz.finish("Desktop Changed")
+  else
+    $dz.finish("Not an Image")
+  end
+  
+  $dz.url(false)
+end

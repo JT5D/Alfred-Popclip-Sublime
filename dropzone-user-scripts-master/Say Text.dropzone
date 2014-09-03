@@ -1,0 +1,14 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Say Text
+# Description: Text dragged onto this destination will be read aloud to you.
+# Events: Dragged
+# Handles: NSStringPboardType
+# Creator: Florian Poeck
+# URL: http://macfidelity.de
+# IconURL: http://aptonic.com/destinations/icons/say.png
+ 
+def dragged
+  system "say \"#{$items[0]}\" &"
+end

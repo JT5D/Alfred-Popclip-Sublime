@@ -1,0 +1,60 @@
+General:
+	- Move workflow into top-level directory to allow use as a Git submodule.
+		Is this necessary? I have to copy stuff hither and thither all the time, but
+		I'm the one developing the workflow package. Will this be such a problem for
+		other developers?
+
+		In this case, where would the docs go? They don't exist yet, but should, and
+		including them in the workflow package would be antithetical to what I'm
+		trying to achieve. They would just be a duplication of the comments in the
+		source code in any case.
+
+web.py:
+workflow.py:
+	- automatically add `lib` and/or `packages` subdirectory to `sys.path`?
+	- move "magic" args to class-level dictionary, so authors can add their own.
+	ui.py:
+	Possibly provide access to dialog boxes, notifications w/out having to use AppleScript
+	- Yes/no dialog
+	- Text input
+	- Select list
+	- Notification center notifications
+	search.py:
+		Interface to `mdfind`
+Docs:
+	- Add tutorial using `workflow.web`
+	- Add tutorial using filesystem/Unicode
+
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+Archive:
+- add `openterminal` magic arg. @done(14-03-08 00:05)
+ @project(workflow.py)
+- Add unit tests @done(14-03-02 01:23)
+ @project(web.py)
+- Normalise Unicode @done(14-03-06 20:34)
+ @project(web.py)
+- Add unit tests @done(14-03-03 03:20)
+ @project(workflow.py)
+- Give log file more unique name @done(14-02-27 23:01)
+ @project(workflow.py)
+bundleid.log?
+- Add magic arguments for opening cache/data directories in Finder @done(14-03-05 00:10)
+ @project(workflow.py)
+- Add `workflowdir` method to match `datadir` and `cachedir`. @done(14-03-05 00:10)
+ @project(workflow.py)
+- Tests for `Workflow` Keychain methods @done(14-03-03 03:21)
+ @project(workflow.py / Unit Tests)
+- Tests for `Workflow.run` method @done(14-03-03 03:21)
+ @project(workflow.py / Unit Tests)
+- Tests for `Workflow` data caching methods @done(14-03-03 03:21)
+ @project(workflow.py / Unit Tests)
+- Update list of "magic" arguments in tutorial2.rst @done(14-03-07 19:02)
+ @project(Docs)
+- Add and adapt phyllisstein's `keychain` module @done(14-02-27 22:56)
+ @project(Other)
+https://github.com/phyllisstein/alp/blob/master/alp/keychain.py
+Created own version
+- Add and adapt phyllisstein's `fuzzy` module @done(14-02-27 22:56)
+ @project(Other)
+https://github.com/phyllisstein/alp/blob/master/alp/fuzzy.py
+Created own version

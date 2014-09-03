@@ -1,0 +1,72 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: HTML5 Boilerplate
+# Description: Clones the latest GitHub HTML5 Boilerplate into folder dragged onto destination, or click to select a folder to clone into.
+# Events: Dragged, Clicked
+# Handles: NSFilenamesPboardType
+# Creator: Marcell Jusztin
+# URL: http://www.marcelljusztin.com
+# IconURL: http://aptonic.com/destinations/icons/html5_boilerplate.png
+
+def dragged
+  folder_path = $items[0]
+  if File::ftype(folder_path).eql? 'directory'
+    git_clone(folder_path, false)
+    $dz.finish("Clone Completed")
+  else
+    $dz.finish("Must be Folder")
+  end
+  
+  $dz.url(false)
+end
+
+def clicked
+  output = `./CocoaDialog fileselect --select-directories --title "Clone repo into folder" --e --text "Select path to clone HTML5 boilerplate into:"`
+  folder_name = output.split("\n")[0]
+  
+  if folder_name.nil? or folder_name == ""
+    $dz.finish("No Folder Selected")
+  else
+    git_clone(folder_name, true)
+    $dz.finish("Clone Completed")
+  end
+    
+  $dz.url(false)
+end
+
+def git_clone(folder, create_folder)
+  $dz.determinate(false)
+  $dz.begin("Cloning HTML5 Boilerplate...")
+  error_title = "HTML5 Boilerplate Clone Error"
+  
+  begin
+    r, w = IO.pipe
+    
+    if create_folder
+      Dir.mkdir(folder) unless File.exists?(folder)
+    end
+    
+    Dir.chdir(folder)
+    
+    # Fork github thread and open STDERR
+    child = fork{ STDERR.reopen w; w.close; `git clone git://github.com/h5bp/html5-boilerplate.git \"#{folder}\" --progress &` } 
+    w.close
+    
+    $dz.determinate(true)
+        
+    # Read STDERR
+    while(( l = r.read(100) )) 
+      error = /fatal/.match(l.inspect) # Look for error message
+      if error.nil?
+        percent = /\d+%(?!.*\d+%)/.match(l.inspect) # Match the last occurance of the percentage
+        $dz.percent(percent.to_s.gsub("\%","")) unless percent.nil? # Get rid of "%" sign and pass value to progressbar
+      else
+        $dz.error(error_title, l.inspect) # Output error message
+      end
+    end
+  rescue Exception => e
+    $dz.error(error_title, e)
+    $dz.url(false)
+  end
+end

@@ -1,0 +1,18 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Public IP
+# Description: Grabs your public IP via ifconfig.me curl API and pushes it to you clipboard.
+# Events: Clicked
+# Creator: Marcell Jusztin
+# URL: http://www.marcelljusztin.com
+# IconURL: http://www.marcelljusztin.com/images/myip.png
+
+def clicked
+  $dz.begin("Retrieving IP Address...")
+  ip_server = IO.popen("curl ifconfig.me/ip")
+  ip = ip_server.readlines
+  ip_server.close
+  $dz.finish("Public IP is on your clipboard")
+  $dz.url(ip)
+end

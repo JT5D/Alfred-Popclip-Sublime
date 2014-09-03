@@ -1,0 +1,39 @@
+#!/usr/bin/ruby
+# Dropzone Destination Info
+# Name: Rename & Save to Folder
+# Description: Allows you to rename files and save them to a folder of your choice.
+# Handles: NSFilenamesPboardType
+# Creator: Buster P. Keaton
+# URL: http://www.notarealURI.com
+# OptionsNIB: ChooseFolder
+
+def dragged
+  output = `./CocoaDialog standard-inputbox --title "Rename File" --e --informative-text "Enter new name for this file (minus extension):"`
+  filename = output.split("\n")[1]
+
+  if filename == nil
+    $dz.finish("Empty Filename")
+    $dz.url(false)
+    return
+  end
+
+  $dz.determinate(false)
+  $dz.begin("Copying file...")
+  
+  ext = File.extname($items[0]).downcase[1..-1]
+  new_filepath = ENV['EXTRA_PATH'] + "/" + filename + "." + ext
+  result = `cp \"#{$items[0]}\" \"#{new_filepath}\" 2>&1`
+  
+  if result == ""
+    $dz.finish("Copy Complete")
+    $dz.url(false)
+  else
+    $dz.finish("Copy Failed")
+    $dz.url(false)
+  end
+end
+
+def clicked
+  escaped_path = ENV['EXTRA_PATH'].gsub(/["`$\\]/){ |s| '\\' + s }
+  system("open \"#{escaped_path}\"")
+end

@@ -1,0 +1,101 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Posterous
+# Description: Share stuff on Posterous. Holding down option allows you to enter a post title.
+# Handles: NSFilenamesPboardType
+# Events: Clicked, Dragged
+# KeyModifiers: Option
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/posterous.png
+# OptionsNIB: Login
+# LoginTitle: Posterous Login Details
+ 
+require "rexml/document"
+
+def dragged
+  $dz.determinate(true)
+  
+  file_path = $items[0]
+  filename = File.basename(file_path)
+  title_text = ""
+  
+  if ENV['KEY_MODIFIERS'] == "Option"
+    output = `./CocoaDialog standard-inputbox --title "Enter Title" --e --informative-text "Enter the title for your post:"`
+    button, title_text = output.split("\n")
+
+    if button == "2" or title_text == nil
+      $dz.finish("Cancelled")
+      $dz.url(false)
+      return
+    end
+  end
+  
+  $dz.begin("Uploading #{filename}...")
+
+  last_output = 0
+  is_receiving_xml = false
+  xml_output = ""
+ 
+  title_text.gsub!('"', '\"')
+  title_text.gsub!('$', '\$')
+  file_path = file_path.gsub('"', '\"')
+  
+  IO.popen("/usr/bin/curl -# -u #{ENV['USERNAME']}:#{ENV['PASSWORD']} -F \"title=#{title_text}\" -F 'media=@#{file_path}' http://posterous.com/api/newpost 2>&1 | tr -u \"\r\" \"\n\"") do |f|
+    while line = f.gets do
+      if line =~ /%/ and not is_receiving_xml
+        line_split = line.split(" ")
+        file_percent_raw = line_split[1]
+        if file_percent_raw != nil
+          file_percent = file_percent_raw.to_i
+          if last_output != file_percent
+            $dz.percent(file_percent) 
+            $dz.determinate(false) if file_percent == 100
+          end
+          last_output = file_percent
+        end
+      else
+        if line =~ /xml/ or is_receiving_xml
+          is_receiving_xml = true
+          xml_output += line
+        else
+          handle_errors(line)
+        end
+      end
+    end
+  end
+
+  begin
+    url = ""
+    doc = REXML::Document.new(xml_output)
+    root = doc.root
+    status = root.attributes["stat"]
+    
+    if status == "ok"
+      doc.elements.each("rsp/post/url") {|e| url = e.text}      
+    else
+      $dz.error("Posterous Upload Error", root.elements[1].attributes["msg"])
+    end
+
+    $dz.finish("URL is now on clipboard")
+    $dz.url(url)
+  rescue
+    $dz.finish("Upload Failed")
+    $dz.url(false)
+  end
+end
+
+def handle_errors(line)
+  if line[0..4] == "curl:"
+    if line[6..-1] =~ /Couldn't resolve/
+      $dz.error("Posterous Upload Error", "Please check your network connection.")
+    else
+      $dz.error("Posterous Upload Error", line[6..-1])
+    end
+  end
+end
+
+def clicked
+  system("open http://posterous.com")
+end

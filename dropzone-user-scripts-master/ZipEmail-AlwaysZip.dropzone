@@ -1,0 +1,27 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Zip & Email (always zip)
+# Description: Zips up the dropped files or folders and creates a new Mail attchment with the zip file.
+# Handles: NSFilenamesPboardType
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/mail.png
+
+def dragged
+  $dz.determinate(false)
+
+  # Zip up files first
+  email_file = ZipFiles.zip($items, "files.zip")
+  delete_zip = true
+
+  system("osascript ../AppleScripts/mail.scpt #{email_file} >& /dev/null")
+  ZipFiles.delete_zip(email_file) if delete_zip
+
+  $dz.finish("Message Created")
+  $dz.url(false)
+end
+
+def clicked
+  system("open /Applications/Mail.app")
+end

@@ -1,0 +1,100 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: LinkSmasher
+# Description: Drop text/url, or click to scan clipboard. If multiple links are found, they'll be collected into one url with linkbun.ch, a single url will be shortened with bit.ly.
+# Handles: NSStringPboardType
+# Creator: Brett Terpstra, w/code by Sergej Müller
+# URL: http://brettterpstra.com
+# IconURL: http://abyss.designheresy.com/LinkSmash.png
+# OptionsNIB: Login
+# LoginTitle: bit.ly Login Details
+
+require 'open-uri'
+require 'net/http'
+require 'cgi'
+require 'rexml/document'
+
+def get_bitly_link(text)
+  if text =~ /(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\/~\+#]*[\w\-\@^=%&amp;\/~\+#])?/m
+	$dz.begin("Getting Bit.ly link")
+	url = $1
+    Net::HTTP.start('api.bit.ly') do |http|
+      req = Net::HTTP::Get.new('/shorten?version=2.0.1&format=xml&history=1&longUrl=' + CGI::escape(url))
+      req.basic_auth ENV['USERNAME'], ENV['PASSWORD']
+      res = http.request(req)
+
+      doc = REXML::Document.new(res.body)
+      doc.elements.each("bitly/statusCode") do |a|
+      	if a.text == "ERROR"
+      		$dz.finish("Invalid user or password")
+    		$dz.url(false)
+      	else
+      		doc.elements.each("bitly/results/nodeKeyVal/shortUrl") do |b|
+      			if b.text.empty?
+      				$dz.finish("Empty URL returned")
+    				$dz.url(false)
+    			else
+      				$dz.finish("Copied short URL")
+    				$dz.url(b.text)
+    			end
+      		end
+      	end
+      end
+    end
+  else
+    $dz.finish("Invalid URL")
+    $dz.url(false)
+  end
+end
+
+def bunch_links(text)
+  $dz.begin("Bunching links")
+  links = text.scan(/((?:http|https):\/\/[\w\-_]+(?:\.[\w\-_]+)+(?:[\w\-\.,@?^=%&amp;:\/~\+#]*[\w\-\@^=%&amp;\/~\+#])?)/m)
+  unless links.empty?
+    linkbunch = CGI.escape(links.join("\n"))
+    url = "http://www.linkbun.ch/linkbunch.php?links=#{linkbunch}&bunch=Bunch&mode=api"
+    res = Net::HTTP.get_response(URI.parse(url))
+    if res.code.to_i == 200
+      $dz.finish("#{links.length} links bunched")
+      $dz.url(res.body)
+    else
+      $dz.finish("Linkbunch returned an error")
+      $dz.url(false)
+    end
+  else
+    $dz.finish("No links detected")
+    $dz.url(false)
+  end
+end
+
+
+def dragged
+	$dz.determinate(false)
+	$dz.begin("Checking links")
+	count = $items[0].scan(/((?:http|https):\/\/[\w\-_]+(?:\.[\w\-_]+)+(?:[\w\-\.,@?^=%&amp;:\/~\+#]*[\w\-\@^=%&amp;\/~\+#])?)/m).length
+	if count > 1
+		bunch_links($items[0])
+	elsif count == 1
+		get_bitly_link($items[0])
+	else
+		$dz.finish("No links detected")
+        $dz.url(false)
+	end
+end
+
+def clicked
+	$dz.determinate(false)
+  	$dz.begin("Scanning clipboard for links")
+    `pbpaste|pbcopy`
+    text = %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}.strip
+	count = text.scan(/((?:http|https):\/\/[\w\-_]+(?:\.[\w\-_]+)+(?:[\w\-\.,@?^=%&amp;:\/~\+#]*[\w\-\@^=%&amp;\/~\+#])?)/m).length
+	if count == 1
+    	get_bitly_link(text)
+	elsif count > 1
+		bunch_links(text)
+	else
+		$dz.finish("No links detected")
+        $dz.url(false)
+	end
+end

@@ -1,0 +1,45 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Secure Eraser
+# Description: Overwrite files three times and then erases them.
+# Handles: NSFilenamesPboardType
+# Creator: Grzegorz Wilk
+# URL: http://www.grzegor.pl
+# IconURL: http://upload.wikimedia.org/wikipedia/commons/e/ee/Erase_stub.png
+ 
+
+def dragged
+  output = `./CocoaDialog yesno-msgbox --text "Do you REALLY want to delete dropped files?" --no-cancel`
+  if output.to_i == 1 
+    $dz.begin("Erasing files (may take a while for large files)")
+    $dz.determinate(true)
+
+    # determine size of all files 
+    whole_size = 0
+    percent = 0
+    undeletable = false
+    $items.each {
+      |item| whole_size += File.size(item)
+    }
+  
+    # delete them one by one in
+    $items.each do |item| 
+        file_size = File.size(item)
+        exit = system('rm -rfP "'+item+'"')
+        if exit == false
+          undeletable = true 
+        end
+        percent += file_size * 100 / whole_size
+        $dz.percent(percent)
+    end
+ 
+    if undeletable == true
+        $dz.finish("Error! See your clipboard.")
+        $dz.url("http://docs.google.com/View?id=dff433k2_45d9qff4hs")
+    else
+        $dz.finish("Files erased successfully.")
+        $dz.url(false)
+    end
+  end
+end

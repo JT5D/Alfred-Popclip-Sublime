@@ -1,0 +1,137 @@
+#!/usr/bin/env ruby
+ 
+# Dropzone Destination Info
+# Name: GitHub Gist
+# Description: Drag text or files to share them instantly via GitHub Gist. Hold down option to make a public Gist. Click to copy and goto the last URL.
+# Handles: NSStringPboardType, NSFilenamesPboardType
+# Events: Clicked, Dragged
+# KeyModifiers: Option
+# Creator: Justin Hileman
+# URL: http://justinhileman.com
+# IconURL: http://aptonic.com/destinations/icons/gist.png
+# OptionsNIB: Login
+# LoginTitle: Your GitHub username and API token
+
+require 'open-uri'
+require 'net/http'
+require 'yaml'
+ 
+class Gist
+  @@gist_url = 'http://gist.github.com/%s'
+  @@last_url_filename = File.expand_path("~/.dz_last_gist_files")
+  
+  class << self
+    
+    def post_text(content, private_gist)
+      url = URI.parse('http://gist.github.com/api/v1/yaml/new')
+      request = Net::HTTP.post_form(url, build_params(fake_file(prompt_filename, content), private_gist))
+      if request.code.to_i == 200
+        response = YAML.load(request.body)
+        persist(@@gist_url % response['gists'][0][:repo])
+      else
+        raise "Error: #{request.code}"
+      end
+    end
+    
+    def post_files(filenames, private_gist)
+      url = URI.parse('http://gist.github.com/api/v1/yaml/new')
+      request = Net::HTTP.post_form(url, build_params(read_files(filenames), private_gist))
+      if request.code.to_i == 200
+        response = YAML.load(request.body)
+        persist(@@gist_url % response['gists'][0][:repo])
+      else
+        raise "Error: #{request.code}"
+      end
+    end
+    
+    def get_last_url
+      if File.readable?(@@last_url_filename)
+        File.open(@@last_url_filename).read.chomp
+      else
+        $dz.finish("No Gists yet")
+        $dz.url(false)
+        Process.exit!
+      end
+    end
+  
+    private
+    
+    def prompt_filename
+      output = `./CocoaDialog standard-inputbox --title "Gist name" --e --informative-text "Enter Gist name:"`
+      button, filename = output.split("\n")
+
+      if button == "2"
+        $dz.finish("Cancelled")
+        $dz.url(false)
+        Process.exit!
+      end
+      
+      if filename == nil
+        filename = "untitled.txt"
+      end
+      
+      return filename
+    end
+    
+    def persist(url)
+      File.open(@@last_url_filename, 'w') do |f|
+        f.puts url
+      end
+      url
+    end
+    
+    def read_files(filenames)
+      params = {}
+      for filename in filenames
+        basename = File.basename(filename)
+        if File.readable?(filename)
+          params["files[#{basename}]"] = File.open(filename).read.chomp
+        else
+          raise "Error: unable to read #{basename}"
+        end
+      end
+      params
+    end
+    
+    def fake_file(filename, content)
+      {"files[#{filename}]" => content}
+    end
+    
+    def build_params(filenames, private_gist)
+      filenames.merge({
+        :login => ENV['USERNAME'],
+        :token => ENV['PASSWORD'],
+      }).merge(private_gist ? { 'private' => 'true' } : {})
+    end
+    
+  end
+end
+
+# DZ events
+ 
+def dragged
+  $dz.determinate(false)
+  $dz.begin("Creating Gist...")
+  begin
+    case ENV['DRAGGED_TYPE']
+      when 'NSStringPboardType'
+        url = Gist.post_text($items[0], ENV['KEY_MODIFIERS'] == "")
+      when 'NSFilenamesPboardType'
+        url = Gist.post_files($items, ENV['KEY_MODIFIERS'] == "")
+    end
+    $dz.finish("URL is now on clipboard")
+    $dz.url(url)
+  rescue Exception => e
+    $dz.finish("Error uploading Gist! %s" % e)
+    $dz.url(false)
+    exit
+  end
+  
+end
+
+def clicked
+  url = Gist.get_last_url
+  $dz.finish("URL is now on clipboard")
+  $dz.url(url)
+  system("open #{url}")
+end

@@ -1,0 +1,13 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Screensaver
+# Description: Starts the screensaver.
+# Events: Clicked
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/screensaver.png
+ 
+def clicked
+  `osascript -e 'tell application "System Events" to start current screen saver' >& /dev/null`
+end

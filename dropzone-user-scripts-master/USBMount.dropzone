@@ -1,0 +1,40 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: USB[Un]Mount
+# Description: Mounts or unmounts all USB drives connected to the system
+# Handles: NSStringPboardType
+# Creator: Brett Terpstra (modified by Ian Soper http://iansoper.com)
+# URL: http://brettterpstra.com
+# IconURL: http://brettterpstra.com/destinations/icons/fwmounter.png
+# Events: Clicked
+
+def clicked
+	$dz.begin("Scanning for drives")
+    $dz.determinate(false)
+	profdata = `system_profiler SPUSBDataType`
+	disks = profdata.scan(/BSD Name: (disk.$)/)
+	mounted = false
+	profdata.scan(/Mount Point: ([^\n]+)/).each { |mounted|
+		mounted = mounted[0].empty? ? false : true
+		break if mounted == true
+	}
+	if mounted == true
+		message = "Cancelled"
+		res = `./CocoaDialog yesno-msgbox --title "Disks Mounted" --text "Unmount all USB drives?" --informative-text "At least one USB volume is mounted, do you want to unmount ALL of them?"`
+		
+		disks.each {|disk|
+			`/usr/sbin/diskutil unmountDisk #{disk}`
+			message = "Unmounted"
+		} if res.to_i == 1
+		$dz.finish(message)
+	else
+		# need a confirmation dialog?
+		disks.each {|disk|
+			`/usr/sbin/diskutil mountDisk #{disk}`
+		}
+		$dz.finish("Mounted")
+	end	
+	
+    $dz.url(false)
+end

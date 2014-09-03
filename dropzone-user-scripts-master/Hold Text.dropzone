@@ -1,0 +1,37 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Hold Text
+# Description: Stores some text
+# Handles: NSStringPboardType
+# Events: Clicked, Dragged
+# Creator: Giorgio Calderolla <giorgio.calderolla@gmail.com>
+# URL: http://giorgiocalderolla.com
+# IconURL: http://www.opaque.it/etc/holdtext.png
+
+FILENAME = '.heldtext.txt'
+
+def dragged
+  # write the text to our file
+  File.new(FILENAME, "w").write $items[0]
+  
+  # alert user
+  $dz.finish("Text stored")
+  $dz.url(false)
+end
+ 
+def clicked
+  if File.exists? FILENAME then
+    # read text from file
+    text = File.new(FILENAME, "r").read
+    # write text to clipboard
+    IO.popen('pbcopy', 'w').write text
+  
+    # alert user
+    $dz.finish("Text pasted to clipboard")
+    $dz.url(false)
+  else
+    $dz.error("No text to paste", "Please drop some text on Hold Text first")
+    $dz.url(false)
+  end
+end

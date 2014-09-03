@@ -1,0 +1,151 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Send To Omnifocus Inbox
+# Description: Copies "stuff" to your Omnifocus inbox
+# Handles: NSFilenamesPboardType, NSStringPboardType
+# Events: Clicked, Dragged
+# Creator: Gaz Liddon
+# URL: http://gamedev.gazaxian.com
+# IconURL: https://dl.dropbox.com/u/3215822/omnifocus-icon.png
+
+#-----------------------------------------------------------------------------
+# Support functions
+
+# Run a script and yield with procces return and process output
+def run_script text
+	out = ""
+	ret = IO.popen('sh', 'r+') do |f|
+		f.puts(text)
+		f.close_write
+		out = f.read
+		yield $?, out if block_given?
+	end
+	out
+end
+
+# Run an apple script
+def run_apple_script text
+	# Cleanup the script text
+	[
+		[/\\/,"\\"],
+		[/\n+\s*/, "\n"],
+		[/\n+/,"\n"],
+		[/\"/,"\\\""]
+	].each {|src| text.gsub!(src[0],src[1])}
+
+	# Execute the script
+	args = "osascript" + text.split("\n").map{|l| " -e \"#{l}\""}.join
+	out = run_script args do |proc_ret, proc_out|
+		yield proc_ret, proc_out if block_given?
+	end
+	out
+end
+
+# Add a task to the OF inbox
+def add_task name, note
+script = <<-eos
+
+set OFName to "#{name}"
+set OFNote to "#{note}"
+
+tell application "OmniFocus"
+	set theDoc to first document
+	tell theDoc
+		make new inbox task with properties {name:OFName, note:OFNote}
+	end tell
+end tell
+
+  eos
+
+  run_apple_script script
+
+end
+
+# Find out if an app is installed or not
+def is_insalled app_id
+script = <<-eos
+try
+  tell application "Finder"
+    return name of application file id "#{app_id}"
+  end tell
+on error err_msg number err_num
+  return null
+end try
+	eos
+
+	ret = run_apple_script(script).gsub(/\s+$/,"")
+	ret != "null"
+end
+
+def if_omnifocus_is_installed
+	finish = "All done"
+	$dz.determinate(false)
+
+	if is_insalled "com.omnigroup.OmniFocus"
+		
+		finish = yield if block_given?
+
+	else
+		$dz.error("Ruh Roh", "You do not have OmniFocus installed on this machine.")
+	end
+
+	$dz.finish("All done")
+	$dz.url(false)
+
+end
+
+
+#-----------------------------------------------------------------------------
+# Plugin
+ 
+def clicked
+
+	if_omnifocus_is_installed do
+
+		unless ENV["GAZ_TESTING"]
+			run_apple_script "tell application \"Omnifocus\" to activate"
+		else
+			puts "*** Not running clicked *** "
+		end
+		
+		"All done"
+	end
+
+end
+
+def dragged
+
+	if_omnifocus_is_installed do
+
+		# Set up a text env
+
+		case ENV['DRAGGED_TYPE']
+			
+			when 'NSFilenamesPboardType'
+				name = $items[0]
+				note = $items.join "\n" if $items.size > 1
+			when 'NSStringPboardType'
+				# If multi line text make the first line the name
+				# and put all lines into notes
+
+				lines = $items[0].split("\n")
+
+				if lines.size > 1
+					name = lines[0]
+					note = $items[0]
+				else
+					name = $items[0]
+					note = ""
+				end
+		end
+
+		add_task name, note
+
+		"Added Task"
+	end
+
+end
+
+#-----------------------------------------------------------------------------
+# ends

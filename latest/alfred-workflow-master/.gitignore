@@ -1,0 +1,10 @@
+/test-workflow
+*.log
+.coverage
+_build/
+posts.json
+*.pyc
+/benchmark_*.py
+/temp_*.py
+/info.plist
+/publish-docs.sh

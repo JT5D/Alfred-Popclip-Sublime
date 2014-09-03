@@ -1,0 +1,67 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Media Filer
+# Description: Moves media files to the selected folder and categorizes by type.
+# Handles: NSFilenamesPboardType
+# Events: Dragged
+# Creator: Brett Terpstra
+# URL: http://brettterpstra.com
+# IconURL: http://brettterpstra.com/destinations/icons/MediaFiler.png
+# OptionsNIB: ChooseFolder
+
+require 'logger'
+
+def time_stamp(oldname)
+  return File.basename(oldname) if File.basename(oldname) =~ /^\d{10}/
+  curdate = `date +'%m%d%y%H%M'`
+  newname = curdate.to_s.strip + '_' + File.basename(oldname).gsub(/[^A-Za-z0-9\.]/,'-')
+  return newname
+end
+
+def dragged
+  log = Logger.new(File.expand_path('~/Library/Application Support/Dropzone/DropzoneMediaFiler.log'),10,1024000)
+  $dz.determinate(true)
+  $dz.begin("Filing #{$items.length} item(s) in #{ENV["EXTRA_PATH"]}")
+
+  input = $items
+  percent = 0
+  inc = 100 / input.length
+  input.each {|file_path|
+    $dz.begin("Filing #{File.basename(file_path)}")
+    $dz.percent(percent)
+    itemtype = %x{mdls -name 'kMDItemContentTypeTree' -raw "#{file_path}"}.gsub(/["()\n]|public\./,'').split(',').map {|item|	item.strip!	}.delete_if {|item| item.nil?}
+    file_kind = 'other'
+    file_kind = 'image' if itemtype.include?("image")
+    file_kind = 'movie' if itemtype.include?("movie")
+    file_kind = 'music' if itemtype.include?("audio")
+    $dz.begin("Moving #{file_kind} #{file_path} to #{ENV['EXTRA_PATH']}")
+    if file_kind == 'movie'
+      newname = time_stamp(file_path)
+      %x{mkdir -p "#{ENV['EXTRA_PATH']}/Video"} unless File.directory?("#{ENV['EXTRA_PATH']}/Video")
+      %x{mv "#{file_path}" "#{ENV['EXTRA_PATH']}/Video/#{newname}"}
+      log.info "#{File.basename(file_path)} => #{ENV['EXTRA_PATH']}/Video/#{newname}"
+    elsif file_kind == 'image'
+      newname = time_stamp(file_path)
+      %x{mkdir -p "#{ENV['EXTRA_PATH']}/Image"} unless File.directory?("#{ENV['EXTRA_PATH']}/Image")
+      %x{mv "#{file_path}" "#{ENV['EXTRA_PATH']}/Image/#{newname}"}
+      log.info "#{File.basename(file_path)} => #{ENV['EXTRA_PATH']}/Image/#{newname}"
+    elsif file_kind == 'music'
+      %x{mkdir -p "#{ENV['EXTRA_PATH']}/Audio"} unless File.directory?("#{ENV['EXTRA_PATH']}/Audio")
+      %x{mv "#{file_path}" "#{ENV['EXTRA_PATH']}/Audio"}
+      log.info "#{File.basename(file_path)} => #{ENV['EXTRA_PATH']}/Audio"
+    elsif file_kind == 'other'
+      %x{mkdir -p "#{ENV['EXTRA_PATH']}/Other"} unless File.directory?("#{ENV['EXTRA_PATH']}/Other")
+      %x{mv "#{file_path}" "#{ENV['EXTRA_PATH']}/Other"}
+      log.info "#{File.basename(file_path)} => #{ENV['EXTRA_PATH']}/Other"
+    end
+    percent = percent + inc
+  }
+  log.close
+  $dz.finish("Finished filing #{input.length} files")
+  $dz.url(false)
+end
+
+def clicked
+
+end

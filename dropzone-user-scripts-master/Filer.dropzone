@@ -1,0 +1,97 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Filer
+# Description: Files based on OpenMeta tags
+# Handles: NSFilenamesPboardType
+# Creator: Brett Terpstra
+# URL: http://brettterpstra.com
+# IconURL: http://brettterpstra.com/destinations/icons/filer2.png
+
+# This script works with OpenMeta tagging (http://code.google.com/p/openmeta/)
+#
+# Target folders are tagged with "°target" and a unique tag name
+# e.g. "°target reference"
+# "°" is option-shift-8
+#
+# 1 level of subtargets are recognized, using "°subtarget"
+# e.g. "°subtarget snippet"
+# 
+# The folder structure would look like this:
+# ~/Documents/Reference			<- tagged "°target reference"
+#                 |
+#                 - Snippets 	<- tagged "°subtarget snippet"
+#
+# The file dropped on the Filer would be tagged "reference snippet" to have it placed
+# into ~/Documents/Reference/Snippets. If it were tagged with just "reference" it would
+# be moved into ~/Documents/Reference, and if it were just tagged "snippet" it would
+# throw an error. Subtargets are optional and only function if there's a target match.
+# 
+# Filer searches the dropped files tags for one that matches an existing °target folder
+# It then checks for subtarget matches only within the target folder, therefore, subtargets 
+# can be repeated in the system, as long as there's a unique target containing them. If no
+# subtarget is found, the main target is assumed to be the destination
+#
+# Dropped files/folders are moved using UNIX 'mv'. Dropped folders are not recursed.
+#
+# If the Growl command line utility is installed in '/usr/local/bin/growlnotify', Growl updates
+# will be sent. A logfile is created in '~/Library/Application Support/Dropzone/DropzoneFiler.log'
+# and shows what files were moved where. Files without tags or without tags that match a target
+# are noted as warnings in the log file (and sticky growl messages).
+require 'logger'
+
+def dragged
+  log = Logger.new(File.expand_path('~/Library/Application Support/Dropzone/DropzoneFiler.log'),10,1024000)
+  $dz.determinate(true)
+  $dz.begin("Handling files")
+  input = $items
+  percent = filedcount = errorcount = 0
+  inc = 100 / input.length
+  input.each {|file_path|
+		$dz.begin("Filing #{File.basename(file_path)}")
+		$dz.percent(percent)
+		# tags = %x{/usr/local/bin/openmeta -l -p "#{file_path}" | grep tags | awk '{print substr($0, index($0,$2))}'}.split(' ')
+		tags = %x{mdls -name 'kOMUserTags' -raw "#{file_path}"|awk '/[^()]/ {print $NF}'|tr -d '\n'}.split(',')
+		break if tags.empty?
+		filed = false
+		tags.each { |tag|
+			target = %x{mdfind "((kOMUserTags == '#{tag}'cd) && (kOMUserTags == '°target') && (kMDItemContentTypeTree == 'public.folder'))"|awk 'NR>1{exit};1'}.strip
+			unless target.empty?
+				tags.each { |tag|
+					subtarget = %x{mdfind -onlyin "#{target}" "((kOMUserTags == '#{tag}'cd) && (kOMUserTags == '°subtarget') && (kMDItemContentTypeTree == 'public.folder'))"|awk 'NR>1{exit};1'}.strip
+					target = subtarget unless subtarget.empty?
+				}
+				%x{mv "#{file_path}" "#{target}/"}
+				# Rsync.do_copy($dz,file_path.to_a,target,move)
+				log.info "#{File.basename(file_path)} => #{target}"
+				%x{/usr/local/bin/growlnotify -a "Dropzone.app" -m "Filed: #{File.basename(file_path)}\nto: #{target}" -t "Dropzone Filer"} if File.exists?("/usr/local/bin/growlnotify")
+				filed = true
+				break
+			end
+		}
+		if filed
+			filedcount += 1
+			filed = false
+		else
+			errorcount += 1
+			%x{/usr/local/bin/growlnotify -a "Dropzone.app" -s -m "Couldn't file #{File.basename(file_path)}" -t "Dropzone Filer"} if File.exists?("/usr/local/bin/growlnotify")
+			log.warn "** Couldn't find a target for #{File.basename(file_path)}"
+			log.warn "** Tagged: #{tags.join(', ')}"
+		end
+		percent = percent + inc
+	}
+  if filedcount > 0
+    output = "Filed #{filedcount} items" 
+  else
+	output = "No items filed"
+  end
+  output += ", #{errorcount} errors" if errorcount > 0
+  log.info output
+  log.close
+  $dz.finish(output)
+  $dz.url("0")
+end
+
+def clicked
+
+end

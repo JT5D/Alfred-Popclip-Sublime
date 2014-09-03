@@ -1,0 +1,123 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: FTP Upload + Bit.ly
+# Description: Slight modification of the standard FTP destination that minifies the resulting URL with bit.ly.
+# Handles: NSFilenamesPboardType
+# Events: Dragged, TestConnection
+# KeyModifiers: Option
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/network.png
+# OptionsNIB: ExtendedLogin
+
+# Your bit.ly API key can be got from http://bit.ly/a/your_api_key
+
+$BITLY_USERNAME = "your-bitly-username"
+$BITLY_API_KEY = "your-bitly-apikey"
+
+$host_info = {:server    => ENV['SERVER'],
+              :port      => ENV['PORT'],
+              :username  => ENV['USERNAME'],
+              :password  => ENV['PASSWORD']}
+
+require 'cgi'
+require 'rexml/document'
+
+def dragged
+  delete_zip = false
+  
+  if ENV['KEY_MODIFIERS'] == "Option"
+    # Zip up files before uploading
+    if $items.length == 1
+      # Use directory or file name as zip file name
+      dir_name = $items[0].split(File::SEPARATOR)[-1]
+      file = ZipFiles.zip($items, "#{dir_name}.zip")
+    else
+      file = ZipFiles.zip($items, "files.zip")
+    end
+    
+    # Remove quotes
+    items = file[1..-2]
+    delete_zip = true
+  else
+    # Recursive upload      
+    items = $items
+  end
+  
+  $dz.begin("Starting transfer...")
+  $dz.determinate(false)
+  
+  remote_paths = FTP.do_upload(items, ENV['REMOTE_PATH'], $host_info)
+  ZipFiles.delete_zip(items) if delete_zip
+  
+  # Put URL of uploaded file on pasteboard
+  finish_text = "Upload Complete"
+  
+  if remote_paths.length == 1
+    filename = remote_paths[0].split(File::SEPARATOR)[-1].strip
+    
+    if ENV['ROOT_URL'] != nil
+      slash = (ENV['ROOT_URL'][-1,1] == "/" ? "" : "/")
+      url = ENV['ROOT_URL'] + slash + filename
+      url = minify_url(url)
+      if (url == false)
+        finish_text = "Empty URL Returned"
+      else
+        finish_text = "URL is now on clipboard"
+      end
+    else
+      url = filename
+    end
+  else
+    url = false
+  end
+  
+  $dz.finish(finish_text)
+  $dz.url(url)
+end
+
+def minify_url(long_url)
+  if long_url =~ /http/
+    username = $BITLY_USERNAME
+    apikey = $BITLY_API_KEY
+    url = CGI::escape(long_url)
+
+    if (username == "your-bitly-username" or apikey == "your-bitly-apikey")
+      $dz.error("Bit.ly login details not set", "You need to edit the FTP Upload+Bit.ly.dropzone script and set the $BITLY_USERNAME and $BITLY_API_KEY variables correctly.")
+    end
+
+    version = "2.0.1"
+    bitly_url = "http://api.bit.ly/shorten?version=#{version}&format=xml&longUrl=#{url}&login=#{username}&apiKey=#{apikey}"
+
+    $dz.begin("Shortening URL...")
+    $dz.determinate(false)
+
+    # parse result and return shortened url
+    buffer = open(bitly_url, "UserAgent" => "Ruby-ExpandLink").read
+
+    doc = REXML::Document.new(buffer)
+    doc.elements.each("bitly/errorMessage") do |a|
+      if a.text == "INVALID_LOGIN"
+        $dz.finish("Invalid user or API key")
+        $dz.url(false)
+       else
+         doc.elements.each("bitly/results/nodeKeyVal/shortUrl") do |b|
+           if b.text.empty?
+             return false
+           else
+             return b.text
+           end
+         end
+       end
+     end
+  else
+    $dz.error("URL From FTP Upload Invalid", "The URL generated from the FTP upload could not be minified as it does not start with http://\n\n\
+Check the Root URL field in the destination settings starts with http://")
+    $dz.url(false)
+  end
+end
+
+def testconnection
+  FTP.test_connection($host_info)
+end

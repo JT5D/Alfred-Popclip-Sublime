@@ -1,0 +1,324 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: SCP Upload with Gallery Creation
+# Description: Uploads files to a remote SSH server. If multiple files are being uploaded, a 'gallery' is created. 'Option' zips the files up. 
+# Handles: NSFilenamesPboardType
+# Events: Dragged, TestConnection
+# KeyModifiers: Option, Control
+# Creator: wulfovitch - based on code from Holistic Software Buggers
+# URL: http://wulfovitch.net
+# IconURL: http://wulfovitch.net/images/scp_image_upload.png
+# OptionsNIB: ExtendedLogin
+# DefaultPort: 22
+
+require 'scp'
+
+$host_info = {:server    => ENV['SERVER'],
+              :port      => ENV['PORT'],
+              :username  => ENV['USERNAME'],
+              :password  => ENV['PASSWORD']}
+              
+$image_max_width  = '1024'
+$image_max_height = '1024'
+
+def dragged
+  delete_zip = false
+  
+  if ENV['KEY_MODIFIERS'] == "Option"
+    # Zip up files before uploading
+    if $items.length == 1
+      # Use directory or file name as zip file name
+      dir_name = $items[0].split(File::SEPARATOR)[-1]
+      file = ZipFiles.zip($items, "#{dir_name}.zip")
+    else
+      file = ZipFiles.zip($items, "files.zip")
+    end
+    
+    # Remove quotes
+    items = file[1..-2]
+    delete_zip = true
+  else
+    
+    title_text = ""
+    if ENV['KEY_MODIFIERS'] == "Control"
+      output = `./CocoaDialog standard-inputbox --title "Enter Title" --e --informative-text "Enter the name for your files:"`
+      button, title_text = output.split("\n")
+
+      if button == "2" or title_text == nil
+        $dz.finish("Cancelled")
+        $dz.url(false)
+        return
+      end
+    end
+    
+    $dz.begin("Resizing Images...")
+    $dz.determinate(true)
+    tmp_folder = "/tmp/dz_scp_tmp/"
+    if title_text.empty?
+      upload_folder_name = "#{Time.now.strftime("%Y-%m-%d_%I-%M-%S")}"
+      title_text = "#{Time.now.strftime("%Y-%m-%d %I:%M:%S")}"
+    else
+      upload_folder_name = "#{Time.now.strftime("%Y-%m-%d_")}#{title_text}"
+      title_text = "#{title_text} &bull; #{Time.now.strftime("%Y-%m-%d")}"
+    end
+    upload_folder = "#{tmp_folder}#{upload_folder_name}/"
+    system("/bin/mkdir #{tmp_folder}")
+    system("/bin/mkdir #{upload_folder}")
+    system("/bin/mkdir #{upload_folder}#{upload_folder_name}")
+    items = Array.new
+    $items.each_with_index { |item, index|
+      file = File.basename(item, '.*')
+      ext = File.extname(item).downcase
+      if image?(item)
+        resized_image = "#{upload_folder}#{file}#{ext}"
+        convert_command_found = system("/usr/local/bin/convert #{item} -resize '#{$image_max_width}x#{$image_max_height}>' #{resized_image}")
+        if convert_command_found
+          items << resized_image
+        else
+          items << item
+        end
+      else 
+        items << item
+      end
+      $dz.percent((((index+1).to_f / $items.length.to_f) * 100.0).to_i)
+    }
+  
+    # only one file is uploaded, no need for a special folder
+    if items.length == 1
+     upload_folder_name = nil
+    else
+      # create html file, if multiple files are present
+      f = File.new("#{upload_folder}index.html",  "w")
+      if f
+        f.syswrite("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n")
+        f.syswrite("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n")
+        f.syswrite("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n")
+        f.syswrite("<head>\n")
+        f.syswrite("  <title>#{title_text}</title>\n")
+        f.syswrite("  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n")
+        f.syswrite("</head>\n")
+        f.syswrite("<body>\n")
+        items.each_with_index { |item, index|
+          f.syswrite("  <p>\n")
+          slash = (ENV['ROOT_URL'][-1,1] == "/" ? "" : "/")
+          filename = "#{File.basename(item, '.*')}#{File.extname(item)}"
+          if image?(filename)
+            f.syswrite("    <img src=\"#{filename}\" alt=\"#{filename}\"/>\n")
+          else
+            f.syswrite("    <a href=\"#{filename}\">#{filename}</a>\n")
+          end
+          f.syswrite("  </p>\n")
+        }
+        f.syswrite("</body>\n")
+        f.syswrite("</html>")
+        items << f.path
+      end
+    end
+  end
+  
+  if $items.length == 1
+   
+  end
+  
+  $dz.begin("Starting transfer...")
+  $dz.determinate(false)
+
+  
+  unless upload_folder_name.nil?
+    # create folder on remote location
+    SCP.do_upload("#{upload_folder}#{upload_folder_name}", ENV['REMOTE_PATH'], $host_info)
+    # drop files into the just created folder
+    remote_paths = SCP.do_upload(items, ENV['REMOTE_PATH']+upload_folder_name, $host_info)
+  else
+    remote_paths = SCP.do_upload(items, ENV['REMOTE_PATH'], $host_info)
+  end
+  
+  ZipFiles.delete_zip(items) if delete_zip
+  
+  # Put URL of uploaded file on pasteboard
+  finish_text = "Upload Complete"
+  if remote_paths.length == 1
+    filename = remote_paths[0].split(File::SEPARATOR)[-1].strip[0..-2]
+    
+    if ENV['ROOT_URL'] != nil
+      slash = (ENV['ROOT_URL'][-1,1] == "/" ? "" : "/")
+      url = ENV['ROOT_URL'] + slash + filename
+      finish_text = "URL is now on clipboard"
+    else
+      url = filename
+    end
+  else
+    filename = items.at(-1).split(File::SEPARATOR)[-1].strip[0..-1]
+    slash = (ENV['ROOT_URL'][-1,1] == "/" ? "" : "/")
+    url = ENV['ROOT_URL'] + slash + upload_folder_name
+    finish_text = "URL is now on clipboard"
+  end
+  
+  system("/bin/rm -rf #{tmp_folder}")
+  
+  $dz.finish(finish_text)
+  $dz.url(url)
+end
+
+def image?(filename)
+  allowed_exts = ["jpg", "jpeg", "gif", "tif", "tiff", "png", "bmp"]
+  ext = File.extname(filename).downcase[1..-1]
+  allowed_exts.include?(ext)
+end
+
+def testconnection
+  SCP.test_connection($host_info)
+end
+
+
+
+
+class SCP
+
+  def self.do_upload(source_files, destination, host_info)
+    last_percent = 0
+    last_uploaded_path = ""
+    set_determinate = false
+    uploaded_file_paths = []
+    
+    host_info = self.sanitize_host_info(host_info)
+    destination = (destination != nil ? destination : "~/")
+    
+    self.upload(source_files, destination, host_info[:server], host_info[:port], 
+                                           host_info[:username], host_info[:password]) do |percent, remote_path|
+      remote_file = remote_path.split(File::SEPARATOR)[-1][0..-2]
+      
+      if remote_path != last_uploaded_path
+        $dz.begin("Uploading #{remote_file}...")
+        uploaded_file_paths << remote_path
+      end
+      
+      last_uploaded_path = remote_path
+      
+      if not set_determinate
+        # Switch to determinate now file sizes have been calculated and upload is beginning
+        $dz.determinate(true)
+        set_determinate = true
+      end
+      
+      $dz.percent(percent) if last_percent != percent
+      last_percent = percent
+    end
+    
+    return uploaded_file_paths
+  end
+
+  def self.upload(localpaths, remotedir, host, port, user, pass, &block)
+    alert_title = "SCP Upload Error"
+    
+    begin
+      Net::SSH.start(host, user, {:password => pass, :port => port}) do |ssh|
+  	    files = []
+  	    size  = 0
+	
+  	    localpaths.each do |localpath|
+  	      path = self.path_contents(localpath, remotedir)
+  	      files.concat path[:files]
+  	      size += path[:size]
+  	    end
+  	    
+  	    transferred = 0
+  	    $dz.begin("Uploading #{files.size} files...") if files.length > 1 
+  	    files.each do |local, remote|
+  	      if local.empty? then
+  	        # Try to create the directory
+  	        begin
+  	          ssh.exec! "mkdir \"#{remote}\""
+  	        rescue
+  	          # $dz.error("Error creating directory", $!)
+  	          # Remote already exists?
+  	        end
+  	      else
+  	        begin
+  	          # Send the file
+  	          bytesSent = 0
+  	          ssh.scp.upload!(local, remote) do |ch, name, sent, total|
+  	            bytesSent = sent
+  	            if size != 0
+  	              percent = ((transferred + sent) * 100 / size)
+  	            else
+  	              percent = 100
+  	            end
+  	            yield percent, remote
+  	          end
+  	          transferred += bytesSent
+              rescue
+                $dz.error(alert_title, $!)
+  	        end
+  	      end
+  	    end
+  	  end
+  	rescue Timeout::Error
+      $dz.error(alert_title, "Connection timed out.")
+    rescue SocketError
+      $dz.error(alert_title, "Server not found.")
+    rescue Net::SSH::AuthenticationFailed
+      $dz.error(alert_title, "Username or password incorrect.")
+    rescue
+      $dz.error(error_title, $!)
+    end  
+  end
+
+  def self.path_contents(localfile, remotedir)
+    files = []
+    size  = 0
+    filestat = File.stat(localfile)
+
+    # Check if this is a file or directory
+    if filestat.directory? then
+      remotedir += ('/' + File.basename(localfile)).gsub('//', '/')
+      # Make sure we create the remote directory later
+      files.push ['', remotedir]
+      # Recurse through dir
+      Dir.foreach localfile do |file|
+        next if file == '.' or file == '..'
+        local = (localfile + '/' + file).gsub('//', '/')
+        begin
+          p = path_contents(local, remotedir)
+        rescue
+          next
+        end
+        size += p[:size]
+        files.concat p[:files]
+      end
+
+    elsif filestat.file? then
+      # Increment the size
+      size += File.size localfile;
+      remotefile = (remotedir + '/' + File.basename(localfile)).gsub('//', '/')
+      files.push [localfile, "\"" + remotefile + "\""]
+    end
+    return { :files => files, :size => size }
+  end
+  
+  def self.sanitize_host_info(host_info)
+    host_info[:port] = (host_info[:port] != nil ? host_info[:port].to_i : 22)
+    return host_info
+  end
+  
+  def self.test_connection(host_info)
+    host_info = self.sanitize_host_info(host_info)
+    error_title = "Connection Failed"
+    begin
+      Net::SSH.start(host_info[:server], host_info[:username], {:password => host_info[:password], :port => host_info[:port]}) do |ssh|
+      end
+    rescue Timeout::Error
+      $dz.error(error_title, "Connection timed out.")
+    rescue SocketError
+      $dz.error(error_title, "Server not found.")
+    rescue Net::SSH::AuthenticationFailed
+      $dz.error("Authentication Failed", "Username or password incorrect.")
+    rescue
+      $dz.error(error_title, $!)
+    end
+    
+    $dz.alert("Connection Successful", "SCP connection succeeded.")
+  end
+
+end

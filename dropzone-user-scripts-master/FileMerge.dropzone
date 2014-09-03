@@ -1,0 +1,22 @@
+# Dropzone Destination Info
+# Name: Diff files with FileMerge
+# Description: You can diff files with dragging them 
+# Handles: NSFilenamesPboardType
+# Events: dragged
+# Creator: Gergo Sulymosi
+# URL: http://twitter.com/trekdemo
+# IconURL: http://trek.2sided.hu/uploads/filemergeicon.png
+
+def dragged
+	$dz.begin("Opening FileMerge...")
+	
+	unless $items.size == 2
+		$dz.finish("You must drag two files!")
+		$dz.url(false)
+		exit
+	end
+	
+	system('opendiff', $items.first, $items.last)
+	
+	$dz.url(false)
+end

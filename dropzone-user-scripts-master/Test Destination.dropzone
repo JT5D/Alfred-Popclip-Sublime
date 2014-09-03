@@ -1,0 +1,31 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Test Destination
+# Description: Provides the ability to do some cool thing.
+# Handles: NSFilenamesPboardType
+# Events: Clicked, Dragged
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/test.png
+ 
+def dragged
+  $dz.determinate(true)
+  file_path = $items[0]
+  $dz.begin("Doing something with #{file_path}...")
+ 
+  $dz.percent(20)
+  sleep(1)
+  $dz.percent(50)
+  sleep(1)
+  $dz.percent(100)
+  sleep(1)
+ 
+  $dz.finish("Finished Task")
+  $dz.url(false)
+end
+ 
+def clicked
+  $dz.finish("You clicked me!")
+  $dz.url(false)
+end

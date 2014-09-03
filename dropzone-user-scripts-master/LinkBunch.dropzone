@@ -1,0 +1,50 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: LinkBuncher
+# Description: Scans clipboard or dropped text for links and creates a LinkBunch (http://linkbun.ch)
+# Handles: NSStringPboardType
+# Events: Clicked, Dragged
+# Creator: Brett Terpstra
+# URL: http://brettterpstra.com
+# IconURL: http://brettterpstra.com/destinations/icons/TextCleaner.png
+
+require 'net/http'
+require 'cgi'
+
+def bunch_links
+  $KCODE = 'u'
+  links = $text.gsub(/http([^\s]+)\n/,'http\\1').scan /(https?:\/\/[^ \n"']+)/m
+  unless links.empty?
+    linkbunch = CGI.escape(links.join("\n"))
+    url = "http://linkbun.ch/linkbunch.php?links=#{linkbunch}&bunch=Bunch&mode=api"
+    res = Net::HTTP.get_response(URI.parse(url))
+    if res.code.to_i == 200
+      %x{/usr/local/bin/growlnotify -a "Mail.app" -m "#{links.length} links bunched" -t "Linkbunch in Clipboard"} if File.exists?("/usr/local/bin/growlnotify")
+      $dz.finish("#{links.length} links bunched")
+      return res.body
+    else
+      %x{/usr/local/bin/growlnotify -a "Mail.app" -m "Son of a bitch." -t "Linkbunch returned an error"} if File.exists?("/usr/local/bin/growlnotify")
+      $dz.finish("Linkbunch returned an error")
+      return false
+    end
+    else
+      %x{/usr/local/bin/growlnotify -a "Mail.app" -m "Select something with links in it. And say no to drugs." -t "No links detected"} if File.exists?("/usr/local/bin/growlnotify")
+      $dz.finish("No links detected")
+      return false
+    end
+  end
+
+
+  def clicked(was_dragged = false)
+    $dz.begin("Scanning for links")
+    $dz.determinate(false)
+    `pbpaste|pbcopy`
+    $text = %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}.strip unless was_dragged == true
+    $dz.url(bunch_links())
+  end
+
+  def dragged
+    $text = $items.to_s
+    clicked(true)
+  end

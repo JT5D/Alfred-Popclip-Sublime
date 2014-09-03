@@ -1,0 +1,145 @@
+#!/usr/bin/ruby
+require 'rexml/document'
+require "base64"
+
+
+# Dropzone Destination Info
+# Name: Send to UpShot
+# Description: Allows pictures to be uploaded on upshot webservice.
+# Handles: NSFilenamesPboardType
+# Events: Clicked, Dragged
+# KeyModifiers: Command
+# Creator: Studio Melipone SARL
+# URL: http://upshotapp.com
+# IconURL: http://aptonic.com/destinations/icons/upshot.png
+# OptionsNIB: Login
+
+def dragged
+  $dz.determinate(false)
+
+  file_path = $items[0]
+  filename = File.basename(file_path)
+  auth_xml_output = ""
+  
+  allowed_exts = ["jpg", "jpeg", "png"]
+  ext = File.extname(file_path).downcase[1..-1]
+  
+  if not allowed_exts.include?(ext)
+    $dz.finish("Not a valid Image")
+    $dz.url(false)
+    Process.exit
+  end
+
+  $dz.begin("Login to your account")
+  
+  # Thank you to twitpic script cause we first did it with Net::HTTP code, and it was really not that efficient.
+  IO.popen("/usr/bin/curl -# -H 'Content-Type:application/xml' -H 'Accept:application/xml' -X GET --basic -u #{ENV['USERNAME']}:#{ENV['PASSWORD']} http://www.upshotapp.com/users/get_id 2>&1 | tr -u \"\r\" \"\n\"") do |f|
+    while line = f.gets do
+      auth_xml_output += line
+    end
+  end
+  
+  doc = REXML::Document.new(auth_xml_output)
+  error = []
+  infos = []
+  doc.elements.each('hash/id') do |ele|
+    infos << ele.text
+  end
+  doc.elements.each('hash/state') do |ele|
+    infos << ele.text
+  end
+  doc.elements.each('hash/error') do |ele|
+    error << ele.text
+  end
+  
+  if !error.empty?
+    finish_text = "Error: #{error[0]}"
+    url = false
+  elsif !infos.empty?
+    $items.each do |file_path|
+      $dz.begin("Sending your file: #{file_path}...")
+      
+      title = File.basename(file_path)
+      
+      last_output = 0
+      is_receiving_xml = false
+      upload_xml_output = ""
+      
+      if ENV['KEY_MODIFIERS'] == "Command"
+        output = `./CocoaDialog standard-inputbox --title "Enter Title" --e --informative-text "Enter the title for your the UpShot for your file : #{title}"`
+        button, title = output.split("\n")
+
+        if button == "2" or title == nil
+          $dz.finish("Cancelled")
+          $dz.url(false)
+          return
+        end
+        
+        # title.downcase.normalize(:kd).gsub(/[^a-z0-9\s]/im,'').gsub(/\s+/, '-').to_s
+      end
+      
+      title.gsub!("'", "&apos;")
+      
+      $dz.determinate(true)
+      
+      IO.popen("/usr/bin/curl -# -F 'upshot[file]=@#{file_path};type=image/#{ext}' -F 'upshot[title]=#{title}' -F '_method=put' -H 'Accept:application/xml' -u #{ENV['USERNAME']}:#{ENV['PASSWORD']} http://www.upshotapp.com/en/users/#{infos[0]}/upshots/dropzone 2>&1 | tr -u \"\r\" \"\n\"") do |f|
+        while line = f.gets do
+          if line =~ /%/ and not is_receiving_xml
+            line_split = line.split(" ")
+            file_percent_raw = line_split[1]
+            if file_percent_raw != nil
+              file_percent = file_percent_raw.to_i
+              if last_output != file_percent
+                $dz.percent(file_percent) 
+                $dz.determinate(false) if file_percent == 100
+              end
+              last_output = file_percent
+            end
+          else
+            if line =~ /xml/ or is_receiving_xml
+              is_receiving_xml = true
+              upload_xml_output += line
+            else
+              handle_errors(line)
+            end
+          end
+        end
+      end
+      
+      upshot = REXML::Document.new(upload_xml_output)
+      ids = []
+      upshot_errors = []
+      upshot.elements.each('upshot/id') do |ele|
+        ids << ele.text
+      end
+      upshot.elements.each('errors/error') do |ele|
+        upshot_errors << ele.text
+      end
+    end
+    
+    finish_text = "Dashboard URL is in Clipboard."
+    url = "http://www.upshotapp.com/en/dashboard"
+  else
+    finish_text = "unknown problem. Contact us."
+    url = false
+  end
+
+  $dz.finish(finish_text)
+  $dz.url(url)
+  Process.exit
+
+end
+
+def clicked
+  system("open http://upshotapp.com/")
+end
+
+def handle_errors(line)
+  if line[0..4] == "curl:"
+    if line[6..-1] =~ /Couldn't resolve/
+      $dz.error("UpShot Upload Error", "Please check your network connection.")
+    else
+      $dz.error("UpShot Upload Error", line[6..-1])
+    end
+  end
+end

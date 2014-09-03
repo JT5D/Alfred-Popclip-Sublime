@@ -1,0 +1,65 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Parse links to Markdown
+# Description: Parses the clipboard text for http(s) links, returns a Markdown reference list
+# Handles: NSStringPboardType
+# Creator: Brett Terpstra
+# URL: http://brettterpstra.com
+# IconURL: http://brettterpstra.com/destinations/icons/LinksToMarkdown.png
+# Events: Clicked, Dragged
+
+def clicked(was_dragged = false)
+  if was_dragged == false
+    $dz.begin("Parsing clipboard for links")
+    $dz.determinate(true)
+    input = %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}.strip
+  else
+    $dz.begin("Parsing text for links")
+    $dz.determinate(true)
+    input = was_dragged
+  end
+  links = input.scan /(https?:\/\/[^ \n"]+)/m
+
+  if links.empty? then
+    $dz.finish("No links found")
+    $dz.url(false)
+  else
+    percent = 10
+    $dz.percent(percent)
+    norepeat = []
+    output = []
+    inc = 90 / links.length
+    links.each {|url|
+      domain = url[0].match(/https?:\/\/([^\/]+)/)
+      parts = domain[1].split('.')
+      name = case parts.length
+      when 1: parts[0]
+      when 2: parts[0]
+      else parts[1]
+      end
+      while norepeat.include? name
+        if name =~ / [0-9]$/
+          name.next!
+        else
+          name = name + " 2"
+        end
+      end
+      output << {'title' => name, 'link' => url }
+      norepeat.push name
+      percent += inc
+      $dz.percent(percent)
+    }
+    output = output.sort {|a,b| a['title'] <=> b['title']}
+    o = ""
+    output.each { |x|
+      o += "[#{x['title']}]: #{x['link']}\n"
+    }
+    $dz.finish("#{output.length} links found")
+    $dz.text("#{o}")
+  end
+end
+
+def dragged
+  clicked($items.to_s)
+end

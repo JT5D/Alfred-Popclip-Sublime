@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Version</key>
+	<integer>2</integer>
+	<key>Extension Identifier</key>
+	<string>com.web5.popclip.extension.sublime</string>
+	<key>Extension Name</key>
+	<string>Sublime</string>
+	<key>Actions</key>
+	<array>
+		<dict>
+			<key>AppleScript File</key>
+			<string>Sublime.applescript</string>
+			<key>Image File</key>
+			<string>sublime.png</string>
+			<key>Title</key>
+			<string>Sublime</string>
+		</dict>
+	</array>
+</dict>
+</plist>

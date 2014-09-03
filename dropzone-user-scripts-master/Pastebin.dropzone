@@ -1,0 +1,52 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Pastebin
+# Description: Copies text from clipboard to pastebin.com. Replaces clipboard with pastebin url. Dragging text is possible as well.
+# Handles: NSStringPboardType
+# Events: Clicked, Dragged
+# Creator: CasperT
+# URL: portableinfo.com
+# IconURL: http://portableinfo.com/pastebin.png
+ 
+def dragged
+	$dz.begin("Sending text to pastebin...")
+	$dz.determinate(false)
+
+	data = $items[0]
+	format = getFormat()
+	$dz.finish("Pastebin URL Copied!")		
+	$dz.url(getPastebinUrl(data, format))
+end
+ 
+def clicked
+	$dz.begin("Sending text to pastebin...")
+	$dz.determinate(false)
+		
+	
+	data = readClipboard()
+	format = getFormat()
+	$dz.finish("Pastebin URL Copied!")		
+	$dz.url(getPastebinUrl(data, format))
+end
+
+def readClipboard
+	IO.popen('pbpaste') {|clipboard| clipboard.read}
+end
+
+def getPastebinUrl(data, format)
+        require 'net/http'
+		Net::HTTP.post_form(URI.parse("http://pastebin.com/pastebin.php"),
+                                         {"parent_pid" => "",
+										  "format" => format,
+										  "code2" => data,
+										  "poster" => "",
+										  "paste" => "Send",
+										  "expiry" => "m",
+										  "email" => ""}).header['Location']
+end
+
+def getFormat
+	result = `./CocoaDialog dropdown --text "Which Format?" --items "None" "bash" "c" "cpp" "html4strict" "java" "javascript" "lua" "perl" "php" "python" "ruby" "text" "abap" "actionscript" "ada" "apache" "applescript" "asm" "asp" "autoit" "bash" "blitzbasic" "bnf" "c" "c_mac" "caddcl" "cadlisp" "cpp" "csharp" "cfm" "css" "d" "delphi" "diff" "dos" "eiffel" "erlang" "fortran" "freebasic" "genero" "gml" "groovy" "haskell" "html4strict" "idl" "ini" "inno" "java" "javascript" "latex" "lisp" "lua" "lsl2" "matlab" "m68k" "mpasm" "mirc" "mysql" "nsis" "objc" "ocaml" "oobas" "oracle8" "pascal" "perl" "php" "plswl" "python" "qbasic" "rails" "robots" "ruby" "scheme" "smalltalk" "smarty" "sql" "tcl" "unreal" "vb" "vbnet" "visualfoxpro" "xml" "z80" --button1 "Ok" ‑‑no‑cancel --float --string-output`	
+	return result.split("\n")[1]
+end

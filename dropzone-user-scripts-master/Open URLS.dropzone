@@ -1,0 +1,55 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Open URLs
+# Description: Parses dropped files, dragged text or the clipboard (on click) for http(s) links, opens them in Safari (or defined browser)
+# Handles: NSFilenamesPboardType
+# Creator: Brett Terpstra
+# URL: http://brettterpstra.com
+# IconURL: http://brettterpstra.com/destinations/icons/openurls.png
+# Events: Clicked, Dragged
+
+def clicked(was_dragged = false)
+  $dz.begin("Parsing text for links")
+  $dz.determinate(true)
+
+  if was_dragged == false
+    input = %x{__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 pbpaste}.strip
+  else
+    input = was_dragged
+  end
+
+  links = input.scan(/((https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w&\?=.-]*)*\/?)/im)
+  if links.empty? then
+    $dz.finish("No links found")
+    $dz.url(false)
+  else
+    percent = 10
+    $dz.percent(percent)
+    norepeat = []
+    output = []
+    inc = 90 / links.length
+    links.each {|url|
+      unless norepeat.include?(url[0])
+        norepeat.push url[0]
+        %x{open "#{url[0]}"}
+      end
+      percent += inc
+      $dz.percent(percent)
+    }
+    $dz.finish("#{norepeat.length} links opened")
+    $dz.url(false)
+  end
+end
+
+def dragged
+  contents = ''
+  $items.each { |f| 
+    if File.file?(f)
+      contents += File.new(f,'r').read + " "
+    else
+      contents += f + ' '
+    end
+  }
+  clicked(contents)
+end

@@ -1,0 +1,28 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Is.Gd
+# Description: A dropped URL will be converted to a Is.Gd URL.
+# Handles: NSStringPboardType
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/is.gd.png
+
+def dragged
+  $dz.determinate(false)
+  $dz.begin("Getting is.gd URL")
+
+  if $items[0] =~ /http/
+    url = IsGd.minify($items[0])
+    $dz.finish("URL is now on clipboard")
+    $dz.url(url)
+  else
+    $dz.finish("Invalid URL")
+    $dz.url(false)
+  end
+end
+
+def clicked
+  system("open http://is.gd/")
+end
+

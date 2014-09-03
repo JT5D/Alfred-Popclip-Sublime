@@ -1,0 +1,16 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: QuickLook
+# Description: Dropped files to preview it
+# Handles: NSFilenamesPboardType
+# Events: Dragged
+# Creator: Du Song
+# URL: http://rollingcode.org
+# IconURL: http://www.iconarchive.com/icons/deleket/scrap/256/Preview-Docment-icon.png
+ 
+def dragged
+  $items.each {|item| fork { `qlmanage -p \"#{item}\" >& /dev/null &` }}
+  $dz.finish("Generating preview...")
+  $dz.url(false)
+end

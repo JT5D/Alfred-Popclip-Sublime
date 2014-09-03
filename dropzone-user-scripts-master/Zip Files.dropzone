@@ -1,0 +1,37 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Zip Files
+# Description: Zips up the dropped files or folders and places the zip file on the desktop.
+# Handles: NSFilenamesPboardType
+# Creator: Sergej Müller
+# URL: http://ebiene.de
+# IconURL: http://aptonic.com/destinations/icons/zip.png
+
+def dragged
+  output = `./CocoaDialog standard-inputbox --title "New ZIP File" --e --informative-text "Enter name for new zip file (minus extension):"`
+
+  button, filename = output.split("\n")
+
+  if button == "2"
+    $dz.finish("Cancelled")
+    $dz.url(false)
+    return
+  end
+  
+  if filename == nil
+    $dz.finish("Invalid Filename")
+    $dz.url(false)
+    return
+  end
+
+  desktop = ENV['HOME'] + '/Desktop'
+
+  zipfile = ZipFiles.zip($items, filename + ".zip")
+  zipfile = zipfile[1, zipfile.length - 2]
+  system("zip -d \"#{zipfile}\" '__MACOSX*' '*.DS_Store' >& /dev/null")
+  Rsync.do_copy(zipfile, desktop, true)
+
+  $dz.finish("ZIP created")
+  $dz.url(false)
+end

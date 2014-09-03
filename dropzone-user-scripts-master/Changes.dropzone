@@ -1,0 +1,22 @@
+# Dropzone Destination Info
+# Name: Diff files with Changes
+# Description: Drag two files to run a diff with Changes.app (must install the Terminal utility from the Changes menu)
+# Handles: NSFilenamesPboardType
+# Events: dragged
+# Creator: Brett Terpstra, w/code by Gergo Sulymosi
+# URL: http://brettterpstra.com
+# IconURL: http://abyss.designheresy.com/changesicon.png
+
+def dragged
+	$dz.begin("Opening Changes...")
+	
+	unless $items.size == 2
+		$dz.finish("You must drag two files!")
+		$dz.url(false)
+		exit
+	end
+	
+	system('chdiff', $items.first, $items.last)
+	
+	$dz.url(false)
+end

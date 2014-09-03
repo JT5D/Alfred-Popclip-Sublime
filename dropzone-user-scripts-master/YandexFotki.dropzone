@@ -1,0 +1,194 @@
+#!/usr/bin/env ruby
+ 
+# Dropzone Destination Info
+# Name: Yandex.Fotki
+# Description: Drag photos to upload them to the Yandex.Fotki (http://fotki.yandex.ru). Hold "Option" key to make phot private.
+# Handles: NSFilenamesPboardType
+# Events: Clicked, Dragged
+# KeyModifiers: Option
+# Creator: Alexander Artemenko <svetlyak.40wt@gmail.com>
+# URL: http://svetlyak.ru
+# IconURL: http://img-fotki.yandex.ru/get/5601/alexander-artemenko.d/0_6afc4_6adf389_orig
+
+
+require 'net/http'
+require 'yaml'
+require 'logger'
+
+class YandexFotki
+    @@config_filename = File.expand_path("~/.dz_yandex_fotki")
+    @@client_id = 'cd414e3ca88a451aa9256f673f40edd6'
+    @@api_host = 'api-fotki.yandex.ru'
+    @@api_port = 80
+    @@log = Logger.new(File.expand_path('~/Library/Application Support/Dropzone/YandexFotki.log'), 10, 1024000)
+ 
+    
+    class << self
+        def get_last_url
+            config = load_config()
+            config['last_image_url']
+        end
+
+        def log(message)
+            @@log.info(message)
+        end
+
+        def post_files(filenames, access_public)
+            config = load_config()
+
+            log("post_files")
+            http = Net::HTTP.new(@@api_host, @@api_port)
+
+            request = Net::HTTP::Get.new('/api/me/')
+            request['Authorization'] = 'OAuth ' + config['token']
+            response = http.request(request)
+
+            if response.code.to_i == 400 or response.code.to_i == 401
+                config['token'] = nil
+                save_config(config)
+                $dz.error("Access Denied", "Token is invalid.")
+            end
+            
+            log("/api/me/ response code: #{response.code}")
+            user = URI.parse(response['location']).request_uri
+            log("user document #{user}")
+
+            request = Net::HTTP::Post.new(user + 'photos/')
+            request['Authorization'] = 'OAuth ' + config['token']
+            request['Content-Type'] = 'image/jpeg'
+
+            for filename in filenames:
+                basename = File.basename(filename)
+                $dz.begin("Uploading #{basename}")
+
+                if File.readable?(filename)
+                    request.body = File.open(filename).read.chomp
+                else
+                    raise "Error: unable to read #{basename}"
+                end
+   
+                request['Slug'] = basename
+                response = http.request(request)
+                log("response: #{response.body}")
+    
+                if response.code.to_i == 201
+                    image_url = response['Content-Location']
+                    config['last_image_url'] = image_url
+                    save_config(config)
+
+                    log("access_public = #{access_public}")
+
+                    entry = response.body
+                    if access_public
+                        entry = entry.gsub('f:access value="private"', 'f:access value="public"')
+                    end
+
+                    entry = entry.gsub('<title>Фотка</title>', "<title>#{basename}</title>")
+
+                    photo_uri = URI.parse(response['location']).request_uri
+                    log("updating photo #{photo_uri} meta") 
+                    update_request = Net::HTTP::Put.new(photo_uri)
+                    update_request['Authorization'] = 'OAuth ' + config['token']
+                    update_request['Content-Type'] = 'application/atom+xml; charset=utf-8; type=entry'
+                    update_request.body = entry
+                    response = http.request(update_request)
+                    log("Response code: #{response.code}, #{response.body}")
+                else
+                    log("Error: #{response.code}, #{response.body}")
+
+                    if response.code.to_i == 401
+                        config['token'] = nil
+                        save_config(config)
+                        $dz.error("Access Denied", "Token is invalid.")
+                    else
+                        raise "Error: #{response.code}, #{response.body}"
+                    end
+                end
+            end
+            image_url
+        end
+
+
+        private
+        
+        def request_token
+            output = `./CocoaDialog msgbox --float --text "Авторизация" --e --informative-text "Для работы мне нужно подтверждение полномочий. Нажмите кнопку \"Продолжить\", в открывшемся окне браузера подтвердите мои полномочия на загрузку картинок, скопируйте полученный токен в буфер обмена, а потом в мои настройки." --button1 "Продолжить"`
+
+            system("open 'https://oauth.yandex.ru/authorize?client_id=#{@@client_id}&response_type=token'")
+
+            output = `./CocoaDialog standard-inputbox --float --title "Введите авторизационный токен" --e --informative-text "Авторизационный токен:"`
+            output.split("\n")[1] 
+        end
+        
+        def load_config
+            if File.readable?(@@config_filename)
+                config = YAML.load(File.open(@@config_filename).read)
+            else
+                config = {}
+            end
+            if not config['token']
+                config['token'] = request_token
+                if not config['token']:
+                    $dz.error('Token required')
+                    exit
+                end
+                save_config config
+            end
+            config
+        end
+    
+        def save_config(config)
+            File.open(@@config_filename, 'w') do |f|
+                f.puts YAML.dump config
+            end
+        end
+        
+        def read_files(filenames)
+            params = {}
+            for filename in filenames
+                basename = File.basename(filename)
+                if File.readable?(filename)
+                    params["files[#{basename}]"] = File.open(filename).read.chomp
+                else
+                    raise "Error: unable to read #{basename}"
+                end
+            end
+            params
+        end
+        
+        def fake_file(filename, content)
+            {"files[#{filename}]" => content}
+        end
+        
+    end
+end
+
+# DZ events
+ 
+def dragged
+    $dz.begin("Uploading files...")
+    begin
+        case ENV['DRAGGED_TYPE']
+            when 'NSFilenamesPboardType'
+                url = YandexFotki.post_files($items, ENV['KEY_MODIFIERS'] == "")
+        end
+        $dz.finish("URL is now on clipboard")
+        $dz.url(url)
+    rescue Exception => e
+        message = "Error uploading photo! %s" % e
+        YandexFotki.log(message)
+        $dz.finish(message)
+        $dz.url(false)
+        exit
+    end
+    
+end
+
+def clicked
+    url = YandexFotki.get_last_url
+    if url
+        $dz.finish("URL is now on clipboard")
+        $dz.url(url)
+        system("open #{url}")
+    end
+end

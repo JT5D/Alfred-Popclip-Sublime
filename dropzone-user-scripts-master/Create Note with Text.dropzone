@@ -1,0 +1,58 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Create Note with Text
+# Description: A new note will be created with the dropped text.
+# Handles: NSStringPboardType
+# Events: Dragged
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/note.png
+
+def dragged
+
+`echo \"#{$items[0]}\" | pbcopy`
+
+`osascript <<END 
+tell application "Stickies" to activate
+tell application "System Events"
+	tell process "Stickies"
+		tell menu bar 1
+			tell menu bar item "File"
+				tell menu "File"
+					
+					click menu item "New Note"
+					
+				end tell
+			end tell
+		end tell
+	end tell
+	
+	
+	tell application "Stickies"
+		tell selection
+			try
+			  set theClip to Unicode text of (the clipboard as record)
+			  type class text text theClip
+			end try
+		end tell
+	end tell
+		
+	tell application "System Events"
+		tell process "Stickies"
+			tell menu bar 1
+				tell menu bar item "Edit"
+					tell menu "Edit"
+						
+						click menu item "Paste"
+						
+					end tell
+				end tell
+			end tell
+		end tell
+		
+end tell
+end tell
+END`
+
+end

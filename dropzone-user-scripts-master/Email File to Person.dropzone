@@ -1,0 +1,57 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Email File to Person
+# Description: Emails a file to a person. Edit this script to change to address, subject, body etc. Multiple files will be zipped.
+# Handles: NSFilenamesPboardType
+# Creator: Aptonic Software
+# URL: http://aptonic.com
+# IconURL: http://aptonic.com/destinations/icons/mail.png
+
+$SUBJECT = "Message Subject"
+$BODY = "This is the message body."
+$TO_NAME = "Test Person"
+$TO_ADDRESS = "test@testing.com"
+
+def dragged
+  $dz.determinate(false)
+
+  if $items.length == 1 and not File.directory?($items[0])
+    # Just add this file as an attachment
+    escaped_email_file =  $items[0].gsub(/["`$\\]/){ |s| '\\' + s }
+    email_file = "\"#{escaped_email_file}\""
+    $dz.begin("Creating message with attachment")
+    delete_zip = false
+  else
+    # Zip up files first
+    email_file = ZipFiles.zip($items, "files.zip")
+    delete_zip = true
+  end
+
+`osascript <<END 
+set theSubject to "#{$SUBJECT}"
+set theBody to "#{$BODY}"
+set theAddress to "#{$TO_ADDRESS}"
+
+tell application "Mail"
+	set newMessage to make new outgoing message with properties {subject:theSubject, content:theBody & return & return}
+	tell newMessage
+		set visible to true
+		make new to recipient at end of to recipients with properties {address:theAddress}
+		tell content
+			make new attachment with properties {file name:"" & #{email_file} & ""} at after the last paragraph
+		end tell
+	end tell
+	activate
+end tell
+END`
+
+  ZipFiles.delete_zip(email_file) if delete_zip
+
+  $dz.finish("Message Created")
+  $dz.url(false)
+end
+
+def clicked
+  system("open /Applications/Mail.app >& /dev/null")
+end

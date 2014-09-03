@@ -1,0 +1,85 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Send to Omploader
+# Description: Allows files to be uploaded to omploader.
+# Handles: NSFilenamesPboardType
+# Events: Clicked, Dragged
+# Creator: Ricardo Martins
+# URL: http://ricardomartins.cc
+# IconURL: http://bits.ohloh.net/attachments/19369/omplogo64x64_med.png
+
+MAX_SIZE = 2**30
+
+def dragged
+  $dz.determinate(true)
+
+  file_path = $items[0]
+  filename = File.basename(file_path)
+
+  if File.size(file_path) > MAX_SIZE
+    $dz.finish("Error uploading '#{filename}': file exceeds " + (MAX_SIZE).to_s + " bytes (size was " + File.size(file_path).to_s + ").")
+    $dz.url(false)
+    Process.exit
+  end
+
+  $dz.begin("Uploading #{filename}...")
+
+  last_output = 0
+  is_receiving = false
+  output = ""
+
+  file_path = file_path.gsub('"', '\"')
+  IO.popen("/usr/bin/curl -# -F \"file1=@#{file_path}\" http://omploader.org/upload 2>&1 | tr -u \"\r\" \"\n\"") do |f|
+    while line = f.gets do
+      if line =~ /%/ and not is_receiving
+        line_split = line.split(" ")
+        file_percent_raw = line_split[1]
+        if file_percent_raw != nil
+          file_percent = file_percent_raw.to_i
+          if last_output != file_percent
+            $dz.percent(file_percent)
+            $dz.determinate(false) if file_percent == 100
+          end
+          last_output = file_percent
+        end
+      else
+        if line =~ /html/ or is_receiving
+          is_receiving = true
+          output += line
+        else
+          handle_errors(line)
+        end
+      end
+    end
+  end
+
+  begin
+    if output =~ /View file: <a href="v([A-Za-z0-9+\/]+)">/
+      id = $1
+      url = "http://omploader.org/v#{id}"
+      $dz.finish("URL is now on clipboard")
+      $dz.url(url)
+    else
+      raise "Error getting URL"
+    end
+  rescue
+    $dz.finish("Upload Failed")
+    $dz.url(false)
+  end
+
+end
+
+def handle_errors(line)
+  if line[0..4] == "curl:"
+    if line[6..-1] =~ /Couldn't resolve/
+      $dz.error("Omploader Upload Error", "Please check your network connection.")
+    else
+      $dz.error("Omploader Upload Error", line[6..-1])
+    end
+  end
+end
+
+def clicked
+  system("open http://omploader.org/")
+end

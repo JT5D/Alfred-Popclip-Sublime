@@ -1,0 +1,15 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Date & Time
+# Description: Displays the current date and time and copies it to the clipboard.
+# Events: Clicked
+# Creator: Paul William
+# URL: http://entropytheblog.com
+# IconURL: http://aptonic.com/destinations/icons/clock.png
+
+def clicked
+  date = `date`.strip
+  $dz.finish(date)
+  $dz.url(date)
+end

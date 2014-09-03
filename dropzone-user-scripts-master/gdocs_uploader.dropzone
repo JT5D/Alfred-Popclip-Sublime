@@ -1,0 +1,101 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: GDocs Uploader
+# Description: Uploads documents to Google Docs
+# Handles: NSFilenamesPboardType
+# Events: clicked, dragged
+# KeyModifiers: Command
+# Creator: Christof Dorner
+# URL: http://chdorner.com/pages/projects/dropzone-plugins#gdocs_uploader
+# IconURL: http://chdorner.com/files/gdocs_uploader_icon.png
+# OptionsNIB: Login
+# LoginTitle: Google Documents Login Details
+
+# Version: 0.2
+
+require 'rubygems'
+require 'gdata'
+require 'mime/types'
+require 'rexml/document'
+
+def dragged
+  $dz.determinate(true)
+  url = ''
+  
+  $dz.begin("Authenticate with Google")
+  $dz.percent(10)
+  client = GData::Client::DocList.new
+  
+  begin
+    client.clientlogin(ENV['USERNAME'], ENV['PASSWORD'])
+  rescue GData::Client::AuthorizationError
+    $dz.error("Login Failure", "Oops, something went wrong while logging you in. Check the credentials")
+  rescue GData::Client::CaptchaError
+    $dz.error("Login Failure", "There was an error with loggin you in, try to login to Google Docs in your browser and then try again.")
+  rescue SocketError
+    $dz.error("No connection", "Cannot connect to the Google Docs service, are you connected to the internet?")
+  rescue Exception
+    $dz.error("Unkown error", "An unkown error happened.")
+  end
+  sleep(1)
+  
+  updoc = "Uploading document"
+  updoc += "s" unless $items.size == 1
+  $dz.begin(updoc)
+  $dz.percent(60)
+  errors = []
+  $items.each do |file_path|
+    begin
+      mime_type = MIME::Types.type_for file_path
+      response = client.make_file_request(:post, 'http://docs.google.com/feeds/documents/private/full', file_path, mime_type)
+      doc = REXML::Document.new(response.body)
+      doc.elements.each("entry/link") do |element|
+        if element.attributes['rel'] == 'alternate'
+          url = element.attributes['href']
+        end
+      end
+    rescue GData::Client::UnknownError
+      if $!.to_s.include?("request error 415")
+        errors << "You tried to upload a document which is not supported by Google Docs service. (" + file_path + ")"
+      else
+        $dz.error("Unkown Error", "An unkown error happened.")
+      end
+    rescue NoMethodError
+      if $!.to_s.include?("Malformed Content-Type")
+        $dz.error("Unsupported Document Format", "Could not read the document format.")
+      end
+    rescue Exception
+      $dz.error("Unkown error", "An unkown error happened.")
+    end
+  end
+  errors.each do |error|
+    $dz.error("Unsupported Document", error)
+  end
+  sleep (1)
+  
+  updoc = "Document"
+  updoc += "s" unless $items.size == 1
+  updoc += " uploaded"
+  $dz.finish(updoc)
+  if $items.size > 1
+    $dz.url(gdocs_home_url)
+  elsif url != ''
+    $dz.url(url)
+  else
+    $dz.url(false)
+  end
+end
+
+def clicked
+  system("open " + gdocs_home_url)
+end
+
+def gdocs_home_url
+  domain = ENV['USERNAME'].split('@')[1]
+  if domain == 'gmail.com'
+    url = 'https://docs.google.com/'
+  else
+    url = 'http://docs.google.com/a/' + domain
+  end
+end

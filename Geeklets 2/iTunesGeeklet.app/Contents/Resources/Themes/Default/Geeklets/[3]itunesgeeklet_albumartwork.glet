@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>GeekletFrame</key>
+	<string>{{14, 220}, {96, 50}}</string>
+	<key>HasShadow</key>
+	<true/>
+	<key>Identifier</key>
+	<string>org.tynsoe.geeklet.image</string>
+	<key>ImageURL</key>
+	<string>file://localhost/Applications/iTunesGeeklet.app/Contents/Resources/Themes/Default/Images/default_artwork.jpg</string>
+	<key>Name</key>
+	<string>itunesgeeklet_albumartwork</string>
+	<key>Opacity</key>
+	<real>1</real>
+	<key>RefreshInterval</key>
+	<integer>0</integer>
+</dict>
+</plist>

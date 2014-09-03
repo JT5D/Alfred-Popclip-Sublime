@@ -1,0 +1,99 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Imgur
+# Description: Share photos via the Imgur service. Holding down option copies the original image url.
+# Handles: NSFilenamesPboardType
+# Events: Clicked, Dragged
+# KeyModifiers: Option
+# Creator: David Bittencourt
+# URL: http://imgur.com/register/api/
+# IconURL: http://i.imgur.com/EIbEm.png
+# OptionsNIB: Login
+# LoginTitle: Add your Imgur API Key to both fields
+ 
+require "rexml/document"
+
+def dragged
+  $dz.determinate(true)
+  
+  file_path = $items[0]
+  filename = File.basename(file_path)
+  
+  allowed_exts = ["jpg", "jpeg", "gif", "png", "apng", "tif", "tiff", "bmp", "pdf", "xcf"]
+  ext = File.extname(file_path).downcase[1..-1]
+  if not allowed_exts.include?(ext)
+    $dz.finish("Not an Image")
+    $dz.url(false)
+    Process.exit
+  end
+  
+  $dz.begin("Uploading #{filename}...")
+
+  last_output = 0
+  is_receiving_xml = false
+  xml_output = ""
+ 
+  file_path = file_path.gsub('"', '\"')
+  
+  IO.popen("/usr/bin/curl -# -F 'key=#{ENV['PASSWORD']}' -F \"image=@#{file_path}\" http://imgur.com/api/upload.xml 2>&1 | tr -u \"\r\" \"\n\"") do |f|
+    while line = f.gets do
+      if line =~ /%/ and not is_receiving_xml
+        line_split = line.split(" ")
+        file_percent_raw = line_split[1]
+        if file_percent_raw != nil
+          file_percent = file_percent_raw.to_i
+          if last_output != file_percent
+            $dz.percent(file_percent) 
+            $dz.determinate(false) if file_percent == 100
+          end
+          last_output = file_percent
+        end
+      else
+        if line =~ /xml/ or is_receiving_xml
+          is_receiving_xml = true
+          xml_output += line
+        else
+          handle_errors(line)
+        end
+      end
+    end
+  end
+
+  begin
+    url = ""
+    doc = REXML::Document.new(xml_output)
+    root = doc.root
+    status = root.attributes["stat"]
+    
+    if status == "ok"
+      if ENV['KEY_MODIFIERS'] == "Option"
+        doc.elements.each("rsp/original_image") {|e| url = e.text}
+      else
+        doc.elements.each("rsp/imgur_page") {|e| url = e.text}
+      end
+    else
+      $dz.error("Imgur Error - #{root.elements[2].text}", root.elements[2].text )
+    end
+
+    $dz.finish("URL is now on clipboard")
+    $dz.url(url)
+  rescue
+    $dz.finish("Upload Failed")
+    $dz.url(false)
+  end
+end
+
+def handle_errors(line)
+  if line[0..4] == "curl:"
+    if line[6..-1] =~ /Couldn't resolve/
+      $dz.error("Imgur Upload Error", "Please check your network connection.")
+    else
+      $dz.error("Imgur Upload Error", line[6..-1])
+    end
+  end
+end
+
+def clicked
+  system("open http://imgur.com/")
+end

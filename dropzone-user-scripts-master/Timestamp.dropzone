@@ -1,0 +1,15 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Timestamp
+# Description: Displays the current timestamp and copies it to the clipboard.
+# Events: Clicked
+# Creator: Tinu Cleatus
+# URL: http://blog.tinucleatus.com
+# IconURL: http://disk.tinucleatus.com/TM256.png
+ 
+def clicked
+  date = Time.now.to_i
+  $dz.finish(date)
+  $dz.url(date)
+end

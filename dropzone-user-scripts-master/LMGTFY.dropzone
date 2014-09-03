@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+ 
+# Dropzone Destination Info
+# Name: LMGTFY
+# Description: Drag text to generate a LMGTFY link. Hold down option for an I'm Feeling Lucky search.
+# Handles: NSStringPboardType
+# Events: Dragged
+# KeyModifiers: Option
+# Creator: Justin Hileman
+# URL: http://justinhileman.com
+# IconURL: http://github.com/downloads/bobthecow/dropzone-user-scripts/lmgtfy.png
+
+# DZ events
+def dragged
+  lmgtfy_url = 'http://lmgtfy.com/?q=%s'
+  $dz.determinate(false)
+  $dz.begin("Let me Google that for you...")
+  begin
+    url = lmgtfy_url % CGI::escape($items[0].strip.gsub("\n", ' '))
+    if ENV['KEY_MODIFIERS'] != ''
+      url += '&l=1'
+    end
+    $dz.finish("LMGTFY link created.")
+    $dz.url(url)
+  rescue Exception => e
+    $dz.finish("Error creating link!")
+    $dz.url(false)
+    exit
+  end
+end

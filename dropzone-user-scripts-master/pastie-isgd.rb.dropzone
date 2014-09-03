@@ -1,0 +1,25 @@
+#!/usr/bin/ruby
+
+# Dropzone Destination Info
+# Name: Pastie / Is.Gd
+# Description: Sends the dropped text to the Pastie (pastie.org) service and minifies the resulting Pastie URL using Is.Gd.
+# Handles: NSStringPboardType
+# Events: Clicked, Dragged
+# Creator: Paul William
+# URL: http://entropytheblog.com
+# IconURL: http://aptonic.com/destinations/icons/pastie-is.gd.png
+
+def dragged
+  $dz.determinate(false)
+  $dz.begin("Performing Paste...")
+
+  pastie = Pastie::API.new
+  url = pastie.paste($items[0], 'plain_text', false)
+  url = IsGd.minify(url)
+  $dz.finish("URL is now on clipboard")
+  $dz.url(url)
+end
+
+def clicked
+  system("open http://pastie.org/")
+end

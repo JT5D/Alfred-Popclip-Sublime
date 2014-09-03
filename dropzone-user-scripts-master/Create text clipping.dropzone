@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+# Dropzone Destination Info
+# Name: Create text clip
+# Description: Creates a text clip with the dragged text
+# Handles: NSStringPboardType
+# Creator: Edgar Suarez
+# URL: http://e.dgar.org
+# IconURL: http://aptonic.com/destinations/icons/text.png
+# OptionsNIB: ChooseFolder
+
+def dragged
+  destination = "#{ENV['EXTRA_PATH']}"
+  
+  $dz.determinate(false)
+  $dz.begin("Creating text clip...")
+  
+  File.open("#{destination}/#{$items[0][0..28]}.textClipping", "w") do |f|
+    f.puts $items[0]
+  end
+  
+  $dz.finish("Text clip saved")
+  $dz.url(false)
+end
+
+def clicked
+  system("open \"#{ENV['EXTRA_PATH']}\"")
+end

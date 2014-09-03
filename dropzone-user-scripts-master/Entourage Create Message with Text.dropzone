@@ -1,0 +1,14 @@
+#!/usr/bin/ruby
+ 
+# Dropzone Destination Info
+# Name: Mail Text
+# Description: Creates new Entourage mail message from dropped text.
+# Handles: NSStringPboardType
+# Events: Dragged
+# Creator: Eric Sylvester
+# URL: http://www.logansportmemorial.org
+# IconURL: http://www.logansportmemorial.org/icons/entourage.png
+ 
+def dragged
+  $items.each {|item| `osascript -e 'tell application \"Microsoft Entourage\"' -e 'activate' -e 'set newMessage to make new draft window with properties {to recipients:\"\", content:\"#{item}\"}' -e 'end tell'`}
+end

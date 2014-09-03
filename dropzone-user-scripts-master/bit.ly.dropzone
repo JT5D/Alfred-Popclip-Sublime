@@ -1,0 +1,66 @@
+# Dropzone Destination Info
+# Name: bit.ly
+# Description: A dropped URL will be converted to a Bit.ly URL. Password is your API key which can be found at http://bit.ly/a/your_api_key
+# Handles: NSStringPboardType
+# Creator: Sergej Müller
+# URL: http://ebiene.de
+# IconURL: http://aptonic.com/destinations/icons/bit.ly.png
+# OptionsNIB: Login
+# LoginTitle: Bit.ly Login Details
+
+require 'cgi'
+require 'rexml/document'
+ 
+def dragged
+  shorten($items[0])
+end
+
+def shorten(item)
+  $dz.determinate(false)
+  $dz.begin("Getting Bit.ly URL")
+  
+  if item =~ /http/
+    username = ENV['USERNAME']
+    apikey = ENV['PASSWORD']
+    url = CGI::escape(item)
+
+    version = "2.0.1"
+    bitly_url = "http://api.bit.ly/shorten?version=#{version}&format=xml&longUrl=#{url}&login=#{username}&apiKey=#{apikey}"
+
+    # parse result and return shortened url
+    buffer = open(bitly_url, "UserAgent" => "Ruby-ExpandLink").read
+
+    doc = REXML::Document.new(buffer)
+    doc.elements.each("bitly/errorMessage") do |a|
+      if a.text == "INVALID_LOGIN"
+        $dz.finish("Invalid user or API key")
+        $dz.url(false)
+      elsif a.text == "ALREADY_A_BITLY_LINK"
+        $dz.finish("Already a bit.ly link")
+        $dz.url(false)
+      else
+         doc.elements.each("bitly/results/nodeKeyVal/shortUrl") do |b|
+           if b.text.empty?
+             $dz.finish("Empty URL is returned")
+             $dz.url(false)
+           else
+             $dz.finish("URL is now on clipboard")
+             $dz.url(b.text)
+           end
+         end
+       end
+     end
+  else
+    $dz.finish("Invalid URL")
+    $dz.url(false)
+  end
+end
+
+def readClipboard
+	IO.popen('pbpaste') {|clipboard| clipboard.read}
+end
+ 
+def clicked
+  data = readClipboard()
+  shorten(data)
+end

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>customSites</key>
+	<dict>
+		<key>7D5B2C0F-95E5-4DA8-AED6-A85E05EFB72D</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>drupal</string>
+			<key>plusSpaces</key>
+			<false/>
+			<key>text</key>
+			<string>Search Drupal</string>
+			<key>url</key>
+			<string>http://drupal.org</string>
+			<key>utf8</key>
+			<false/>
+		</dict>
+		<key>D1DFA08D-7ED3-487D-996F-CC1F00F723B2</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>go</string>
+			<key>plusSpaces</key>
+			<false/>
+			<key>text</key>
+			<string>google short</string>
+			<key>url</key>
+			<string>http://google.com</string>
+			<key>utf8</key>
+			<true/>
+		</dict>
+		<key>F6F4C442-26A5-4301-8D7C-909A8CAAC55E</key>
+		<dict>
+			<key>enabled</key>
+			<true/>
+			<key>keyword</key>
+			<string>gi</string>
+			<key>plusSpaces</key>
+			<false/>
+			<key>text</key>
+			<string>Search github</string>
+			<key>url</key>
+			<string>http://hithub.com</string>
+			<key>utf8</key>
+			<false/>
+		</dict>
+	</dict>
+</dict>
+</plist>
